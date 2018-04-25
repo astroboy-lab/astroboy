@@ -1,0 +1,28 @@
+{
+  "name": "astroboy",
+  "version": "0.0.11",
+  "description": "Astroboy（阿童木）is a Nodejs SFB(Separation of Front and Back ends) framework, built on koa2.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.qima-inc.com:nodejs/astroboy.git"
+  },
+  "keywords": [],
+  "author": "KK",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^2.4.0",
+    "complete-assign": "0.0.2",
+    "fast-glob": "^2.2.0",
+    "fs-extra": "^5.0.0",
+    "koa": "^2.5.0",
+    "koa-body": "^2.5.0",
+    "koa-compose": "^4.0.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^4.0.2",
+    "lodash": "^4.17.5",
+    "path-matching": "0.0.2",
+    "xss": "^0.3.7"
+  }
+}
