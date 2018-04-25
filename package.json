@@ -6,7 +6,7 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git@gitlab.qima-inc.com:nodejs/astroboy.git"
+    "url": "git@github.com:astroboy-lab/astroboy.git"
   },
   "keywords": [],
   "author": "KK",
