@@ -4,43 +4,41 @@
 const lodash = require('lodash');
 const KoaRouter = require('koa-router');
 const compose = require('koa-compose');
+const pathToRegExp = require('path-to-regexp');
+const methods = require('methods');
 
-const HTTP_VERBS = ['head', 'options', 'get', 'put', 'patch', 'post', 'delete', 'all'];
-
-module.exports = function(options = {}, app) {
+module.exports = function (options = {}, app) {
   const koaRouter = new KoaRouter();
   const routers = app.routers;
   const controllers = app.controllers;
+  let newRouters = [];
 
   routers.forEach(router => {
-    let routerName; // 路由名字
-    let verb; // HTTP 方法
-    let registerPath; // 匹配路由
-    if (HTTP_VERBS.indexOf(router[0].toLowerCase()) === -1) { // 说明第一个参数是 routerName
-      routerName = router[0];
-      verb = router[1].toLowerCase();
-      registerPath = router[2];
-    } else {
-      routerName = '';
-      verb = router[0].toLowerCase();
-      registerPath = router[1];
+    // 如果第一个参数不是 routerName，则添加空参数名
+    if (methods.indexOf(router[0].toLowerCase()) > -1) {
+      router.unshift('');
     }
-    if (!Array.isArray(registerPath)) {
-      registerPath = [registerPath];
-    }
+    newRouters.push({
+      name: router[0],
+      verb: router[1].toLowerCase(),
+      path: Array.isArray(router[2]) ? router[2] : [router[2]],
+      controller: controllers[router[3]],
+      method: router[4]
+    });
+  });
 
-    const ControllerClass = controllers[router[router.length - 2]]; // 倒数第二个
-    const method = router[router.length - 1]; // 倒数第一个
-
-    if (ControllerClass && lodash.isFunction(ControllerClass) && ControllerClass.prototype[method]) {
-      registerPath.forEach(item => {
-        koaRouter[verb](routerName, item, async function(ctx, next) {
+  newRouters.forEach(router => {
+    const ControllerClass = router.controller;
+    if (ControllerClass && lodash.isFunction(ControllerClass) && ControllerClass.prototype[router.method]) {
+      router.path.forEach(item => {
+        koaRouter[router.verb](router.name, item, async function (ctx, next) {
           const controller = new ControllerClass(ctx);
-          await controller[method](ctx, next);
+          await controller[router.method](ctx, next);
         });
       });
     }
   });
+  console.log(newRouters);
 
   let fn = compose([
     koaRouter.routes(),
