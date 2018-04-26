@@ -22,7 +22,9 @@
     "koa-router": "^7.4.0",
     "koa-static": "^4.0.2",
     "lodash": "^4.17.5",
+    "methods": "^1.1.2",
     "path-matching": "0.0.2",
+    "path-to-regexp": "^2.2.1",
     "xss": "^0.3.7"
   }
 }
