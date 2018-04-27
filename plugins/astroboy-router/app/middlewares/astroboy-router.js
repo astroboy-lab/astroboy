@@ -38,7 +38,6 @@ module.exports = function (options = {}, app) {
       });
     }
   });
-  console.log(newRouters);
 
   let fn = compose([
     koaRouter.routes(),
