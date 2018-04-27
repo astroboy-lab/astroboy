@@ -59,3 +59,5 @@ typings/
 
 run/
 .idea/
+static/
+.vscode/
