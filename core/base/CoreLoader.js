@@ -197,7 +197,6 @@ class CoreLoader {
       });
     });
     this.app.middlewareConfig = config;
-    Util.outputJsonSync(`${this.baseDir}/run/middleware-config.json`, config);
   }
 
   loadMiddlewares() {
@@ -209,7 +208,7 @@ class CoreLoader {
       });
     });
     this.app.middlewares = middlewares;
-    Util.outputJsonSync(`${this.baseDir}/run/middlewares-available.json`, Object.keys(middlewares));
+    // Util.outputJsonSync(`${this.baseDir}/run/middlewares-available.json`, Object.keys(middlewares));
   }
 
   loadMiddlewareQueue() {
@@ -229,7 +228,7 @@ class CoreLoader {
         return a.priority - b.priority;
       });
     this.app.middlewareQueue = middlewareQueue;
-    Util.outputJsonSync(`${this.baseDir}/run/middlewares-queue.json`, middlewareQueue);
+    Util.outputJsonSync(`${this.baseDir}/run/middlewares.json`, middlewareQueue);
   }
 
   loadLib() {
