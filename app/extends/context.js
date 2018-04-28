@@ -50,7 +50,7 @@ module.exports = {
     assert(serviceName, 'Service name cannot be empty!');
     if (this.app.services
       && this.app.services[packageName]
-      && this.app.services[packageName][serviceNamename]) {
+      && this.app.services[packageName][serviceName]) {
       const ServiceClass = this.app.services[packageName][serviceName];
       return new ServiceClass(this);
     } else {
