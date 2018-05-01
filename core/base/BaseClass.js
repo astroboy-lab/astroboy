@@ -22,6 +22,10 @@ class BaseClass {
     return this.ctx.getService(...args);
   }
 
+  callService(...args) {
+    return this.ctx.callService(...args);
+  }
+
   getLib(...args) {
     return this.ctx.getLib(...args);
   }

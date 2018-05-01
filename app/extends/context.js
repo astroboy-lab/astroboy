@@ -29,6 +29,24 @@ module.exports = {
     }
   },
 
+  async callService(packageName, serviceName, methodName, ...args) {
+    assert(packageName, 'Package name cannot be empty!');
+    assert(serviceName, 'Service name cannot be empty!');
+    if (this.app.services &&
+      this.app.services[packageName] &&
+      this.app.services[packageName][serviceName]) {
+      const ServiceClass = this.app.services[packageName][serviceName];
+      const service = new ServiceClass(this);
+      if (service[methodName]) {
+        return await service[methodName](...args);
+      } else {
+        throw new Error(`method name ${methodName} is not found.`);
+      }
+    } else {
+      throw new Error(`Service ${packageName} ${serviceName} is not found.`);
+    }
+  },
+
   getLib(...args) {
     return this.app.getLib(...args);
   }
