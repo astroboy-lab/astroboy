@@ -25,6 +25,7 @@ class Astroboy {
     this.app.env = this.options.NODE_ENV;
     this.app.NODE_ENV = this.options.NODE_ENV;
     this.app.ROOT_PATH = this.options.ROOT_PATH;
+    this.app.projectName = path.basename(this.options.ROOT_PATH);
 
     this.loader = new DefaultLoader({
       baseDir: this.options.ROOT_PATH,
