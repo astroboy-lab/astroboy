@@ -34,18 +34,24 @@ class DefaultLoader extends CoreLoader {
     Util.outputJsonSync(`${this.baseDir}/run/controllers.json`, Object.keys(controllers));
   }
 
+  // 如果 app/services 目录存在 index.js 文件，则只需加载该文件
   loadServices() {
     let services = {};
     this.dirs.forEach(item => {
-      this.globItem(item.baseDir, this.patterns.service, (entries) => {
-        if (entries.length > 0) {
-          services[item.name] = {};
-          entries.forEach(entry => {
-            const key = entry.split('services/')[1].replace('.js', '').replace(/\//g, '.');
-            services[item.name][key] = require(entry);
-          });
-        }
-      });
+      const indexFile = `${item.baseDir}/app/services/index.js`;
+      if (fs.existsSync(indexFile)) {
+        services[item.name] = require(indexFile);
+      } else {
+        this.globItem(item.baseDir, this.patterns.service, (entries) => {
+          if (entries.length > 0) {
+            services[item.name] = {};
+            entries.forEach(entry => {
+              const key = entry.split('services/')[1].replace('.js', '').replace(/\//g, '.');
+              services[item.name][key] = require(entry);
+            });
+          }
+        });
+      }
     });
     this.app.services = services;
 
