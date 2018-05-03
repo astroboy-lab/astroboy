@@ -23,19 +23,30 @@ module.exports = function (options = {}, app) {
       verb: router[1].toLowerCase(),
       path: Array.isArray(router[2]) ? router[2] : [router[2]],
       controller: controllers[router[3]],
-      method: router[4]
+      method: router[4],
+      controllerName: router[3]
     });
   });
 
   newRouters.forEach(router => {
     const ControllerClass = router.controller;
-    if (ControllerClass && lodash.isFunction(ControllerClass) && ControllerClass.prototype[router.method]) {
-      router.path.forEach(item => {
-        koaRouter[router.verb](router.name, item, async function (ctx, next) {
-          const controller = new ControllerClass(ctx);
-          await controller[router.method](ctx, next);
-        });
-      });
+    if (ControllerClass) {
+      if (lodash.isFunction(ControllerClass)) {
+        if (ControllerClass.prototype[router.method]) {
+          router.path.forEach(item => {
+            koaRouter[router.verb](router.name, item, async function (ctx, next) {
+              const controller = new ControllerClass(ctx);
+              await controller[router.method](ctx, next);
+            });
+          });
+        } else {
+          throw new Error(`注册路由失败：${router.verb} ${router.path}, method ${router.method} is not found.`);
+        }
+      } else {
+        throw new Error(`注册路由失败：${router.verb} ${router.path}, ${router.controllerName} is not a function.`);
+      }
+    } else {
+      throw new Error(`注册路由失败：${router.verb} ${router.path}, ${router.controllerName} is undefined.`);
     }
   });
 
