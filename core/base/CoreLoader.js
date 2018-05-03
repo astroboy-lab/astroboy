@@ -234,15 +234,20 @@ class CoreLoader {
   loadLib() {
     let libs = {};
     this.dirs.forEach(item => {
-      this.globItem(item.baseDir, this.patterns.lib, (entries) => {
-        if (entries.length > 0) {
-          libs[item.name] = {};
-          entries.forEach(entry => {
-            const key = entry.split('lib/')[1].replace('.js', '').replace(/\//g, '.');
-            libs[item.name][key] = require(entry);
-          });
-        }
-      });
+      const indexFile = `${item.baseDir}/app/lib/index.js`;
+      if (fs.existsSync(indexFile)) {
+        libs[item.name] = require(indexFile);
+      } else {
+        this.globItem(item.baseDir, this.patterns.lib, (entries) => {
+          if (entries.length > 0) {
+            libs[item.name] = {};
+            entries.forEach(entry => {
+              const key = entry.split('lib/')[1].replace('.js', '').replace(/\//g, '.');
+              libs[item.name][key] = require(entry);
+            });
+          }
+        });
+      }
     });
 
     this.app.libs = libs;
