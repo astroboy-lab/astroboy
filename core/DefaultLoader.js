@@ -64,12 +64,17 @@ class DefaultLoader extends CoreLoader {
 
   loadRouters() {
     let routers = [];
-    const entries = glob.sync([`${this.baseDir}${this.patterns.router}`], {
-      dot: true
-    });
-    entries.forEach(entry => {
-      routers = routers.concat(require(entry));
-    });
+    const indexFile = `${this.baseDir}/app/routers/index.js`;
+    if (fs.existsSync(indexFile)) {
+      routers = require(indexFile);
+    } else {
+      const entries = glob.sync([`${this.baseDir}${this.patterns.router}`], {
+        dot: true
+      });
+      entries.forEach(entry => {
+        routers = routers.concat(require(entry));
+      });
+    }
     this.app.routers = routers;
     Util.outputJsonSync(`${this.baseDir}/run/routers.json`, this.app.routers);
   }
