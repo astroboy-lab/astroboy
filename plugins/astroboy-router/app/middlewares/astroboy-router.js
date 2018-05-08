@@ -36,6 +36,9 @@ module.exports = function (options = {}, app) {
           router.path.forEach(item => {
             koaRouter[router.verb](router.name, item, async function (ctx, next) {
               const controller = new ControllerClass(ctx);
+              if (ControllerClass.prototype.init) {
+                await controller['init']();
+              }
               await controller[router.method](ctx, next);
             });
           });
