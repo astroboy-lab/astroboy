@@ -1,15 +1,17 @@
+const EventEmitter = require('events');
 const path = require('path');
 const chalk = require('chalk');
 const Application = require('./Application');
 const DefaultLoader = require('./DefaultLoader');
 
-class Astroboy {
+class Astroboy extends EventEmitter {
 
-  get[Symbol.for('BASE_DIR')]() {
+  get [Symbol.for('BASE_DIR')]() {
     return path.join(__dirname, '..');
   }
 
   constructor(options = {}) {
+    super();
     options.NODE_ENV = process.env.NODE_ENV || options.NODE_ENV || 'development';
     options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || 8201;
     options.ROOT_PATH = options.ROOT_PATH || process.cwd();
@@ -39,11 +41,20 @@ class Astroboy {
       console.log('');
       console.log(chalk.green('应用启动成功'));
       console.log(chalk.green(`访问地址：${chalk.blue('http://127.0.0.1:' + this.options.NODE_PORT)}`));
+      this.emit('start', this.app);
     });
-    let defaultErrorCallback = err => {
-      console.log('defaultErrorCallback: ', err);
-    };
-    this.app.on('error', defaultErrorCallback);
+    this.app.on('error', (err, ctx) => {
+      this.emit('error', err, ctx);
+    });
+    // 添加默认的 error 事件监听器
+    setTimeout(() => {
+      if (this.listenerCount('error') === 0) {
+        this.on('error', (err, ctx) => {
+          console.log('[default error callback]');
+          console.log(err);
+        });
+      }
+    }, 3000);
   }
 
 }
