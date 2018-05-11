@@ -43,7 +43,7 @@ module.exports = {
       packageName = keys[0];
       serviceName = keys[1];
     } else if (keys.length === 1) {
-      packageName = this.app.projectName;
+      packageName = this.app.ROOT_NAME;
       serviceName = keys[0];
     }
     if (this.app.services &&
