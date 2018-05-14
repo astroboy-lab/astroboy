@@ -81,12 +81,16 @@ class DefaultLoader extends CoreLoader {
 
   loadVersionFiles() {
     let map = {};
-    const entries = glob.sync([`${this.baseDir}/config/version*.json`], {
-      dot: true
-    });
-    entries.forEach(entry => {
-      const key = path.basename(entry, '.json');
-      map[key] = require(entry);
+    this.dirs.forEach(item => {
+      const entries = glob.sync([`${item.baseDir}/config/version*.json`], {
+        dot: true
+      });
+      if (entries.length > 0) {
+        entries.forEach(entry => {
+          const key = path.basename(entry, '.json');
+          map[key] = require(entry);
+        });
+      }
     });
     this.app.versionMap = map;
   }
