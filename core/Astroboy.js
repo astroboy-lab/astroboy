@@ -12,7 +12,10 @@ class Astroboy extends EventEmitter {
 
   constructor(options = {}) {
     super();
-    options.NODE_ENV = process.env.NODE_ENV || options.NODE_ENV || 'development';
+    options.NODE_ENV =
+      process.env.APPLICATION_STANDARD_ENV ||
+      process.env.NODE_ENV ||
+      options.NODE_ENV || 'development';
     options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || 8201;
     options.ROOT_PATH = options.ROOT_PATH || process.cwd();
     this.options = options;
