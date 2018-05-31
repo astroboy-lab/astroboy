@@ -39,7 +39,9 @@ module.exports = function (options = {}, app) {
               if (ControllerClass.prototype.init) {
                 await controller['init']();
               }
-              await controller[router.method](ctx, next);
+              if (ctx.status !== 301 && ctx.status !== 302) {
+                await controller[router.method](ctx, next);
+              }
             });
           });
         } else {
