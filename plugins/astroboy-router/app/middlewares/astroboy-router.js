@@ -40,7 +40,13 @@ module.exports = function (options = {}, app) {
                 await controller['init']();
               }
               if (ctx.status !== 301 && ctx.status !== 302) {
-                await controller[router.method](ctx, next);
+                const beforeMethod = 'before' + router.method.slice(0, 1).toUpperCase() + router.method.slice(1);
+                if (ControllerClass.prototype[beforeMethod]) {
+                  await controller[beforeMethod]();
+                }
+                if (ctx.status !== 301 && ctx.status !== 302) {
+                  await controller[router.method](ctx, next);
+                }
               }
             });
           });
