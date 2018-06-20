@@ -27,7 +27,7 @@ class DefaultLoader extends CoreLoader {
       dot: true
     });
     entries.forEach(entry => {
-      const key = entry.split('controllers/')[1].replace('.js', '').replace('/', '.');
+      const key = entry.split('controllers/')[1].replace('.js', '').replace(/\//g, '.');
       controllers[key] = require(entry);
     });
     this.app.controllers = controllers;
