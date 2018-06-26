@@ -51,13 +51,13 @@ module.exports = function (options = {}, app) {
             });
           });
         } else {
-          throw new Error(`注册路由失败：${router.verb} ${router.path}, method ${router.method} is not found.`);
+          throw new Error(`注册路由失败，verb:${router.verb} path:${router.path}, method:${router.method} is not found.`);
         }
       } else {
-        throw new Error(`注册路由失败：${router.verb} ${router.path}, ${router.controllerName} is not a function.`);
+        throw new Error(`注册路由失败，verb:${router.verb} path:${router.path}, controllerName:${router.controllerName} is not a function.`);
       }
     } else {
-      throw new Error(`注册路由失败：${router.verb} ${router.path}, ${router.controllerName} is undefined.`);
+      throw new Error(`注册路由失败，verb:${router.verb} path:${router.path}, controllerName:${router.controllerName} is undefined.`);
     }
   });
 
