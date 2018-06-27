@@ -1,7 +1,6 @@
 const path = require('path');
 
 module.exports = {
-
   'astroboy-body': {
     priority: 3,
     enable: true,
@@ -16,5 +15,4 @@ module.exports = {
       strict: false
     }
   }
-
 };

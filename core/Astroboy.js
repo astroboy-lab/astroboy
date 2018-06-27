@@ -16,13 +16,12 @@ class Astroboy extends EventEmitter {
       process.env.APPLICATION_STANDARD_ENV ||
       process.env.NODE_ENV ||
       options.NODE_ENV || 'development';
-    options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || 8201;
+    options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || '8201';
     options.ROOT_PATH = options.ROOT_PATH || process.cwd();
     this.options = options;
 
     this.init();
     this.start();
-    return this;
   }
 
   init() {
@@ -41,7 +40,6 @@ class Astroboy extends EventEmitter {
 
   start() {
     this.app.listen(this.options.NODE_PORT, () => {
-      console.log('');
       console.log(chalk.green('应用启动成功'));
       console.log(chalk.green(`访问地址：${chalk.blue('http://127.0.0.1:' + this.options.NODE_PORT)}`));
       this.emit('start', this.app);
