@@ -6,6 +6,8 @@ const requestProto = require('koa/lib/request');
 const responseProto = require('koa/lib/response');
 const contextProto = require('koa/lib/context');
 const applicationProto = require('koa/lib/application').prototype;
+
+// 用于像既有原型注入方法, 实现对 class 的隐式扩充(非继承式)
 const completeAssign = require('complete-assign');
 const assert = require('assert');
 const Util = require('../lib/util');
@@ -44,6 +46,8 @@ class CoreLoader {
     this.astroboy = this.options.astroboy;
     this.app = this.options.app;
     this.NODE_ENV = this.app.NODE_ENV;
+
+    // NOTE: 实例化 loader 的参数里没有 patterns 字段?
     this.patterns = Object.assign({}, this.defaultPatterns, options.patterns);
 
     this.init();

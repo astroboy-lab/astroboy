@@ -33,7 +33,7 @@ module.exports = {
    * @return {Promise} result
    */
   renderString(...args) {
-    return this.view.renderString(...args);
+    return this.view.renderString(...args); // NOTE: 不存在这个方法
   },
 
 }

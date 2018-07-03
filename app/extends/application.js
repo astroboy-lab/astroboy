@@ -47,5 +47,4 @@ module.exports = {
       throw new Error(`Lib ${packageName} ${libName} is not found.`);
     }
   }
-
 };
