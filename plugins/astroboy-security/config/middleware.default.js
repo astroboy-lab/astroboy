@@ -1,5 +1,19 @@
 module.exports = {
 
+  'astroboy-security-csrf': {
+    priority: 2,
+    enable: false,
+    options: {
+      env: ['prod'],
+      excluded: ['GET', 'HEAD', 'OPTIONS'],
+      csrfSecretName: 'csrf_secret',
+      csrfTokenName: 'csrf_token',
+      saltLength: 10,
+      secretLength: 18,
+      maxAge: 3 * 3600 * 1000
+    }
+  },
+
   'astroboy-security-cto': {
     priority: 2,
     enable: true,
