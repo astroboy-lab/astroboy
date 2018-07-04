@@ -26,7 +26,7 @@ class DefaultLoader extends CoreLoader {
     const entries = glob.sync([`${this.baseDir}${this.patterns.controller}`], {
       dot: true
     });
-    entries.forEach(entry => {
+    entries.filter(i => !i.includes('.d.ts')).forEach(entry => {
       const key = this.resolveExtensions(entry.split('controllers/')[1], true);
       controllers[key] = require(entry);
     });
