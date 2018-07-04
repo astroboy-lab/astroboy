@@ -158,9 +158,8 @@ class CoreLoader {
         return `${baseDir}${pattern}`;
       });
     }
-    callback(glob.sync(newPatterns, {
-      dot: true
-    }));
+    const arr = glob.sync(newPatterns, { dot: true });
+    callback(arr.filter(i => !i.includes('.d.ts')));
   }
 
   globDirs(patterns, callback) {
@@ -248,7 +247,7 @@ class CoreLoader {
           if (entries.length > 0) {
             libs[item.name] = {};
             entries.forEach(entry => {
-              const key = entry.split('lib/')[1].replace('.js', '').replace(/\//g, '.');
+              const key = this.resolveExtensions(entry.split('lib/')[1], true);
               libs[item.name][key] = require(entry);
             });
           }
