@@ -16,15 +16,15 @@ class CoreLoader {
 
   get defaultPatterns() {
     return {
-      application: '/app/extends/application.js',
-      context: '/app/extends/context.js',
-      request: '/app/extends/request.js',
-      response: '/app/extends/response.js',
-      controller: '/app/controllers/**/*.js',
-      service: '/app/services/**/*.js',
-      router: '/app/routers/**/*.js',
-      middleware: '/app/middlewares/*.js',
-      lib: '/app/lib/*.js',
+      application: `/app/extends/application.${this.SUPPORT_EXT}`,
+      context: `/app/extends/context.${this.SUPPORT_EXT}`,
+      request: `/app/extends/request.${this.SUPPORT_EXT}`,
+      response: `/app/extends/response.${this.SUPPORT_EXT}`,
+      controller: `/app/controllers/**/*.${this.SUPPORT_EXT}`,
+      service: `/app/services/**/*.${this.SUPPORT_EXT}`,
+      router: `/app/routers/**/*.${this.SUPPORT_EXT}`,
+      middleware: `/app/middlewares/*.${this.SUPPORT_EXT}`,
+      lib: `/app/lib/*.${this.SUPPORT_EXT}`,
       config: [
         '/config/config.default.js',
         `/config/config.${this.NODE_ENV}.js`
@@ -46,6 +46,8 @@ class CoreLoader {
     this.astroboy = this.options.astroboy;
     this.app = this.options.app;
     this.NODE_ENV = this.app.NODE_ENV;
+    this.APP_EXTENSIONS = this.app.APP_EXTENSIONS;
+    this.SUPPORT_EXT = `(${this.APP_EXTENSIONS.join('|')})`;
 
     // NOTE: 实例化 loader 的参数里没有 patterns 字段?
     this.patterns = Object.assign({}, this.defaultPatterns, options.patterns);
@@ -207,7 +209,7 @@ class CoreLoader {
     let middlewares = {};
     this.globDirs(this.patterns.middleware, (entries) => {
       entries.forEach(entry => {
-        const key = path.basename(entry, '.js');
+        const key = this.resolveExtensions(path.basename(entry));
         middlewares[key] = require(entry);
       });
     });
@@ -271,6 +273,12 @@ class CoreLoader {
         boot(this.app);
       }
     });
+  }
+
+  resolveExtensions(path, resolveDevide = false) {
+    let newPath = path;
+    this.APP_EXTENSIONS.forEach(ext => newPath = newPath.replace(`.${ext}`, ''));
+    return resolveDevide ? newPath.replace(/\//g, '.') : newPath;
   }
 
 }

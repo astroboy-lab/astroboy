@@ -307,7 +307,7 @@ interface App extends Koa {
     NODE_ENV: string
     ROOT_PATH: string
     ROOT_NAME: string
-    APP_FOLDER: string
+    APP_EXTENSIONS: ['js'] | ['js', 'ts']
 
     // astroboy-view 注入
     readonly view: ViewManager
@@ -387,7 +387,7 @@ interface Options {
     NODE_ENV: string
     NODE_PORT: string
     ROOT_PATH: string
-    APP_FOLDER: string
+    APP_EXTENSIONS: ['js'] | ['js', 'ts']
 }
 
 type OptionParms = Partial<Options>;

@@ -27,7 +27,7 @@ class DefaultLoader extends CoreLoader {
       dot: true
     });
     entries.forEach(entry => {
-      const key = entry.split('controllers/')[1].replace('.js', '').replace(/\//g, '.');
+      const key = this.resolveExtensions(entry.split('controllers/')[1], true);
       controllers[key] = require(entry);
     });
     this.app.controllers = controllers;
@@ -46,7 +46,7 @@ class DefaultLoader extends CoreLoader {
           if (entries.length > 0) {
             services[item.name] = {};
             entries.forEach(entry => {
-              const key = entry.split('services/')[1].replace('.js', '').replace(/\//g, '.');
+              const key = this.resolveExtensions(entry.split('services/')[1], true);
               services[item.name][key] = require(entry);
             });
           }
