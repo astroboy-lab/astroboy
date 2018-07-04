@@ -264,8 +264,8 @@ interface Context extends Koa.Context {
 }
 
 interface ViewEngine {
-    render(...args: any[]):any
-    renderString(...args: any[]):any
+    render(...args: any[]): any
+    renderString(...args: any[]): any
     [key: string]: any
 }
 
@@ -280,7 +280,7 @@ declare class ViewManager extends Map {
      * @param {*} viewEngine
      * @memberof ViewManager
      */
-    use(name:string, viewEngine: Constructor<ViewEngine>):void
+    use(name: string, viewEngine: Constructor<ViewEngine>): void
 
     /**
      * @description 读取模板文件相对路径(相对 root)+文件名+后缀
@@ -298,7 +298,7 @@ declare class ViewManager extends Map {
      * @returns {string}
      * @memberof ViewManager
      */
-    resolvePath(names: string[], root:string): string
+    resolvePath(names: string[], root: string): string
 }
 
 interface App extends Koa {
@@ -307,6 +307,7 @@ interface App extends Koa {
     NODE_ENV: string
     ROOT_PATH: string
     ROOT_NAME: string
+    APP_FOLDER: string
 
     // astroboy-view 注入
     readonly view: ViewManager
@@ -382,17 +383,14 @@ interface App extends Koa {
     getLib(packageName: string, libName: string): Lib
 }
 
-interface OptionParms {
-    NODE_ENV?: string
-    NODE_PORT?: string
-    ROOT_PATH?: string
-}
-
 interface Options {
     NODE_ENV: string
     NODE_PORT: string
     ROOT_PATH: string
+    APP_FOLDER: string
 }
+
+type OptionParms = Partial<Options>;
 
 declare const BASE_DIR: unique symbol
 
@@ -460,22 +458,22 @@ interface BaseClass {
 }
 
 declare global {
-    interface AstroboyConfig extends Config {}
-    interface AstroboyServices extends Services {}
-    interface AstroboyService extends Service {}
-    interface AstroboyServiceInstance extends ServiceInstance {}
-    interface AstroboyControllers extends Controllers {}
-    interface AstroboyAstController extends Controller {}
-    interface AstroboyRouter extends Router {}
-    interface AstroboyVersionMap extends VersionMap {}
-    interface AstroboyVersion extends Version {}
-    interface AstroboyMiddlewareConfig extends MiddlewareConfig {}
-    interface AstroboyLibs extends Libs {}
-    interface AstroboyLib extends Lib {}
-    interface AstroboyApp extends App {}
-    interface AstroboyContext extends Context {}
-    interface AstroboyRequest extends Request {}
-    interface AstroboyResponse extends Response {}
+    interface AstroboyConfig extends Config { }
+    interface AstroboyServices extends Services { }
+    interface AstroboyService extends Service { }
+    interface AstroboyServiceInstance extends ServiceInstance { }
+    interface AstroboyControllers extends Controllers { }
+    interface AstroboyAstController extends Controller { }
+    interface AstroboyRouter extends Router { }
+    interface AstroboyVersionMap extends VersionMap { }
+    interface AstroboyVersion extends Version { }
+    interface AstroboyMiddlewareConfig extends MiddlewareConfig { }
+    interface AstroboyLibs extends Libs { }
+    interface AstroboyLib extends Lib { }
+    interface AstroboyApp extends App { }
+    interface AstroboyContext extends Context { }
+    interface AstroboyRequest extends Request { }
+    interface AstroboyResponse extends Response { }
 }
 
 declare class Astroboy extends EventEmitter {
@@ -485,7 +483,7 @@ declare class Astroboy extends EventEmitter {
     app: AstroboyApp
     loader: DefaultLoader
 
-    constructor(options: OptionParms)
+    constructor(options?: OptionParms)
 
     public init(): void
     public start(): void

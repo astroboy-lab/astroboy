@@ -30,6 +30,7 @@ class Astroboy extends EventEmitter {
     this.app.env = this.options.NODE_ENV;
     this.app.NODE_ENV = this.options.NODE_ENV;
     this.app.ROOT_PATH = this.options.ROOT_PATH;
+    this.app.APP_FOLDER = this.options.APP_FOLDER;
     this.app.ROOT_NAME = path.basename(this.options.ROOT_PATH);
 
     this.loader = new DefaultLoader({
