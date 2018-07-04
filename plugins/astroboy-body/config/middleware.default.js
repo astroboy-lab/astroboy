@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   'astroboy-body': {
-    priority: 3,
+    priority: 15,
     enable: true,
     options: {
       formidable: {
