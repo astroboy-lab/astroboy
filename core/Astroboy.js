@@ -18,6 +18,7 @@ class Astroboy extends EventEmitter {
       options.NODE_ENV || 'development';
     options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || '8201';
     options.ROOT_PATH = options.ROOT_PATH || process.cwd();
+    options.APP_FOLDER = process.env.APP_FOLDER || 'app';
     this.options = options;
 
     this.init();
