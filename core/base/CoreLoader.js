@@ -47,7 +47,7 @@ class CoreLoader {
     this.app = this.options.app;
     this.NODE_ENV = this.app.NODE_ENV;
     this.APP_EXTENSIONS = this.app.APP_EXTENSIONS;
-    this.SUPPORT_EXT = `(${this.APP_EXTENSIONS.join('|')})`;
+    this.SUPPORT_EXT = this.APP_EXTENSIONS.length === 1 ? this.APP_EXTENSIONS[0] : `(${this.APP_EXTENSIONS.join('|')})`;
 
     // NOTE: 实例化 loader 的参数里没有 patterns 字段?
     this.patterns = Object.assign({}, this.defaultPatterns, options.patterns);
