@@ -2,12 +2,12 @@ module.exports = {
 
   'astroboy-meta-node-engine': {
     enable: true,
-    priority: 2
+    priority: 10
   },
 
   'astroboy-meta-rt': {
     enable: true,
-    priority: 1
+    priority: 5
   },
 
 }
