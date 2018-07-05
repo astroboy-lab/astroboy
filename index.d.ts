@@ -461,6 +461,9 @@ interface BaseClassContract {
 }
 
 declare global {
+    type SourceType<T> = {
+        [key in keyof T]: T[key];
+    }
     interface AstroboyConfig extends Config { }
     interface AstroboyServices extends Services { }
     interface AstroboyService extends Service { }
