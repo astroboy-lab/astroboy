@@ -170,9 +170,12 @@ interface Lib {
  * @description 阿童木中间件配置字典
  */
 interface MiddlewareConfig {
-    priority: number
-    enable: boolean
-    options: any
+    priority?: number
+    enable?: boolean
+    options?: {
+        root?: string
+        [prop: string]: any
+    }
     name?: string
 }
 
@@ -398,7 +401,7 @@ interface Response extends Koa.Response { }
 
 interface Request extends Koa.Request { }
 
-interface BaseClass {
+interface BaseClassContract {
     ctx: Context
     app: App
     config: Config
@@ -406,7 +409,7 @@ interface BaseClass {
     /**
      * @description 获取应用 config 字典
      * @returns {Config} 完整 config 字典
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     getConfig(): Config
 
@@ -423,7 +426,7 @@ interface BaseClass {
      * @param {string} packageName
      * @param {string} serviceName
      * @returns {Service}
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     getServiceClass(packageName: string, serviceName: string): Service
 
@@ -432,7 +435,7 @@ interface BaseClass {
      * @param {string} packageName
      * @param {string} libName
      * @returns {Lib} lib 字典
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     getLib(packageName: string, libName: string): Lib
 
@@ -441,7 +444,7 @@ interface BaseClass {
      * @param {string} packageName
      * @param {string} serviceName
      * @returns {ServiceInstance}
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     getService(packageName: string, serviceName: string): ServiceInstance
 
@@ -452,7 +455,7 @@ interface BaseClass {
      * @param {string} method
      * @param {...any[]} args
      * @returns {Promise<any>}
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     callService(service: string, method: string, ...args: any[]): Promise<any>
 }
@@ -490,7 +493,7 @@ declare class Astroboy extends EventEmitter {
 }
 
 declare namespace Astroboy {
-    class BaseClass implements BaseClass {
+    class BaseClass implements BaseClassContract {
         ctx: AstroboyContext
         app: AstroboyApp
         config: AstroboyConfig
