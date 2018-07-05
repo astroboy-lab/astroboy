@@ -170,9 +170,12 @@ interface Lib {
  * @description 阿童木中间件配置字典
  */
 interface MiddlewareConfig {
-    priority: number
-    enable: boolean
-    options: any
+    priority?: number
+    enable?: boolean
+    options?: {
+        root?: string
+        [prop: string]: any
+    }
     name?: string
 }
 
@@ -264,8 +267,8 @@ interface Context extends Koa.Context {
 }
 
 interface ViewEngine {
-    render(...args: any[]):any
-    renderString(...args: any[]):any
+    render(...args: any[]): any
+    renderString(...args: any[]): any
     [key: string]: any
 }
 
@@ -280,7 +283,7 @@ declare class ViewManager extends Map {
      * @param {*} viewEngine
      * @memberof ViewManager
      */
-    use(name:string, viewEngine: Constructor<ViewEngine>):void
+    use(name: string, viewEngine: Constructor<ViewEngine>): void
 
     /**
      * @description 读取模板文件相对路径(相对 root)+文件名+后缀
@@ -298,7 +301,7 @@ declare class ViewManager extends Map {
      * @returns {string}
      * @memberof ViewManager
      */
-    resolvePath(names: string[], root:string): string
+    resolvePath(names: string[], root: string): string
 }
 
 interface App extends Koa {
@@ -307,6 +310,7 @@ interface App extends Koa {
     NODE_ENV: string
     ROOT_PATH: string
     ROOT_NAME: string
+    APP_EXTENSIONS: ['js'] | ['js', 'ts']
 
     // astroboy-view 注入
     readonly view: ViewManager
@@ -382,17 +386,14 @@ interface App extends Koa {
     getLib(packageName: string, libName: string): Lib
 }
 
-interface OptionParms {
-    NODE_ENV?: string
-    NODE_PORT?: string
-    ROOT_PATH?: string
-}
-
 interface Options {
     NODE_ENV: string
     NODE_PORT: string
     ROOT_PATH: string
+    APP_EXTENSIONS: ['js'] | ['js', 'ts']
 }
+
+type OptionParms = Partial<Options>;
 
 declare const BASE_DIR: unique symbol
 
@@ -400,7 +401,7 @@ interface Response extends Koa.Response { }
 
 interface Request extends Koa.Request { }
 
-interface BaseClass {
+interface BaseClassContract {
     ctx: Context
     app: App
     config: Config
@@ -408,7 +409,7 @@ interface BaseClass {
     /**
      * @description 获取应用 config 字典
      * @returns {Config} 完整 config 字典
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     getConfig(): Config
 
@@ -425,7 +426,7 @@ interface BaseClass {
      * @param {string} packageName
      * @param {string} serviceName
      * @returns {Service}
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     getServiceClass(packageName: string, serviceName: string): Service
 
@@ -434,7 +435,7 @@ interface BaseClass {
      * @param {string} packageName
      * @param {string} libName
      * @returns {Lib} lib 字典
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     getLib(packageName: string, libName: string): Lib
 
@@ -443,7 +444,7 @@ interface BaseClass {
      * @param {string} packageName
      * @param {string} serviceName
      * @returns {ServiceInstance}
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     getService(packageName: string, serviceName: string): ServiceInstance
 
@@ -454,28 +455,31 @@ interface BaseClass {
      * @param {string} method
      * @param {...any[]} args
      * @returns {Promise<any>}
-     * @memberof BaseClass
+     * @memberof BaseClassContract
      */
     callService(service: string, method: string, ...args: any[]): Promise<any>
 }
 
 declare global {
-    interface AstroboyConfig extends Config {}
-    interface AstroboyServices extends Services {}
-    interface AstroboyService extends Service {}
-    interface AstroboyServiceInstance extends ServiceInstance {}
-    interface AstroboyControllers extends Controllers {}
-    interface AstroboyAstController extends Controller {}
-    interface AstroboyRouter extends Router {}
-    interface AstroboyVersionMap extends VersionMap {}
-    interface AstroboyVersion extends Version {}
-    interface AstroboyMiddlewareConfig extends MiddlewareConfig {}
-    interface AstroboyLibs extends Libs {}
-    interface AstroboyLib extends Lib {}
-    interface AstroboyApp extends App {}
-    interface AstroboyContext extends Context {}
-    interface AstroboyRequest extends Request {}
-    interface AstroboyResponse extends Response {}
+    type SourceType<T> = {
+        [key in keyof T]: T[key];
+    }
+    interface AstroboyConfig extends Config { }
+    interface AstroboyServices extends Services { }
+    interface AstroboyService extends Service { }
+    interface AstroboyServiceInstance extends ServiceInstance { }
+    interface AstroboyControllers extends Controllers { }
+    interface AstroboyAstController extends Controller { }
+    interface AstroboyRouter extends Router { }
+    interface AstroboyVersionMap extends VersionMap { }
+    interface AstroboyVersion extends Version { }
+    interface AstroboyMiddlewareConfig extends MiddlewareConfig { }
+    interface AstroboyLibs extends Libs { }
+    interface AstroboyLib extends Lib { }
+    interface AstroboyApp extends App { }
+    interface AstroboyContext extends Context { }
+    interface AstroboyRequest extends Request { }
+    interface AstroboyResponse extends Response { }
 }
 
 declare class Astroboy extends EventEmitter {
@@ -485,14 +489,14 @@ declare class Astroboy extends EventEmitter {
     app: AstroboyApp
     loader: DefaultLoader
 
-    constructor(options: OptionParms)
+    constructor(options?: OptionParms)
 
     public init(): void
     public start(): void
 }
 
 declare namespace Astroboy {
-    class BaseClass implements BaseClass {
+    class BaseClass implements BaseClassContract {
         ctx: AstroboyContext
         app: AstroboyApp
         config: AstroboyConfig
