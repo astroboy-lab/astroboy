@@ -23,7 +23,7 @@ module.exports = function (options = {}, app) {
       verb: router[1].toLowerCase(),
       path: Array.isArray(router[2]) ? router[2] : [router[2]],
       controller: controllers[router[3]],
-      method: router[4],
+      methods: Array.isArray(router[4]) ? router[4] : [router[4]],
       controllerName: router[3]
     });
   });
@@ -32,27 +32,34 @@ module.exports = function (options = {}, app) {
     const ControllerClass = router.controller;
     if (ControllerClass) {
       if (lodash.isFunction(ControllerClass)) {
-        if (ControllerClass.prototype[router.method]) {
-          router.path.forEach(item => {
-            koaRouter[router.verb](router.name, item, async function (ctx, next) {
-              const controller = new ControllerClass(ctx);
-              if (ControllerClass.prototype.init) {
-                await controller['init']();
-              }
-              if (ctx.status !== 301 && ctx.status !== 302) {
-                const beforeMethod = 'before' + router.method.slice(0, 1).toUpperCase() + router.method.slice(1);
+        for (let i = 0; i < router.methods.length; i++) {
+          if (!ControllerClass.prototype[router.methods[i]]) {
+            throw new Error(`注册路由失败，verb:${router.verb} path:${router.path}, method:${router.methods[i]} is not found.`);
+          }
+        }
+        router.path.forEach(item => {
+          koaRouter[router.verb](router.name, item, async function (ctx, next) {
+            const controller = new ControllerClass(ctx);
+            // init 是 Controller 类初始化后调用的一个方法
+            if (ControllerClass.prototype.init) {
+              await controller['init']();
+            }
+            if (ctx.status !== 301 && ctx.status !== 302) {
+              for (let i = 0; i < router.methods.length; i++) {
+                let method = router.methods[i];
+                const beforeMethod = 'before' + method.slice(0, 1).toUpperCase() + method.slice(1);
                 if (ControllerClass.prototype[beforeMethod]) {
                   await controller[beforeMethod]();
                 }
                 if (ctx.status !== 301 && ctx.status !== 302) {
-                  await controller[router.method](ctx, next);
+                  await controller[method](ctx, next);
+                } else {
+                  break;
                 }
               }
-            });
+            }
           });
-        } else {
-          throw new Error(`注册路由失败，verb:${router.verb} path:${router.path}, method:${router.method} is not found.`);
-        }
+        });
       } else {
         throw new Error(`注册路由失败，verb:${router.verb} path:${router.path}, controllerName:${router.controllerName} is not a function.`);
       }
