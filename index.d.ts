@@ -183,12 +183,12 @@ declare const RENDER: unique symbol;
 declare const RENDER_STRING: unique symbol;
 
 declare class ContextView {
-    ctx: Context
+    ctx: AstroboyContext
     app: App
     viewManager: ViewManager
     config: ViewConfig
 
-    constructor(ctx: Context)
+    constructor(ctx: AstroboyContext)
 
     render(...args: any[]): Promise<any>
 
@@ -305,7 +305,7 @@ declare class ViewManager extends Map {
 }
 
 interface App extends Koa {
-    context: Context
+    context: AstroboyContext
     env: string
     NODE_ENV: string
     ROOT_PATH: string
@@ -402,7 +402,7 @@ interface Response extends Koa.Response { }
 interface Request extends Koa.Request { }
 
 interface BaseClassContract {
-    ctx: Context
+    ctx: AstroboyContext
     app: App
     config: Config
 
@@ -461,7 +461,7 @@ interface BaseClassContract {
 }
 
 declare global {
-    type SourceType<T> = {
+    type ISourceType<T> = {
         [key in keyof T]: T[key];
     }
     interface AstroboyConfig extends Config { }
@@ -511,8 +511,11 @@ declare namespace Astroboy {
         callService(service: string, method: string, ...args: any[]): any
     }
 
-    export const Controller: typeof BaseClass
-    export const Service: typeof BaseClass
+    export {
+        BaseClass,
+        BaseClass as Controller,
+        BaseClass as Service
+    }
 }
 
 export = Astroboy
