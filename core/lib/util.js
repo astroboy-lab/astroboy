@@ -1,7 +1,6 @@
 const fs = require('fs-extra');
 
 module.exports = {
-
   outputJsonSync(file, data, options = {}) {
     options = Object.assign({
       spaces: 2,
@@ -9,5 +8,4 @@ module.exports = {
     }, options);
     fs.outputJsonSync(file, data, options);
   }
-
 }

@@ -61,6 +61,29 @@ module.exports = {
     }
   },
 
+  /**
+   * 调用服务(定义支持)
+   * @param {String} pkgName 包名
+   * @param {String} serviceName 服务名
+   * @param {String} methodName 方法名
+   * @param {Object} args 参数
+   */
+  async invokeServiceMethod(pkgName, serviceName, methodName, ...args) {
+    if (this.app.services &&
+      this.app.services[pkgName] &&
+      this.app.services[pkgName][serviceName]) {
+      const ServiceClass = this.app.services[pkgName][serviceName];
+      const service = new ServiceClass(this);
+      if (service[methodName]) {
+        return await service[methodName](...args);
+      } else {
+        throw new Error(`method name ${methodName} is not found.`);
+      }
+    } else {
+      throw new Error(`Service ${pkgName} ${serviceName} is not found.`);
+    }
+  },
+
   getLib(...args) {
     return this.app.getLib(...args);
   }
