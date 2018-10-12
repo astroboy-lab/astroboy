@@ -11,7 +11,6 @@
   "keywords": [],
   "author": "KK",
   "license": "MIT",
-  "typings": "./typings/index.d.ts",
   "dependencies": {
     "chalk": "2.4.0",
     "complete-assign": "0.0.2",
