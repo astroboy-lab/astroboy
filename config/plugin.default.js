@@ -10,11 +10,6 @@ module.exports = {
     path: path.resolve(__dirname, '../plugins/astroboy-body')
   },
 
-  'astroboy-meta': {
-    enable: true,
-    path: path.resolve(__dirname, '../plugins/astroboy-meta')
-  },
-
   'astroboy-router': {
     enable: true,
     path: path.resolve(__dirname, '../plugins/astroboy-router')
