@@ -10,7 +10,7 @@ function deepXss(value, deep = true) {
     res = {};
   } else {
     if (typeof value === 'string') {
-      return xss(value);
+      return xss(value.trim());
     }
     return value;
   }
