@@ -17,7 +17,7 @@ class CoreLoader {
   get defaultPatterns() {
     return {
       application: `/app/extends/application.${this.SUPPORT_EXT}`,
-      context: `/app/extends/context.${this.SUPPORT_EXT}`,
+      context: [`/app/extends/context.${this.SUPPORT_EXT}`, `/app/extends/context/*.${this.SUPPORT_EXT}`],
       request: `/app/extends/request.${this.SUPPORT_EXT}`,
       response: `/app/extends/response.${this.SUPPORT_EXT}`,
       controller: `/app/controllers/**/*.${this.SUPPORT_EXT}`,
