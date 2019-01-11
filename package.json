@@ -3,7 +3,9 @@
   "version": "0.0.35",
   "description": "Astroboy（阿童木）is a Nodejs SFB(Separation of Front and Back ends) framework, built on koa2.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "release": "sh release.sh"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:astroboy-lab/astroboy.git"
