@@ -24,9 +24,11 @@ class CoreLoader {
       router: `/app/routers/**/*.${this.SUPPORT_EXT}`,
       middleware: `/app/middlewares/*.${this.SUPPORT_EXT}`,
       lib: `/app/lib/*.${this.SUPPORT_EXT}`,
+      loaderPattern: `/loader/*.${this.SUPPORT_EXT}`,
       config: ['/config/config.default.js', `/config/config.${this.NODE_ENV}.js`],
       middlewareConfig: ['/config/middleware.default.js', `/config/middleware.${this.NODE_ENV}.js`],
       pluginConfig: ['/config/plugin.default.js', `/config/plugin.${this.NODE_ENV}.js`],
+      loaderConfigPatterns: ['/config/loader.default.js', `/config/loader.${this.NODE_ENV}.js`],
     };
   }
 
@@ -49,8 +51,10 @@ class CoreLoader {
     this.loadCoreDirs(this.baseDir);
     this.loadPluginConfig();
     this.loadFullDirs();
+    this.loadLoaderQueue();
+    this.loadLoaders();
+    this.runLoaders();
 
-    this.loadAstroboyPkg();
     this.loadExtend(this.patterns.application, applicationProto);
     this.loadExtend(this.patterns.context, contextProto);
     this.loadExtend(this.patterns.request, requestProto);
@@ -61,14 +65,6 @@ class CoreLoader {
     this.loadMiddlewareQueue();
     this.loadLib();
     this.loadBoot();
-  }
-
-  // load astroboy package.json
-  loadAstroboyPkg() {
-    const pkgPath = path.resolve(__dirname, '../../package.json');
-    if (fs.existsSync(pkgPath)) {
-      this.app.pkg = require(pkgPath);
-    }
   }
 
   // 加载核心目录，包括 app、framework，但不包括 plugin
@@ -123,6 +119,62 @@ class CoreLoader {
 
     this.dirs = dirs;
     Util.outputJsonSync(`${this.baseDir}/run/dirs.json`, dirs);
+  }
+
+  // 获取加载器执行队列
+  loadLoaderQueue() {
+    let loaderConfig = {};
+    this.dirs.forEach(item => {
+      this.globItem(item.baseDir, this.patterns.loaderConfigPatterns, entries => {
+        loaderConfig = entries.reduce((previousValue, currentValue) => {
+          return lodash.merge(previousValue, require(currentValue));
+        }, loaderConfig);
+      });
+    });
+    let queue = [];
+    Object.keys(loaderConfig).forEach(item => {
+      queue.push(
+        Object.assign(
+          {
+            priority: 300,
+            name: item,
+          },
+          loaderConfig[item]
+        )
+      );
+    });
+    queue = queue.sort((a, b) => {
+      return a.priority - b.priority;
+    });
+    this.loaderQueue = queue;
+  }
+
+  // 获取加载器
+  loadLoaders() {
+    let loaders = {};
+    this.dirs.forEach(item => {
+      this.globItem(item.baseDir, this.patterns.loaderPattern, entries => {
+        entries.forEach(entry => {
+          const key = this.resolveExtensions(path.basename(entry));
+          loaders[key] = require(entry);
+        });
+      });
+    });
+    this.loaders = loaders;
+  }
+
+  // 执行加载器
+  runLoaders() {
+    const app = this.app;
+    const loaders = this.loaders;
+
+    this.loaderQueue.forEach(item => {
+      if (loaders[item.name]) {
+        new loaders[item.name]().load(this.dirs, item.options || {}, app);
+      } else {
+        throw new Error(`Loader ${item.name} is not found.`);
+      }
+    });
   }
 
   // 获取需要遍历的插件目录

@@ -13,26 +13,9 @@ class DefaultLoader extends CoreLoader {
 
   init() {
     super.init();
-    this.loadControllers();
     this.loadServices();
     this.loadRouters();
-    this.loadVersionFiles();
     this.useMiddlewares();
-  }
-
-  loadControllers() {
-    let controllers = {};
-    const entries = glob.sync([`${this.baseDir}${this.patterns.controller}`], {
-      dot: true,
-    });
-    entries
-      .filter(i => !i.includes('.d.ts'))
-      .forEach(entry => {
-        const key = this.resolveExtensions(entry.split('controllers/')[1], true);
-        controllers[key] = require(entry);
-      });
-    this.app.controllers = controllers;
-    Util.outputJsonSync(`${this.baseDir}/run/controllers.json`, Object.keys(controllers));
   }
 
   // 如果 app/services 目录存在 index.js 文件，则只需加载该文件
@@ -95,22 +78,6 @@ class DefaultLoader extends CoreLoader {
     });
     this.app.routers = newRouters;
     Util.outputJsonSync(`${this.baseDir}/run/routers.json`, newRouters);
-  }
-
-  loadVersionFiles() {
-    let map = {};
-    this.dirs.forEach(item => {
-      const entries = glob.sync([`${item.baseDir}/config/version*.json`], {
-        dot: true,
-      });
-      if (entries.length > 0) {
-        entries.forEach(entry => {
-          const key = path.basename(entry, '.json');
-          map[key] = require(entry);
-        });
-      }
-    });
-    this.app.versionMap = map;
   }
 
   useMiddlewares() {
