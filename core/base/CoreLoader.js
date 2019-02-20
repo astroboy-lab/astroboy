@@ -13,7 +13,6 @@ const assert = require('assert');
 const Util = require('../lib/util');
 
 class CoreLoader {
-
   get defaultPatterns() {
     return {
       application: `/app/extends/application.${this.SUPPORT_EXT}`,
@@ -25,18 +24,9 @@ class CoreLoader {
       router: `/app/routers/**/*.${this.SUPPORT_EXT}`,
       middleware: `/app/middlewares/*.${this.SUPPORT_EXT}`,
       lib: `/app/lib/*.${this.SUPPORT_EXT}`,
-      config: [
-        '/config/config.default.js',
-        `/config/config.${this.NODE_ENV}.js`
-      ],
-      middlewareConfig: [
-        '/config/middleware.default.js',
-        `/config/middleware.${this.NODE_ENV}.js`
-      ],
-      pluginConfig: [
-        '/config/plugin.default.js',
-        `/config/plugin.${this.NODE_ENV}.js`
-      ]
+      config: ['/config/config.default.js', `/config/config.${this.NODE_ENV}.js`],
+      middlewareConfig: ['/config/middleware.default.js', `/config/middleware.${this.NODE_ENV}.js`],
+      pluginConfig: ['/config/plugin.default.js', `/config/plugin.${this.NODE_ENV}.js`],
     };
   }
 
@@ -56,7 +46,10 @@ class CoreLoader {
   }
 
   init() {
-    this.loadDirs(this.baseDir);
+    this.loadCoreDirs(this.baseDir);
+    this.loadPluginConfig();
+    this.loadFullDirs();
+
     this.loadAstroboyPkg();
     this.loadExtend(this.patterns.application, applicationProto);
     this.loadExtend(this.patterns.context, contextProto);
@@ -78,31 +71,55 @@ class CoreLoader {
     }
   }
 
-  // 获取遍历目录
-  loadDirs(baseDir) {
-    let dirs = [{
-      baseDir: baseDir,
-      type: 'app',
-      name: path.basename(baseDir)
-    }];
-    dirs = dirs.concat(this.getPluginDirs(baseDir));
-
+  // 加载核心目录，包括 app、framework，但不包括 plugin
+  loadCoreDirs(baseDir) {
+    let coreDirs = [
+      {
+        baseDir: baseDir,
+        type: 'app',
+        name: path.basename(baseDir),
+      },
+    ];
     let proto = this.astroboy;
     while (proto) {
       proto = Object.getPrototypeOf(proto);
       if (proto) {
         const newBaseDir = proto[Symbol.for('BASE_DIR')];
         if (newBaseDir) {
-          dirs.push({
+          coreDirs.push({
             baseDir: newBaseDir,
             type: 'framework',
-            name: path.basename(newBaseDir)
+            name: path.basename(newBaseDir),
           });
-          dirs = dirs.concat(this.getPluginDirs(newBaseDir));
         }
       }
     }
-    dirs = dirs.reverse();
+    this.coreDirs = coreDirs.reverse();
+    Util.outputJsonSync(`${this.baseDir}/run/coreDirs.json`, this.coreDirs);
+  }
+
+  // 获取插件配置
+  loadPluginConfig() {
+    let pluginConfig = {};
+    this.coreDirs.forEach(item => {
+      this.globItem(item.baseDir, this.patterns.pluginConfig, entries => {
+        pluginConfig = entries.reduce((a, b) => {
+          let content = require(b);
+          return lodash.merge(a, content);
+        }, pluginConfig);
+      });
+    });
+    this.pluginConfig = pluginConfig;
+    Util.outputJsonSync(`${this.baseDir}/run/pluginConfig.json`, pluginConfig);
+  }
+
+  // 获取遍历目录
+  loadFullDirs() {
+    let dirs = [];
+    this.coreDirs.forEach(item => {
+      dirs = dirs.concat(this.getPluginDirs(item.baseDir).reverse());
+      dirs.push(item);
+    });
 
     this.dirs = dirs;
     Util.outputJsonSync(`${this.baseDir}/run/dirs.json`, dirs);
@@ -115,12 +132,12 @@ class CoreLoader {
     let ret = [];
     if (lodash.isPlainObject(config)) {
       for (let name in config) {
-        if (config[name].enable) {
+        if (this.pluginConfig[name].enable) {
           const baseDir = this.getPluginPath(config[name]);
           ret.push({
             baseDir: baseDir,
             type: 'plugin',
-            name: path.basename(baseDir)
+            name: path.basename(baseDir),
           });
         }
       }
@@ -141,7 +158,7 @@ class CoreLoader {
 
   getPluginConfig(baseDir) {
     let config = {};
-    this.globItem(baseDir, this.patterns.pluginConfig, (entries) => {
+    this.globItem(baseDir, this.patterns.pluginConfig, entries => {
       config = entries.reduce((a, b) => {
         return lodash.merge(a, require(b));
       }, {});
@@ -169,7 +186,7 @@ class CoreLoader {
   }
 
   loadExtend(patterns, proto) {
-    this.globDirs(patterns, (entries) => {
+    this.globDirs(patterns, entries => {
       entries.forEach(entry => {
         completeAssign(proto, require(entry));
       });
@@ -180,7 +197,7 @@ class CoreLoader {
   // config.default.js / config.${env}.js
   loadConfig() {
     let config = {};
-    this.globDirs(this.patterns.config, (entries) => {
+    this.globDirs(this.patterns.config, entries => {
       config = entries.reduce((a, b) => {
         let content = require(b);
         if (lodash.isFunction(content)) {
@@ -196,7 +213,7 @@ class CoreLoader {
 
   loadMiddlewareConfig() {
     let config = {};
-    this.globDirs(this.patterns.middlewareConfig, (entries) => {
+    this.globDirs(this.patterns.middlewareConfig, entries => {
       entries.forEach(entry => {
         config = lodash.merge(config, require(entry));
       });
@@ -206,7 +223,7 @@ class CoreLoader {
 
   loadMiddlewares() {
     let middlewares = {};
-    this.globDirs(this.patterns.middleware, (entries) => {
+    this.globDirs(this.patterns.middleware, entries => {
       entries.forEach(entry => {
         const key = this.resolveExtensions(path.basename(entry));
         middlewares[key] = require(entry);
@@ -220,14 +237,19 @@ class CoreLoader {
     const config = this.app.middlewareConfig;
     let middlewareQueue = [];
     Object.keys(config).forEach(item => {
-      middlewareQueue.push(Object.assign({
-        priority: 300,
-        name: item
-      }, config[item]));
+      middlewareQueue.push(
+        Object.assign(
+          {
+            priority: 300,
+            name: item,
+          },
+          config[item]
+        )
+      );
     });
     middlewareQueue = middlewareQueue
       .filter(item => {
-        return item.enable === true
+        return item.enable === true;
       })
       .sort((a, b) => {
         return a.priority - b.priority;
@@ -243,7 +265,7 @@ class CoreLoader {
       if (fs.existsSync(indexFile)) {
         libs[item.name] = require(indexFile);
       } else {
-        this.globItem(item.baseDir, this.patterns.lib, (entries) => {
+        this.globItem(item.baseDir, this.patterns.lib, entries => {
           if (entries.length > 0) {
             libs[item.name] = {};
             entries.forEach(entry => {
@@ -268,7 +290,7 @@ class CoreLoader {
     this.dirs.forEach(dir => {
       if (fs.existsSync(`${dir.baseDir}/boot.js`)) {
         let boot = require(`${dir.baseDir}/boot.js`);
-        assert(lodash.isFunction(boot), `${dir.baseDir}/boot.js must return a function.`)
+        assert(lodash.isFunction(boot), `${dir.baseDir}/boot.js must return a function.`);
         boot(this.app);
       }
     });
@@ -276,10 +298,9 @@ class CoreLoader {
 
   resolveExtensions(path, resolveDevide = false) {
     let newPath = path;
-    this.APP_EXTENSIONS.forEach(ext => newPath = newPath.replace(`.${ext}`, ''));
+    this.APP_EXTENSIONS.forEach(ext => (newPath = newPath.replace(`.${ext}`, '')));
     return resolveDevide ? newPath.replace(/\//g, '.') : newPath;
   }
-
 }
 
 module.exports = CoreLoader;
