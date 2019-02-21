@@ -16,26 +16,20 @@ class CoreLoader extends Loader {
   constructor(options = {}) {
     super(options);
     this.options = options;
-    this.baseDir = this.options.baseDir;
     this.astroboy = this.options.astroboy;
     this.app = this.options.app;
     this.NODE_ENV = this.app.NODE_ENV;
-
-    // NOTE: 实例化 loader 的参数里没有 patterns 字段?
-    this.patterns = Object.assign({}, this.defaultPatterns, options.patterns);
-
+    this.patterns = Object.assign({}, this.defaultPatterns);
     this.init();
   }
 
   init() {
-    this.loadCoreDirs(this.baseDir);
+    this.loadCoreDirs(this.app.ROOT_PATH);
     this.loadPluginConfig();
     this.loadFullDirs();
-
     this.loadLoaderQueue();
     this.loadLoaders();
     this.runLoaders();
-
     this.useMiddlewares();
   }
 
@@ -63,7 +57,7 @@ class CoreLoader extends Loader {
       }
     }
     this.coreDirs = coreDirs.reverse();
-    Util.outputJsonSync(`${this.baseDir}/run/coreDirs.json`, this.coreDirs);
+    Util.outputJsonSync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
   }
 
   // 获取插件配置
@@ -78,7 +72,7 @@ class CoreLoader extends Loader {
       });
     });
     this.pluginConfig = pluginConfig;
-    Util.outputJsonSync(`${this.baseDir}/run/pluginConfig.json`, pluginConfig);
+    Util.outputJsonSync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
   }
 
   // 获取遍历目录
@@ -90,7 +84,7 @@ class CoreLoader extends Loader {
     });
 
     this.dirs = dirs;
-    Util.outputJsonSync(`${this.baseDir}/run/dirs.json`, dirs);
+    Util.outputJsonSync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
   }
 
   // 获取需要遍历的插件目录
