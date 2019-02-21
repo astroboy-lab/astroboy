@@ -1,8 +1,8 @@
 const EventEmitter = require('events');
 const path = require('path');
 const chalk = require('chalk');
-const Application = require('./Application');
-const DefaultLoader = require('./DefaultLoader');
+const Koa = require('koa');
+const CoreLoader = require('./CoreLoader');
 
 class Astroboy extends EventEmitter {
 
@@ -18,7 +18,6 @@ class Astroboy extends EventEmitter {
       options.NODE_ENV || 'development';
     options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || '8201';
     options.ROOT_PATH = options.ROOT_PATH || process.cwd();
-    options.APP_EXTENSIONS = JSON.parse(process.env.APP_EXTENSIONS || 'null') || ['js'];
     this.options = options;
 
     this.init();
@@ -26,14 +25,13 @@ class Astroboy extends EventEmitter {
   }
 
   init() {
-    this.app = new Application();
+    this.app = new Koa();
     this.app.env = this.options.NODE_ENV;
     this.app.NODE_ENV = this.options.NODE_ENV;
     this.app.ROOT_PATH = this.options.ROOT_PATH;
-    this.app.APP_EXTENSIONS = this.options.APP_EXTENSIONS;
     this.app.ROOT_NAME = path.basename(this.options.ROOT_PATH);
 
-    this.loader = new DefaultLoader({
+    this.loader = new CoreLoader({
       baseDir: this.options.ROOT_PATH,
       astroboy: this,
       app: this.app

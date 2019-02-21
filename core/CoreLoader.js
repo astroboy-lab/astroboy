@@ -1,13 +1,14 @@
 const path = require('path');
 const lodash = require('lodash');
-const Util = require('../lib/util');
-const Loader = require('../Loader');
+const pathMatching = require('path-matching');
+const Util = require('./lib/util');
+const Loader = require('./Loader');
 
 class CoreLoader extends Loader {
   get defaultPatterns() {
     return {
-      loaderPattern: `/loader/*.${this.SUPPORT_EXT}`,
-      pluginPattern: ['/config/plugin.default.js', `/config/plugin.${this.NODE_ENV}.js`],
+      loaderPattern: `/loader/*.(js|ts)`,
+      pluginPattern: `/config/plugin.(default|${this.NODE_ENV}).js`,
       loaderConfigPattern: `/config/loader.(default|${this.NODE_ENV}).js`,
     };
   }
@@ -19,8 +20,6 @@ class CoreLoader extends Loader {
     this.astroboy = this.options.astroboy;
     this.app = this.options.app;
     this.NODE_ENV = this.app.NODE_ENV;
-    this.APP_EXTENSIONS = this.app.APP_EXTENSIONS;
-    this.SUPPORT_EXT = this.APP_EXTENSIONS.length === 1 ? this.APP_EXTENSIONS[0] : `(${this.APP_EXTENSIONS.join('|')})`;
 
     // NOTE: 实例化 loader 的参数里没有 patterns 字段?
     this.patterns = Object.assign({}, this.defaultPatterns, options.patterns);
@@ -36,6 +35,8 @@ class CoreLoader extends Loader {
     this.loadLoaderQueue();
     this.loadLoaders();
     this.runLoaders();
+
+    this.useMiddlewares();
   }
 
   // 加载核心目录，包括 app、framework，但不包括 plugin
@@ -181,6 +182,35 @@ class CoreLoader extends Loader {
         throw new Error(`Loader ${item.name} is not found.`);
       }
     });
+  }
+
+  useMiddlewares() {
+    const app = this.app;
+    const middlewares = app.middlewares;
+    app.middlewareQueue.forEach(item => {
+      if (middlewares[item.name]) {
+        let fn = middlewares[item.name](item.options, app);
+        fn = this.wrapMiddleware(fn, item);
+        if (fn) {
+          app.use(fn);
+        }
+      } else {
+        throw new Error(`middleware ${item.name} is not found.`);
+      }
+    });
+  }
+
+  wrapMiddleware(middleware, options) {
+    const match = pathMatching(options);
+    let fn = async function(ctx, next) {
+      if (match(ctx)) {
+        await middleware(ctx, next);
+      } else {
+        await next();
+      }
+    };
+    fn._name = `wrap-${middleware.name || middleware._name}`;
+    return fn;
   }
 }
 
