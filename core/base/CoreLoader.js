@@ -1,9 +1,9 @@
 const path = require('path');
 const lodash = require('lodash');
-const glob = require('fast-glob');
 const Util = require('../lib/util');
+const Loader = require('../Loader');
 
-class CoreLoader {
+class CoreLoader extends Loader {
   get defaultPatterns() {
     return {
       loaderPattern: `/loader/*.${this.SUPPORT_EXT}`,
@@ -13,6 +13,7 @@ class CoreLoader {
   }
 
   constructor(options = {}) {
+    super(options);
     this.options = options;
     this.baseDir = this.options.baseDir;
     this.astroboy = this.options.astroboy;
@@ -67,7 +68,7 @@ class CoreLoader {
   loadPluginConfig() {
     let pluginConfig = {};
     this.coreDirs.forEach(item => {
-      this.globItem(item.baseDir, this.patterns.pluginConfig, entries => {
+      this.globDir(item.baseDir, this.patterns.pluginConfig, entries => {
         pluginConfig = entries.reduce((a, b) => {
           let content = require(b);
           return lodash.merge(a, content);
@@ -94,7 +95,7 @@ class CoreLoader {
   loadLoaderQueue() {
     let loaderConfig = {};
     this.dirs.forEach(item => {
-      this.globItem(item.baseDir, this.patterns.loaderConfigPatterns, entries => {
+      this.globDir(item.baseDir, this.patterns.loaderConfigPatterns, entries => {
         loaderConfig = entries.reduce((previousValue, currentValue) => {
           return lodash.merge(previousValue, require(currentValue));
         }, loaderConfig);
@@ -122,7 +123,7 @@ class CoreLoader {
   loadLoaders() {
     let loaders = {};
     this.dirs.forEach(item => {
-      this.globItem(item.baseDir, this.patterns.loaderPattern, entries => {
+      this.globDir(item.baseDir, this.patterns.loaderPattern, entries => {
         entries.forEach(entry => {
           const key = this.resolveExtensions(path.basename(entry));
           loaders[key] = require(entry);
@@ -183,37 +184,12 @@ class CoreLoader {
 
   getPluginConfig(baseDir) {
     let config = {};
-    this.globItem(baseDir, this.patterns.pluginConfig, entries => {
+    this.globDir(baseDir, this.patterns.pluginConfig, entries => {
       config = entries.reduce((a, b) => {
         return lodash.merge(a, require(b));
       }, {});
     });
     return config;
-  }
-
-  globItem(baseDir, patterns, callback) {
-    let newPatterns;
-    if (typeof patterns === 'string') {
-      newPatterns = [`${baseDir}${patterns}`];
-    } else if (Array.isArray(patterns)) {
-      newPatterns = patterns.map(pattern => {
-        return `${baseDir}${pattern}`;
-      });
-    }
-    const arr = glob.sync(newPatterns, { dot: true });
-    callback(arr.filter(i => !i.includes('.d.ts')));
-  }
-
-  globDirs(patterns, callback) {
-    this.dirs.forEach(item => {
-      this.globItem(item.baseDir, patterns, callback);
-    });
-  }
-
-  resolveExtensions(path, resolveDevide = false) {
-    let newPath = path;
-    this.APP_EXTENSIONS.forEach(ext => (newPath = newPath.replace(`.${ext}`, '')));
-    return resolveDevide ? newPath.replace(/\//g, '.') : newPath;
   }
 }
 
