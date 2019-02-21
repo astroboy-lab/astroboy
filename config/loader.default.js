@@ -2,6 +2,7 @@
  * 配置加载器加载顺序
  */
 const SUPPORT_EXT = '(js|ts)';
+const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = {
   AstroboyPkgLoader: {
@@ -18,15 +19,28 @@ module.exports = {
   },
   AstroboyConfigLoader: {
     priority: 20,
+    options: {
+      pattern: ['/config/config.default.js', `/config/config.${NODE_ENV}.js`],
+    },
   },
   AstroboyMiddlewareLoader: {
     priority: 25,
+    options: {
+      pattern: `/app/middlewares/*.${SUPPORT_EXT}`,
+      configPattern: `/config/middleware.(default|${NODE_ENV}).js`,
+    },
   },
   AstroboyLibLoader: {
     priority: 30,
+    options: {
+      pattern: `/app/lib/*.${SUPPORT_EXT}`,
+    },
   },
   AstroboyBootLoader: {
     priority: 35,
+    options: {
+      pattern: `/boot.${SUPPORT_EXT}`,
+    },
   },
   AstroboyControllerLoader: {
     priority: 40,
