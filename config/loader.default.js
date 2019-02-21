@@ -20,7 +20,7 @@ module.exports = {
   AstroboyConfigLoader: {
     priority: 20,
     options: {
-      pattern: ['/config/config.default.js', `/config/config.${NODE_ENV}.js`],
+      pattern: `/config/config.(default|${NODE_ENV}).js`,
     },
   },
   AstroboyMiddlewareLoader: {
