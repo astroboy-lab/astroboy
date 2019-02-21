@@ -9,6 +9,8 @@ class Loader {
     this.app = options.app;
   }
 
+  load() {}
+
   resolveExtensions(path, resolveDevide = false) {
     let newPath = path;
     APP_EXTENSIONS.forEach(ext => (newPath = newPath.replace(`.${ext}`, '')));
@@ -33,6 +35,17 @@ class Loader {
     const entries = glob.sync(newPatterns, { dot: true });
 
     callback(entries.filter(i => !i.includes('.d.ts')));
+  }
+
+  // 获取插件的根目录
+  // 要求插件的入口文件必须放在插件根目录
+  getPluginPath(plugin) {
+    if (plugin.path) {
+      return plugin.path;
+    }
+    const name = plugin.package || plugin.name;
+    const entryFile = require.resolve(name);
+    return path.dirname(entryFile);
   }
 }
 

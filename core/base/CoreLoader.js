@@ -8,7 +8,7 @@ class CoreLoader extends Loader {
     return {
       loaderPattern: `/loader/*.${this.SUPPORT_EXT}`,
       pluginConfig: ['/config/plugin.default.js', `/config/plugin.${this.NODE_ENV}.js`],
-      loaderConfigPatterns: ['/config/loader.default.js', `/config/loader.${this.NODE_ENV}.js`],
+      loaderConfigPattern: `/config/loader.(default|${this.NODE_ENV}).js`,
     };
   }
 
@@ -32,6 +32,7 @@ class CoreLoader extends Loader {
     this.loadCoreDirs(this.baseDir);
     this.loadPluginConfig();
     this.loadFullDirs();
+
     this.loadLoaderQueue();
     this.loadLoaders();
     this.runLoaders();
@@ -91,16 +92,45 @@ class CoreLoader extends Loader {
     Util.outputJsonSync(`${this.baseDir}/run/dirs.json`, dirs);
   }
 
+  // 获取需要遍历的插件目录
+  getPluginDirs(baseDir) {
+    const config = this.getPluginConfig(baseDir);
+
+    let ret = [];
+    if (lodash.isPlainObject(config)) {
+      for (let name in config) {
+        if (this.pluginConfig[name].enable) {
+          const baseDir = this.getPluginPath(config[name]);
+          ret.push({
+            baseDir: baseDir,
+            type: 'plugin',
+            name: path.basename(baseDir),
+          });
+        }
+      }
+    }
+    return ret;
+  }
+
+  getPluginConfig(baseDir) {
+    let config = {};
+    this.globDir(baseDir, this.patterns.pluginConfig, entries => {
+      config = entries.reduce((a, b) => {
+        return lodash.merge(a, require(b));
+      }, {});
+    });
+    return config;
+  }
+
   // 获取加载器执行队列
   loadLoaderQueue() {
     let loaderConfig = {};
-    this.dirs.forEach(item => {
-      this.globDir(item.baseDir, this.patterns.loaderConfigPatterns, entries => {
-        loaderConfig = entries.reduce((previousValue, currentValue) => {
-          return lodash.merge(previousValue, require(currentValue));
-        }, loaderConfig);
-      });
+    this.globDirs(this.patterns.loaderConfigPattern, entries => {
+      loaderConfig = entries.reduce((previousValue, currentValue) => {
+        return lodash.merge(previousValue, require(currentValue));
+      }, loaderConfig);
     });
+
     let queue = [];
     Object.keys(loaderConfig).forEach(item => {
       queue.push(
@@ -122,12 +152,10 @@ class CoreLoader extends Loader {
   // 获取加载器
   loadLoaders() {
     let loaders = {};
-    this.dirs.forEach(item => {
-      this.globDir(item.baseDir, this.patterns.loaderPattern, entries => {
-        entries.forEach(entry => {
-          const key = this.resolveExtensions(path.basename(entry));
-          loaders[key] = require(entry);
-        });
+    this.globDirs(this.patterns.loaderPattern, entries => {
+      entries.forEach(entry => {
+        const key = this.resolveExtensions(path.basename(entry));
+        loaders[key] = require(entry);
       });
     });
     this.loaders = loaders;
@@ -140,56 +168,19 @@ class CoreLoader extends Loader {
 
     this.loaderQueue.forEach(item => {
       if (loaders[item.name]) {
-        new loaders[item.name]({
+        const loader = new loaders[item.name]({
           dirs: this.dirs,
           config: item.options,
           app,
-        }).load();
+        });
+        if (!(loader instanceof Loader)) {
+          throw new Error(`Loader ${item.name} must extend Loader.`);
+        }
+        loader.load();
       } else {
         throw new Error(`Loader ${item.name} is not found.`);
       }
     });
-  }
-
-  // 获取需要遍历的插件目录
-  getPluginDirs(baseDir) {
-    const config = this.getPluginConfig(baseDir);
-
-    let ret = [];
-    if (lodash.isPlainObject(config)) {
-      for (let name in config) {
-        if (this.pluginConfig[name].enable) {
-          const baseDir = this.getPluginPath(config[name]);
-          ret.push({
-            baseDir: baseDir,
-            type: 'plugin',
-            name: path.basename(baseDir),
-          });
-        }
-      }
-    }
-    return ret;
-  }
-
-  // 获取插件的根目录
-  // 要求插件的入口文件必须放在插件根目录
-  getPluginPath(plugin) {
-    if (plugin.path) {
-      return plugin.path;
-    }
-    const name = plugin.package || plugin.name;
-    const entryFile = require.resolve(name);
-    return path.dirname(entryFile);
-  }
-
-  getPluginConfig(baseDir) {
-    let config = {};
-    this.globDir(baseDir, this.patterns.pluginConfig, entries => {
-      config = entries.reduce((a, b) => {
-        return lodash.merge(a, require(b));
-      }, {});
-    });
-    return config;
   }
 }
 
