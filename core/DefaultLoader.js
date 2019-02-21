@@ -13,37 +13,8 @@ class DefaultLoader extends CoreLoader {
 
   init() {
     super.init();
-    this.loadServices();
     this.loadRouters();
     this.useMiddlewares();
-  }
-
-  // 如果 app/services 目录存在 index.js 文件，则只需加载该文件
-  loadServices() {
-    let services = {};
-    this.dirs.forEach(item => {
-      const indexFile = `${item.baseDir}/app/services/index.js`;
-      if (fs.existsSync(indexFile)) {
-        services[item.name] = require(indexFile);
-      } else {
-        this.globItem(item.baseDir, this.patterns.service, entries => {
-          if (entries.length > 0) {
-            services[item.name] = {};
-            entries.forEach(entry => {
-              const key = this.resolveExtensions(entry.split('services/')[1], true);
-              services[item.name][key] = require(entry);
-            });
-          }
-        });
-      }
-    });
-    this.app.services = services;
-
-    let logServices = {};
-    for (let packageName in services) {
-      logServices[packageName] = Object.keys(services[packageName]);
-    }
-    Util.outputJsonSync(`${this.baseDir}/run/services.json`, logServices);
   }
 
   loadRouters() {

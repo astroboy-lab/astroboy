@@ -2,31 +2,16 @@ const fs = require('fs-extra');
 const path = require('path');
 const lodash = require('lodash');
 const glob = require('fast-glob');
-const requestProto = require('koa/lib/request');
-const responseProto = require('koa/lib/response');
-const contextProto = require('koa/lib/context');
-const applicationProto = require('koa/lib/application').prototype;
 
-// 用于像既有原型注入方法, 实现对 class 的隐式扩充(非继承式)
-const completeAssign = require('complete-assign');
 const assert = require('assert');
 const Util = require('../lib/util');
 
 class CoreLoader {
   get defaultPatterns() {
     return {
-      application: `/app/extends/application.${this.SUPPORT_EXT}`,
-      context: [`/app/extends/context/*.${this.SUPPORT_EXT}`, `/app/extends/context.${this.SUPPORT_EXT}`],
-      request: `/app/extends/request.${this.SUPPORT_EXT}`,
-      response: `/app/extends/response.${this.SUPPORT_EXT}`,
-      controller: `/app/controllers/**/*.${this.SUPPORT_EXT}`,
       service: `/app/services/**/*.${this.SUPPORT_EXT}`,
       router: `/app/routers/**/*.${this.SUPPORT_EXT}`,
-      middleware: `/app/middlewares/*.${this.SUPPORT_EXT}`,
-      lib: `/app/lib/*.${this.SUPPORT_EXT}`,
       loaderPattern: `/loader/*.${this.SUPPORT_EXT}`,
-      config: ['/config/config.default.js', `/config/config.${this.NODE_ENV}.js`],
-      middlewareConfig: ['/config/middleware.default.js', `/config/middleware.${this.NODE_ENV}.js`],
       pluginConfig: ['/config/plugin.default.js', `/config/plugin.${this.NODE_ENV}.js`],
       loaderConfigPatterns: ['/config/loader.default.js', `/config/loader.${this.NODE_ENV}.js`],
     };
@@ -55,16 +40,6 @@ class CoreLoader {
     this.loadLoaders();
     this.runLoaders();
 
-    this.loadExtend(this.patterns.application, applicationProto);
-    this.loadExtend(this.patterns.context, contextProto);
-    this.loadExtend(this.patterns.request, requestProto);
-    this.loadExtend(this.patterns.response, responseProto);
-    this.loadConfig();
-    this.loadMiddlewareConfig();
-    this.loadMiddlewares();
-    this.loadMiddlewareQueue();
-    this.loadLib();
-    this.loadBoot();
   }
 
   // 加载核心目录，包括 app、framework，但不包括 plugin
@@ -170,7 +145,11 @@ class CoreLoader {
 
     this.loaderQueue.forEach(item => {
       if (loaders[item.name]) {
-        new loaders[item.name]().load(this.dirs, item.options || {}, app);
+        new loaders[item.name]({
+          dirs: this.dirs,
+          config: item.options,
+          app,
+        }).load(this.dirs, item.options || {}, app);
       } else {
         throw new Error(`Loader ${item.name} is not found.`);
       }
@@ -234,117 +213,6 @@ class CoreLoader {
   globDirs(patterns, callback) {
     this.dirs.forEach(item => {
       this.globItem(item.baseDir, patterns, callback);
-    });
-  }
-
-  loadExtend(patterns, proto) {
-    this.globDirs(patterns, entries => {
-      entries.forEach(entry => {
-        completeAssign(proto, require(entry));
-      });
-    });
-  }
-
-  // load config file
-  // config.default.js / config.${env}.js
-  loadConfig() {
-    let config = {};
-    this.globDirs(this.patterns.config, entries => {
-      config = entries.reduce((a, b) => {
-        let content = require(b);
-        if (lodash.isFunction(content)) {
-          return lodash.merge(a, content(this.app));
-        } else if (lodash.isPlainObject(content)) {
-          return lodash.merge(a, content);
-        }
-      }, config);
-    });
-    this.app.config = config;
-    Util.outputJsonSync(`${this.baseDir}/run/config.json`, config);
-  }
-
-  loadMiddlewareConfig() {
-    let config = {};
-    this.globDirs(this.patterns.middlewareConfig, entries => {
-      entries.forEach(entry => {
-        config = lodash.merge(config, require(entry));
-      });
-    });
-    this.app.middlewareConfig = config;
-  }
-
-  loadMiddlewares() {
-    let middlewares = {};
-    this.globDirs(this.patterns.middleware, entries => {
-      entries.forEach(entry => {
-        const key = this.resolveExtensions(path.basename(entry));
-        middlewares[key] = require(entry);
-      });
-    });
-    this.app.middlewares = middlewares;
-    // Util.outputJsonSync(`${this.baseDir}/run/middlewares-available.json`, Object.keys(middlewares));
-  }
-
-  loadMiddlewareQueue() {
-    const config = this.app.middlewareConfig;
-    let middlewareQueue = [];
-    Object.keys(config).forEach(item => {
-      middlewareQueue.push(
-        Object.assign(
-          {
-            priority: 300,
-            name: item,
-          },
-          config[item]
-        )
-      );
-    });
-    middlewareQueue = middlewareQueue
-      .filter(item => {
-        return item.enable === true;
-      })
-      .sort((a, b) => {
-        return a.priority - b.priority;
-      });
-    this.app.middlewareQueue = middlewareQueue;
-    Util.outputJsonSync(`${this.baseDir}/run/middlewares.json`, middlewareQueue);
-  }
-
-  loadLib() {
-    let libs = {};
-    this.dirs.forEach(item => {
-      const indexFile = `${item.baseDir}/app/lib/index.js`;
-      if (fs.existsSync(indexFile)) {
-        libs[item.name] = require(indexFile);
-      } else {
-        this.globItem(item.baseDir, this.patterns.lib, entries => {
-          if (entries.length > 0) {
-            libs[item.name] = {};
-            entries.forEach(entry => {
-              const key = this.resolveExtensions(entry.split('lib/')[1], true);
-              libs[item.name][key] = require(entry);
-            });
-          }
-        });
-      }
-    });
-
-    this.app.libs = libs;
-
-    let logs = {};
-    for (let packageName in libs) {
-      logs[packageName] = Object.keys(libs[packageName]);
-    }
-    Util.outputJsonSync(`${this.baseDir}/run/libs.json`, logs);
-  }
-
-  loadBoot() {
-    this.dirs.forEach(dir => {
-      if (fs.existsSync(`${dir.baseDir}/boot.js`)) {
-        let boot = require(`${dir.baseDir}/boot.js`);
-        assert(lodash.isFunction(boot), `${dir.baseDir}/boot.js must return a function.`);
-        boot(this.app);
-      }
     });
   }
 
