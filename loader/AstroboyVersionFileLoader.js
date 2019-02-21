@@ -4,11 +4,11 @@ const path = require('path');
 const Loader = require('../core/Loader');
 
 class AstroboyVersionFileLoader extends Loader {
-  load(dirs, options = {}, app) {
+  load() {
     let versionMap = {};
 
-    dirs.forEach(item => {
-      const entries = glob.sync([`${item.baseDir}${options.pattern}`], {
+    this.dirs.forEach(item => {
+      const entries = glob.sync([`${item.baseDir}${this.config.pattern}`], {
         dot: true,
       });
       entries.forEach(entry => {
@@ -17,7 +17,7 @@ class AstroboyVersionFileLoader extends Loader {
       });
     });
 
-    app.versionMap = versionMap;
+    this.app.versionMap = versionMap;
   }
 }
 
