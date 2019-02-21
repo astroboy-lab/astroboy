@@ -143,7 +143,7 @@ class CoreLoader {
           dirs: this.dirs,
           config: item.options,
           app,
-        }).load(this.dirs, item.options || {}, app);
+        }).load();
       } else {
         throw new Error(`Loader ${item.name} is not found.`);
       }
