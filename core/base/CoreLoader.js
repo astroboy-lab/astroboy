@@ -7,7 +7,7 @@ class CoreLoader extends Loader {
   get defaultPatterns() {
     return {
       loaderPattern: `/loader/*.${this.SUPPORT_EXT}`,
-      pluginConfig: ['/config/plugin.default.js', `/config/plugin.${this.NODE_ENV}.js`],
+      pluginPattern: ['/config/plugin.default.js', `/config/plugin.${this.NODE_ENV}.js`],
       loaderConfigPattern: `/config/loader.(default|${this.NODE_ENV}).js`,
     };
   }
@@ -69,7 +69,7 @@ class CoreLoader extends Loader {
   loadPluginConfig() {
     let pluginConfig = {};
     this.coreDirs.forEach(item => {
-      this.globDir(item.baseDir, this.patterns.pluginConfig, entries => {
+      this.globDir(item.baseDir, this.patterns.pluginPattern, entries => {
         pluginConfig = entries.reduce((a, b) => {
           let content = require(b);
           return lodash.merge(a, content);
@@ -114,7 +114,7 @@ class CoreLoader extends Loader {
 
   getPluginConfig(baseDir) {
     let config = {};
-    this.globDir(baseDir, this.patterns.pluginConfig, entries => {
+    this.globDir(baseDir, this.patterns.pluginPattern, entries => {
       config = entries.reduce((a, b) => {
         return lodash.merge(a, require(b));
       }, {});
