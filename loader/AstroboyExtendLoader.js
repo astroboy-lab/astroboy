@@ -7,8 +7,34 @@ const completeAssign = require('complete-assign');
 const Loader = require('../core/Loader');
 
 class AstroboyExtendLoader extends Loader {
-  load(dirs, options = {}, app) {
-    
+  load() {
+    // application extend
+    this.globDirs(this.config.applicationPattern, entries => {
+      entries.forEach(entry => {
+        completeAssign(applicationProto, require(entry));
+      });
+    });
+
+    // context extend
+    this.globDirs(this.config.contextPattern, entries => {
+      entries.forEach(entry => {
+        completeAssign(contextProto, require(entry));
+      });
+    });
+
+    // request extend
+    this.globDirs(this.config.requestPattern, entries => {
+      entries.forEach(entry => {
+        completeAssign(requestProto, require(entry));
+      });
+    });
+
+    // response extend
+    this.globDirs(this.config.responsePattern, entries => {
+      entries.forEach(entry => {
+        completeAssign(responseProto, require(entry));
+      });
+    });
   }
 }
 
