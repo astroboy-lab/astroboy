@@ -1,7 +1,7 @@
 /**
  * 配置加载器加载顺序
  */
-const SUPPORT_EXT = 'js|ts';
+const SUPPORT_EXT = '(js|ts)';
 
 module.exports = {
   AstroboyPkgLoader: {
