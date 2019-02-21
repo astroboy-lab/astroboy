@@ -3,9 +3,10 @@ const glob = require('fast-glob');
 const Loader = require('../core/Loader');
 
 class AstroboyControllerLoader extends Loader {
-  load(dirs, options = {}, app) {
+  load() {
+    const app = this.app;
     let controllers = {};
-    const entries = glob.sync([`${app.ROOT_PATH}${options.pattern}`], {
+    const entries = glob.sync([`${app.ROOT_PATH}${this.config.pattern}`], {
       dot: true,
     });
     entries
