@@ -1,5 +1,5 @@
 'use strict';
-const fs = require('fs');
+const fs = require('fs-extra');
 const Loader = require('../core/Loader');
 
 class AstroboyServiceLoader extends Loader {

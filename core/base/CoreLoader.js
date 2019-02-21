@@ -1,16 +1,11 @@
-const fs = require('fs-extra');
 const path = require('path');
 const lodash = require('lodash');
 const glob = require('fast-glob');
-
-const assert = require('assert');
 const Util = require('../lib/util');
 
 class CoreLoader {
   get defaultPatterns() {
     return {
-      service: `/app/services/**/*.${this.SUPPORT_EXT}`,
-      router: `/app/routers/**/*.${this.SUPPORT_EXT}`,
       loaderPattern: `/loader/*.${this.SUPPORT_EXT}`,
       pluginConfig: ['/config/plugin.default.js', `/config/plugin.${this.NODE_ENV}.js`],
       loaderConfigPatterns: ['/config/loader.default.js', `/config/loader.${this.NODE_ENV}.js`],
@@ -39,7 +34,6 @@ class CoreLoader {
     this.loadLoaderQueue();
     this.loadLoaders();
     this.runLoaders();
-
   }
 
   // 加载核心目录，包括 app、framework，但不包括 plugin
