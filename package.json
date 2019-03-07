@@ -4,7 +4,9 @@
   "description": "Astroboy（阿童木）is a Nodejs SFB(Separation of Front and Back ends) framework, built on koa2.",
   "main": "index.js",
   "scripts": {
-    "release": "sh release.sh"
+    "release": "sh release.sh",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "xss": "0.3.7"
   },
   "devDependencies": {
-    "@types/koa": "^2.0.46"
+    "@types/koa": "^2.0.46",
+    "vuepress": "^1.0.0-alpha.42"
   }
 }
