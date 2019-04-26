@@ -20,6 +20,7 @@ module.exports = {
   AstroboyConfigLoader: {
     priority: 20,
     options: {
+      // 注意：为了控制配置合并顺序，不要这么写 `/config/config.(default|${NODE_ENV}).js`
       pattern: ['/config/config.default.js', `/config/config.${NODE_ENV}.js`],
     },
   },
@@ -27,6 +28,7 @@ module.exports = {
     priority: 25,
     options: {
       pattern: `/app/middlewares/*.${SUPPORT_EXT}`,
+      // 注意：为了控制配置合并顺序，不要这么写 `/config/config.(default|${NODE_ENV}).js`
       configPattern: ['/config/middleware.default.js', `/config/middleware.${NODE_ENV}.js`],
     },
   },
