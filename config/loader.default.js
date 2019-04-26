@@ -20,14 +20,14 @@ module.exports = {
   AstroboyConfigLoader: {
     priority: 20,
     options: {
-      pattern: `/config/config.(default|${NODE_ENV}).js`,
+      pattern: ['/config/config.default.js', `/config/config.${NODE_ENV}.js`],
     },
   },
   AstroboyMiddlewareLoader: {
     priority: 25,
     options: {
       pattern: `/app/middlewares/*.${SUPPORT_EXT}`,
-      configPattern: `/config/middleware.(default|${NODE_ENV}).js`,
+      configPattern: ['/config/middleware.default.js', `/config/middleware.${NODE_ENV}.js`],
     },
   },
   AstroboyLibLoader: {
