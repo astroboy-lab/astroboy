@@ -51,7 +51,7 @@ module.exports = (options, app) => {
      // 如果返回一个字符串，则当前属性值将被替换为该字符串
      */
     onTagAttr = (tag, name, value, isWhiteAttr) => {}
-  } = options;
+  } = options || {};
 
   return async function (ctx, next) {
     const _options = {};
