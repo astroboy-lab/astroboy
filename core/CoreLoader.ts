@@ -1,29 +1,52 @@
-const path = require('path');
-const lodash = require('lodash');
-const pathMatching = require('path-matching');
-const Util = require('./lib/util');
-const Loader = require('./Loader');
+// @ts-ignore no types matched
+import pathMatching = require('path-matching');
+import path = require('path');
+import lodash from 'lodash';
+import * as Util from './lib/util';
+import { Loader } from './Loader';
+import {
+  IInnerApplication,
+  PureObject,
+  ILoaderOptions,
+  IDir,
+  PriorityDefine as IPriority,
+  IDefaultLoaders,
+  NormalizedMiddleware,
+} from './contract';
 
-class CoreLoader extends Loader {
-  get defaultPatterns() {
+export interface ICoreLoaderOptions<A extends IInnerApplication, F extends PureObject> extends ILoaderOptions<A, F> {
+  astroboy: any;
+}
+
+export class CoreLoader<A extends IInnerApplication, F extends PureObject> extends Loader<A, F> {
+  protected options!: Partial<ICoreLoaderOptions<A, F>>;
+  protected patterns!: IDefaultLoaders;
+  protected pluginConfig!: PureObject;
+  protected astroboy!: any;
+  protected loaders!: PureObject;
+  protected coreDirs!: IDir[];
+  protected loaderQueue!: IPriority[];
+  protected NODE_ENV!: string;
+
+  get defaultPatterns(): IDefaultLoaders {
     return {
       loaderPattern: `/loader/*.(js|ts)`,
-      pluginPattern: `/config/plugin.(default|${this.NODE_ENV}).js`,
-      loaderConfigPattern: `/config/loader.(default|${this.NODE_ENV}).js`,
+      pluginPattern: `/config/plugin.(default|${this.NODE_ENV}).(js|ts)`,
+      loaderConfigPattern: `/config/loader.(default|${this.NODE_ENV}).(js|ts)`,
     };
   }
 
-  constructor(options = {}) {
+  constructor(options: Partial<ICoreLoaderOptions<A, F>> = {}) {
     super(options);
-    this.options = options;
+    this.options = options || {};
     this.astroboy = this.options.astroboy;
-    this.app = this.options.app;
-    this.NODE_ENV = this.app.NODE_ENV;
+    this.app = this.options.app || this.app;
+    this.NODE_ENV = this.app.NODE_ENV || 'development';
     this.patterns = Object.assign({}, this.defaultPatterns);
     this.init();
   }
 
-  init() {
+  protected init() {
     this.loadCoreDirs(this.app.ROOT_PATH);
     this.loadPluginConfig();
     this.loadFullDirs();
@@ -33,9 +56,14 @@ class CoreLoader extends Loader {
     this.useMiddlewares();
   }
 
-  // 加载核心目录，包括 app、framework，但不包括 plugin
-  loadCoreDirs(baseDir) {
-    let coreDirs = [
+  public load() {}
+
+  /**
+   * 加载核心目录，包括 app、framework，但不包括 plugin
+   * @param baseDir
+   */
+  protected loadCoreDirs(baseDir: string) {
+    const coreDirs: IDir[] = [
       {
         baseDir: baseDir,
         type: 'app',
@@ -60,13 +88,13 @@ class CoreLoader extends Loader {
     Util.outputJsonSync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
   }
 
-  // 获取插件配置
-  loadPluginConfig() {
-    let pluginConfig = {};
+  /** 获取插件配置 */
+  protected loadPluginConfig() {
+    let pluginConfig: PureObject = {};
     this.coreDirs.forEach(item => {
       this.globDir(item.baseDir, this.patterns.pluginPattern, entries => {
         pluginConfig = entries.reduce((a, b) => {
-          let content = require(b);
+          const content = require(b as string);
           return lodash.merge(a, content);
         }, pluginConfig);
       });
@@ -75,11 +103,11 @@ class CoreLoader extends Loader {
     Util.outputJsonSync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
   }
 
-  // 获取遍历目录
-  loadFullDirs() {
-    let dirs = [];
+  /** 获取遍历目录 */
+  protected loadFullDirs() {
+    let dirs: IDir[] = [];
     this.coreDirs.forEach(item => {
-      dirs = dirs.concat(this.getPluginDirs(item.baseDir).reverse());
+      dirs = dirs.concat(<IDir[]>this.getPluginDirs(item.baseDir).reverse());
       dirs.push(item);
     });
 
@@ -87,11 +115,11 @@ class CoreLoader extends Loader {
     Util.outputJsonSync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
   }
 
-  // 获取需要遍历的插件目录
-  getPluginDirs(baseDir) {
+  /** 获取需要遍历的插件目录 */
+  protected getPluginDirs(baseDir: string) {
     const config = this.getPluginConfig(baseDir);
 
-    let ret = [];
+    const ret: IDir[] = [];
     if (lodash.isPlainObject(config)) {
       for (let name in config) {
         if (this.pluginConfig[name].enable) {
@@ -107,26 +135,26 @@ class CoreLoader extends Loader {
     return ret;
   }
 
-  getPluginConfig(baseDir) {
-    let config = {};
+  protected getPluginConfig(baseDir: string) {
+    let config: PureObject = {};
     this.globDir(baseDir, this.patterns.pluginPattern, entries => {
       config = entries.reduce((a, b) => {
-        return lodash.merge(a, require(b));
+        return lodash.merge(a, require(b as string));
       }, {});
     });
     return config;
   }
 
-  // 获取加载器执行队列
-  loadLoaderQueue() {
-    let loaderConfig = {};
+  /** 获取加载器执行队列 */
+  protected loadLoaderQueue() {
+    let loaderConfig: PureObject = {};
     this.globDirs(this.patterns.loaderConfigPattern, entries => {
       loaderConfig = entries.reduce((previousValue, currentValue) => {
-        return lodash.merge(previousValue, require(currentValue));
+        return lodash.merge(previousValue, require(currentValue as string));
       }, loaderConfig);
     });
 
-    let queue = [];
+    let queue: IPriority[] = [];
     Object.keys(loaderConfig).forEach(item => {
       queue.push(
         Object.assign(
@@ -144,20 +172,20 @@ class CoreLoader extends Loader {
     this.loaderQueue = queue;
   }
 
-  // 获取加载器
-  loadLoaders() {
-    let loaders = {};
+  /** 获取加载器 */
+  protected loadLoaders() {
+    let loaders: PureObject = {};
     this.globDirs(this.patterns.loaderPattern, entries => {
       entries.forEach(entry => {
-        const key = this.resolveExtensions(path.basename(entry));
-        loaders[key] = require(entry);
+        const key = this.resolveExtensions(path.basename(entry as string));
+        loaders[key] = require(entry as string);
       });
     });
     this.loaders = loaders;
   }
 
-  // 执行加载器
-  runLoaders() {
+  /** 执行加载器 */
+  protected runLoaders() {
     const app = this.app;
     const loaders = this.loaders;
 
@@ -178,7 +206,7 @@ class CoreLoader extends Loader {
     });
   }
 
-  useMiddlewares() {
+  protected useMiddlewares() {
     const app = this.app;
     const middlewares = app.middlewares;
     app.middlewareQueue.forEach(item => {
@@ -194,18 +222,16 @@ class CoreLoader extends Loader {
     });
   }
 
-  wrapMiddleware(middleware, options) {
-    const match = pathMatching(options);
-    let fn = async function(ctx, next) {
+  protected wrapMiddleware(middleware: NormalizedMiddleware, options: IPriority) {
+    const match: (ctx: any) => boolean = pathMatching(options);
+    let fn: any = async function(ctx: any, next: () => Promise<any>) {
       if (match(ctx)) {
         await middleware(ctx, next);
       } else {
         await next();
       }
     };
-    fn._name = `wrap-${middleware.name || middleware._name}`;
-    return fn;
+    fn._name = `wrap-${middleware.name || (<any>middleware)._name}`;
+    return fn as NormalizedMiddleware;
   }
 }
-
-module.exports = CoreLoader;
