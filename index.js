@@ -1,5 +1,5 @@
-const Astroboy = require('./core/Astroboy');
-const BaseClass = require('./core/base/BaseClass');
+const { Astroboy } = require('./core/Astroboy');
+const { BaseClass } = require('./core/base/BaseClass');
 
 module.exports = Astroboy;
 
