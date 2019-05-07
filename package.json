@@ -17,6 +17,7 @@
   "author": "KK",
   "license": "MIT",
   "dependencies": {
+    "@types/koa": "^2.0.46",
     "chalk": "2.4.0",
     "complete-assign": "0.0.2",
     "fast-glob": "2.2.6",
@@ -34,7 +35,6 @@
     "xss": "0.3.7"
   },
   "devDependencies": {
-    "@types/koa": "^2.0.46",
     "vuepress": "^1.0.0-alpha.42"
   }
 }
