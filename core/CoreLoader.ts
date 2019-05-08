@@ -7,19 +7,15 @@ import { Loader } from './Loader';
 import {
   IInnerApplication,
   PureObject,
-  ILoaderOptions,
   IDir,
   PriorityDefine as IPriority,
   IDefaultLoaders,
   NormalizedMiddleware,
+  ICoreLoaderOptions,
 } from '../definitions/core';
 
-export interface ICoreLoaderOptions<A extends IInnerApplication, F extends PureObject> extends ILoaderOptions<A, F> {
-  astroboy: any;
-}
-
-export class CoreLoader<A extends IInnerApplication, F extends PureObject> extends Loader<A, F> {
-  protected options!: Partial<ICoreLoaderOptions<A, F>>;
+export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> extends Loader<F, A> {
+  protected options!: Partial<ICoreLoaderOptions<F, A>>;
   protected patterns!: IDefaultLoaders;
   protected pluginConfig!: PureObject;
   protected astroboy!: any;
@@ -36,7 +32,7 @@ export class CoreLoader<A extends IInnerApplication, F extends PureObject> exten
     };
   }
 
-  constructor(options: Partial<ICoreLoaderOptions<A, F>> = {}) {
+  constructor(options: Partial<ICoreLoaderOptions<F, A>> = {}) {
     super(options);
     this.options = options || {};
     this.astroboy = this.options.astroboy;

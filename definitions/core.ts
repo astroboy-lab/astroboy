@@ -1,14 +1,18 @@
 import Koa from 'koa';
 
-export interface IBaseApplication extends Koa {}
-
-export interface IBaseContext extends Koa.Context {
-  app: IBaseApplication;
-  config: PureObject;
+export interface IBaseApplication<F extends PureObject = PureObject> extends Koa {
+  config: F;
 }
 
-export interface IInnerApplication extends IBaseApplication {
+export interface IBaseContext<F extends PureObject = PureObject, A extends IBaseApplication = IBaseApplication<F>>
+  extends Koa.Context {
+  app: A;
+  config: F;
+}
+
+export interface IInnerApplication<F extends PureObject = PureObject> extends IBaseApplication<F> {
   ROOT_PATH: string;
+  ROOT_NAME: string;
   NODE_ENV: string;
   middlewares: PureObject<(options: any, app: any) => (ctx: any, next: () => Promise<any>) => Promise<any>>;
   middlewareQueue: PriorityDefine[];
@@ -28,10 +32,14 @@ export interface IAstroboyOptions {
   ROOT_PATH: string;
 }
 
-export interface ILoaderOptions<A extends IInnerApplication, F extends PureObject> {
+export interface ILoaderOptions<F extends PureObject, A extends IBaseApplication> {
   dirs: IDir[];
   config: F;
   app: A;
+}
+
+export interface ICoreLoaderOptions<F extends PureObject, A extends IInnerApplication<F>> extends ILoaderOptions<F, A> {
+  astroboy?: any;
 }
 
 export interface IPluginEntry {

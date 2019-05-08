@@ -1,7 +1,7 @@
 import glob = require('fast-glob');
 import path = require('path');
 import { EntryItem } from 'fast-glob/out/types/entries';
-import { IInnerApplication, PureObject, IDir, ILoaderOptions, IPluginEntry } from '../definitions/core';
+import { PureObject, IDir, ILoaderOptions, IPluginEntry, IBaseApplication } from '../definitions/core';
 
 const TYPING_FILE_EXTS = '.d.ts';
 const APP_EXTENSIONS = ['js', 'ts'];
@@ -10,12 +10,12 @@ function fileIsNotTypingFile(entry: EntryItem) {
   return typeof entry === 'string' ? !entry.endsWith(TYPING_FILE_EXTS) : !entry.path.endsWith(TYPING_FILE_EXTS);
 }
 
-export abstract class Loader<A extends IInnerApplication, F extends PureObject> {
+export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>> {
   protected dirs!: IDir[];
   protected app!: A;
   protected config!: F;
 
-  constructor(options: Partial<ILoaderOptions<A, F>> = {}) {
+  constructor(options: Partial<ILoaderOptions<F, A>> = {}) {
     this.dirs = options.dirs || [];
     this.config = <F>options.config || {};
     this.app = <A>options.app || {};

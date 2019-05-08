@@ -4,16 +4,16 @@ import chalk from 'chalk';
 import Koa = require('koa');
 import { CoreLoader } from './CoreLoader';
 import { BaseClass as AstroboyClassBase } from './base/BaseClass';
-import { IBaseApplication, PureObject, IAstroboyOptions, IBaseContext } from '../definitions/core';
+import { IBaseApplication, PureObject, IAstroboyOptions, IBaseContext, IInnerApplication } from '../definitions/core';
 
 export class Astroboy<
-  CTX extends PureObject = IBaseContext,
-  APP extends PureObject = IBaseApplication,
-  CONF extends PureObject = PureObject
+  CONF extends PureObject = PureObject,
+  APP extends IBaseApplication = IBaseApplication<CONF>,
+  CTX extends IBaseContext = IBaseContext<CONF, APP>
 > extends EventEmitter {
   protected app!: APP;
   protected options!: IAstroboyOptions;
-  private loader!: CoreLoader<any, CONF>;
+  private loader!: CoreLoader<CONF, any>;
 
   protected get [Symbol.for('BASE_DIR')]() {
     return path.join(__dirname, '..');
@@ -34,11 +34,11 @@ export class Astroboy<
   protected init() {
     this.app = <any>new Koa();
     this.app.env = this.options.NODE_ENV;
-    this.app.NODE_ENV = this.options.NODE_ENV;
-    this.app.ROOT_PATH = this.options.ROOT_PATH;
-    this.app.ROOT_NAME = path.basename(this.options.ROOT_PATH);
+    (<IInnerApplication>(<unknown>this.app)).NODE_ENV = this.options.NODE_ENV;
+    (<IInnerApplication>(<unknown>this.app)).ROOT_PATH = this.options.ROOT_PATH;
+    (<IInnerApplication>(<unknown>this.app)).ROOT_NAME = path.basename(this.options.ROOT_PATH);
 
-    this.loader = new CoreLoader<any, CONF>({
+    this.loader = new CoreLoader<CONF, any>({
       astroboy: this,
       app: this.app,
     });
