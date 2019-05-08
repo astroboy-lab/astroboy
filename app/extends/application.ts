@@ -1,34 +1,27 @@
 /**
  * 扩展 Koa Application 对象
  */
-const assert = require('assert');
+import assert = require('assert');
 
-module.exports = {
+import { IAstroboyAppExtends, IAstroboyApplication } from '../../definitions/extends/app';
+import { IInnerApplication } from '../../definitions/core';
 
-  /**
-   * 获取配置信息，参数 key 可以是点分隔符隔开的字符串，例如 foo.bar
-   * @param {String} key 配置 key
-   */
-  getConfig(key) {
+const appExtends: IAstroboyAppExtends = {
+  getConfig(this: IAstroboyApplication<any>, key?: string) {
     if (!key) {
       return this.config;
     } else {
       let keys = key.split('.');
       let result = this.config;
       let item;
-      while (item = keys.shift()) {
+      while ((item = keys.shift())) {
         result = result[item];
       }
       return result;
     }
   },
 
-  /**
-   * 获取 Service 类
-   * @param {String} packageName 包名
-   * @param {String} serviceName 服务名
-   */
-  getServiceClass(packageName, serviceName) {
+  getServiceClass(this: IInnerApplication, packageName, serviceName) {
     assert(packageName, 'Package name cannot be empty!');
     assert(serviceName, 'Service name cannot be empty!');
     if (this.services && this.services[packageName] && this.services[packageName][serviceName]) {
@@ -38,7 +31,7 @@ module.exports = {
     }
   },
 
-  getLib(packageName, libName) {
+  getLib(this: IInnerApplication, packageName, libName) {
     assert(packageName, 'Package name cannot be empty!');
     assert(libName, 'Lib name cannot be empty!');
     if (this.libs && this.libs[packageName] && this.libs[packageName][libName]) {
@@ -46,5 +39,7 @@ module.exports = {
     } else {
       throw new Error(`Lib ${packageName} ${libName} is not found.`);
     }
-  }
+  },
 };
+
+export = appExtends;

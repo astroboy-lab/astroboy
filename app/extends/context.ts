@@ -1,24 +1,21 @@
 /**
  * 扩展 Koa Context 对象
  */
-const assert = require('assert');
+import assert = require('assert');
+import { IAstroboyApplication } from '../../definitions/extends/app';
+import { IAstroboyContext, IAstroboyCtxExtends } from '../../definitions/extends/context';
+import { IInnerApplication } from '../../definitions/core';
 
-module.exports = {
-
-  getConfig(...args) {
+const ctxExtends: IAstroboyCtxExtends<any, IAstroboyApplication> = {
+  getConfig(this: IAstroboyContext<any, any>, ...args: any[]) {
     return this.app.getConfig(...args);
   },
 
-  getServiceClass(...args) {
+  getServiceClass(this: IAstroboyContext<any, IAstroboyApplication>, ...args) {
     return this.app.getServiceClass(...args);
   },
 
-  /**
-   * 获取一个 Service 类实例
-   * @param {String} packageName 包名
-   * @param {String} serviceName 服务名
-   */
-  getService(packageName, serviceName) {
+  getService(this: IAstroboyContext<any, IInnerApplication>, packageName, serviceName) {
     assert(packageName, 'Package name cannot be empty!');
     assert(serviceName, 'Service name cannot be empty!');
     if (this.app.services && this.app.services[packageName] && this.app.services[packageName][serviceName]) {
@@ -29,16 +26,10 @@ module.exports = {
     }
   },
 
-  /**
-   * 调用服务
-   * @param {String} service 服务名
-   * @param {String} method 方法名
-   * @param {Object} args 参数
-   */
-  async callService(service, method, ...args) {
+  async callService(this: IAstroboyContext<any, IInnerApplication>, service: string, method: string, ...args: any[]) {
     const keys = service.split('/');
-    let packageName,
-      serviceName;
+    let packageName: string = undefined!;
+    let serviceName: string = undefined!;
     if (keys.length === 2) {
       packageName = keys[0];
       serviceName = keys[1];
@@ -46,9 +37,7 @@ module.exports = {
       packageName = this.app.ROOT_NAME;
       serviceName = keys[0];
     }
-    if (this.app.services &&
-      this.app.services[packageName] &&
-      this.app.services[packageName][serviceName]) {
+    if (this.app.services && this.app.services[packageName] && this.app.services[packageName][serviceName]) {
       const ServiceClass = this.app.services[packageName][serviceName];
       const service = new ServiceClass(this);
       if (service[method]) {
@@ -61,17 +50,8 @@ module.exports = {
     }
   },
 
-  /**
-   * 调用服务(定义支持)
-   * @param {String} pkgName 包名
-   * @param {String} serviceName 服务名
-   * @param {String} methodName 方法名
-   * @param {Object} args 参数
-   */
-  async invokeServiceMethod(pkgName, serviceName, methodName, ...args) {
-    if (this.app.services &&
-      this.app.services[pkgName] &&
-      this.app.services[pkgName][serviceName]) {
+  async invokeServiceMethod(this: IAstroboyContext<any, IInnerApplication>, pkgName, serviceName, methodName, ...args) {
+    if (this.app.services && this.app.services[pkgName] && this.app.services[pkgName][serviceName]) {
       const ServiceClass = this.app.services[pkgName][serviceName];
       const service = new ServiceClass(this);
       if (service[methodName]) {
@@ -84,8 +64,9 @@ module.exports = {
     }
   },
 
-  getLib(...args) {
+  getLib(this: IAstroboyContext<any, IAstroboyApplication>, ...args) {
     return this.app.getLib(...args);
-  }
-
+  },
 };
+
+export = ctxExtends;

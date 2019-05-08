@@ -16,8 +16,8 @@ export interface IInnerApplication<F extends PureObject = PureObject> extends IB
   ROOT_NAME: string;
   NODE_ENV: string;
   libs: PureObject<any>;
-  controllers: PureObject<IConstructor<any>>;
-  services: PureObject<IConstructor<any>>;
+  controllers: PureObject<PureObject<IConstructor<any>>>;
+  services: PureObject<PureObject<IConstructor<any>>>;
   middlewares: PureObject<MiddlewareFactory>;
   middlewareQueue: PriorityDefine[];
   middlewareConfig: PureObject<any>;
