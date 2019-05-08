@@ -1,4 +1,5 @@
 import Koa from 'koa';
+import { IConstructor } from './base';
 
 export interface IBaseApplication<F extends PureObject = PureObject> extends Koa {
   config: F;
@@ -14,9 +15,18 @@ export interface IInnerApplication<F extends PureObject = PureObject> extends IB
   ROOT_PATH: string;
   ROOT_NAME: string;
   NODE_ENV: string;
-  middlewares: PureObject<(options: any, app: any) => (ctx: any, next: () => Promise<any>) => Promise<any>>;
+  libs: PureObject<any>;
+  controllers: PureObject<IConstructor<any>>;
+  services: PureObject<IConstructor<any>>;
+  middlewares: PureObject<MiddlewareFactory>;
   middlewareQueue: PriorityDefine[];
+  middlewareConfig: PureObject<any>;
+  routers: any[];
+  versionMap: PureObject<any>;
+  pkg: PureObject<any>;
 }
+
+export type MiddlewareFactory = (options: any, app: any) => (ctx: any, next: () => Promise<any>) => Promise<any>;
 
 export type NormalizedMiddleware<T = any> = (ctx: T, next: () => Promise<any>) => Promise<any>;
 
@@ -51,6 +61,7 @@ export interface IPluginEntry {
 export type PriorityDefine = PathIgnoreOptions & {
   priority: number;
   name: string;
+  enable?: boolean;
 };
 
 export type ValidOperator<T = any> = string | RegExp | ((context: T) => boolean);

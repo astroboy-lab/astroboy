@@ -1,12 +1,14 @@
-'use strict';
-const fs = require('fs-extra');
-const glob = require('fast-glob');
-const methods = require('methods');
-const Loader = require('../core/Loader');
+import fs = require('fs-extra');
+import glob = require('fast-glob');
+// @ts-ignore typings missing
+import methods = require('methods');
+import { Loader } from '../core/Loader';
+import { IInnerApplication } from '../definitions/core';
+import { IOptions } from '../definitions/config';
 
-class AstroboyRouterLoader extends Loader {
+class AstroboyRouterLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
   load() {
-    let routers = [];
+    let routers: any[] = [];
     const indexFile = `${this.app.ROOT_PATH}/app/routers/index.js`;
     if (fs.existsSync(indexFile)) {
       routers = require(indexFile);
@@ -15,12 +17,12 @@ class AstroboyRouterLoader extends Loader {
         dot: true,
       });
       entries.forEach(entry => {
-        routers = routers.concat(require(entry));
+        routers = routers.concat(require(entry as string));
       });
     }
 
     const controllers = this.app.controllers;
-    let newRouters = [];
+    let newRouters: any[] = [];
     routers.forEach(router => {
       // 如果第一个参数不是 routerName，则添加空参数名
       if (methods.indexOf(router[0].toLowerCase()) > -1) {
@@ -39,4 +41,4 @@ class AstroboyRouterLoader extends Loader {
   }
 }
 
-module.exports = AstroboyRouterLoader;
+export = AstroboyRouterLoader;
