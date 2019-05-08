@@ -5,12 +5,12 @@
     "module": "commonjs",
     "lib": ["es2015", "es2016", "es2017"],
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "strict": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "importHelpers": false,
     "outDir": "./dist"
   },
-  "include": ["app", "config", "core", "loader", "plugins"]
+  "include": ["app", "config", "core", "loader", "plugins", "index.ts"]
 }
