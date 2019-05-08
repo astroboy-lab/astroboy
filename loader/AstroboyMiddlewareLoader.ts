@@ -1,9 +1,9 @@
-import path = require('path');
+import * as path from 'path';
 import lodash from 'lodash';
 import { Loader } from '../core/Loader';
 import { IInnerApplication, PureObject, MiddlewareFactory, PriorityDefine } from '../definitions/core';
 import { IOptions } from '../definitions/config';
-import * as Util from '../core/lib/util';
+import { outputJsonSync } from '../core/lib/util';
 
 class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
   load() {
@@ -47,7 +47,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
         return a.priority - b.priority;
       });
     this.app.middlewareQueue = middlewareQueue;
-    Util.outputJsonSync(`${this.app.ROOT_PATH}/run/middlewares.json`, middlewareQueue);
+    outputJsonSync(`${this.app.ROOT_PATH}/run/middlewares.json`, middlewareQueue);
   }
 }
 

@@ -2,7 +2,7 @@
  * Strict-Transport-Security
  * https://developer.mozilla.org/zh-CN/docs/Security/HTTP_Strict_Transport_Security
  */
-import assert = require('assert');
+import * as assert from 'assert';
 import { MiddlewareFactory } from '../../../../definitions';
 import { IHstsOptions } from '../../../../definitions/plugins/astroboy-security/middleware';
 

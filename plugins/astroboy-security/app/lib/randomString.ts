@@ -1,4 +1,4 @@
-import assert = require('assert');
+import * as assert from 'assert';
 
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const length = Buffer.byteLength(chars);
@@ -7,7 +7,7 @@ const length = Buffer.byteLength(chars);
  * 生成一个长度为 len 的字符串
  * @param {Number} len 字符串长度
  */
-function randomString(len: number = 10): string {
+export function randomString(len: number = 10): string {
   assert(typeof len === 'number' && len >= 0, 'the length of the random string must be a number!');
 
   var str = '';
@@ -16,5 +16,3 @@ function randomString(len: number = 10): string {
   }
   return str;
 }
-
-export = randomString;

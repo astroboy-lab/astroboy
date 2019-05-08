@@ -1,5 +1,5 @@
-import glob = require('fast-glob');
-import path = require('path');
+import * as glob from 'fast-glob';
+import * as path from 'path';
 import { EntryItem } from 'fast-glob/out/types/entries';
 import { PureObject, IDir, ILoaderOptions, IPluginEntry, IBaseApplication } from '../definitions/core';
 

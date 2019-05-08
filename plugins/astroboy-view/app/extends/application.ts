@@ -1,6 +1,6 @@
 import { IAstroboyViewPluginAppExtends } from '../../../../definitions/plugins/astroboy-view/app';
 
-import ViewManager = require('../lib/ViewManager');
+import { ViewManager } from '../lib/ViewManager';
 
 const VIEW = Symbol('Application#view');
 

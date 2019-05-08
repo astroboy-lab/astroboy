@@ -1,6 +1,6 @@
 import { IAstroboyBodyPluginMiddlewareExtends } from '../../../definitions/plugins/astroboy-body/middleware';
 
-import path = require('path');
+import * as path from 'path';
 
 const config: IAstroboyBodyPluginMiddlewareExtends = {
   'astroboy-body': {

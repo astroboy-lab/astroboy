@@ -1,7 +1,7 @@
-import crypto = require('crypto');
-import randomString = require('./randomString');
+import * as crypto from 'crypto';
+import { randomString } from './randomString';
 
-class Token {
+export class Token {
   private options: any;
   private saltLength: number;
   private secretLength: number;
@@ -52,5 +52,3 @@ class Token {
     return expected === token;
   }
 }
-
-export = Token;

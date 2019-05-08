@@ -1,4 +1,4 @@
-import glob = require('fast-glob');
+import * as glob from 'fast-glob';
 import { Loader } from '../core/Loader';
 import { IInnerApplication, PureObject } from '../definitions/core';
 import { IOptions } from '../definitions/config';

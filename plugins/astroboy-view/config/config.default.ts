@@ -1,6 +1,6 @@
 import { IAstroboyPluginConfigMixins } from '../../../definitions/plugins';
 
-import path = require('path');
+import * as path from 'path';
 
 const config: (app: any) => IAstroboyPluginConfigMixins = app => {
   return {

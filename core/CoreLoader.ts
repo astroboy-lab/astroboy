@@ -1,8 +1,8 @@
 // @ts-ignore no types matched
-import pathMatching = require('path-matching');
-import path = require('path');
+import * as pathMatching from 'path-matching';
+import * as path from 'path';
 import lodash from 'lodash';
-import * as Util from './lib/util';
+import { outputJsonSync } from './lib/util';
 import { Loader } from './Loader';
 import {
   IInnerApplication,
@@ -81,7 +81,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
       }
     }
     this.coreDirs = coreDirs.reverse();
-    Util.outputJsonSync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
+    outputJsonSync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
   }
 
   /** 获取插件配置 */
@@ -96,7 +96,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
       });
     });
     this.pluginConfig = pluginConfig;
-    Util.outputJsonSync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
+    outputJsonSync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
   }
 
   /** 获取遍历目录 */
@@ -108,7 +108,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     });
 
     this.dirs = dirs;
-    Util.outputJsonSync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
+    outputJsonSync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
   }
 
   /** 获取需要遍历的插件目录 */

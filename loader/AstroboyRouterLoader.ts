@@ -1,7 +1,7 @@
-import fs = require('fs-extra');
-import glob = require('fast-glob');
+import * as fs from 'fs-extra';
+import * as glob from 'fast-glob';
 // @ts-ignore typings missing
-import methods = require('methods');
+import * as methods from 'methods';
 import { Loader } from '../core/Loader';
 import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';

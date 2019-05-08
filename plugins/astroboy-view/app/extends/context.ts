@@ -1,6 +1,6 @@
 import { IAstroboyViewPluginCtxExtends } from '../../../../definitions/plugins/astroboy-view/context';
 
-import ContextView = require('../lib/ContextView');
+import { ContextView } from '../lib/ContextView';
 
 const VIEW = Symbol('Context#view');
 

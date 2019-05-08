@@ -1,4 +1,4 @@
-import assert = require('assert');
+import * as assert from 'assert';
 import lodash from 'lodash';
 import { Loader } from '../core/Loader';
 import { IInnerApplication } from '../definitions/core';

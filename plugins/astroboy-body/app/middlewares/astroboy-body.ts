@@ -1,9 +1,9 @@
 /**
  * 请求体解析中间件
  */
-import koaBody = require('koa-body');
+import * as koaBody from 'koa-body';
 // @ts-ignore typings missed
-import bodyParser = require('koa-bodyparser');
+import * as bodyParser from 'koa-bodyparser';
 
 import { MiddlewareFactory } from '../../../../definitions';
 

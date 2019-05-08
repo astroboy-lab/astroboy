@@ -1,7 +1,7 @@
-import EventEmitter = require('events');
-import path = require('path');
+import * as EventEmitter from 'events';
+import * as path from 'path';
+import * as Koa from 'koa';
 import chalk from 'chalk';
-import Koa = require('koa');
 import { CoreLoader } from './CoreLoader';
 import { BaseClass as AstroboyClassBase } from './base/BaseClass';
 import { PureObject, IAstroboyOptions, IInnerApplication } from '../definitions/core';

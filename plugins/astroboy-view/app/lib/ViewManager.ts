@@ -1,8 +1,8 @@
-import assert = require('assert');
-import path = require('path');
-import fs = require('fs-extra');
+import * as assert from 'assert';
+import * as path from 'path';
+import * as fs from 'fs-extra';
 
-class ViewManager extends Map {
+export class ViewManager extends Map {
   private config: any;
   private extMap: Map<any, any>;
   private fileMap: Map<any, any>;
@@ -77,5 +77,3 @@ class ViewManager extends Map {
     }
   }
 }
-
-export = ViewManager;

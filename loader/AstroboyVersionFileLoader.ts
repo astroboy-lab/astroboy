@@ -1,5 +1,5 @@
-import glob = require('fast-glob');
-import path = require('path');
+import * as glob from 'fast-glob';
+import * as path from 'path';
 import { Loader } from '../core/Loader';
 import { IInnerApplication, PureObject } from '../definitions/core';
 import { IOptions } from '../definitions/config';

@@ -1,11 +1,11 @@
-import path = require('path');
-import assert = require('assert');
+import * as path from 'path';
+import * as assert from 'assert';
 
 const RENDER = Symbol.for('contextView#render');
 const RENDER_STRING = Symbol.for('contextView#renderString');
 const GET_VIEW_ENGINE = Symbol.for('contextView#getViewEngine');
 
-class ContextView {
+export class ContextView {
   private app: any;
   private viewManager: any;
   private config: any;
@@ -55,5 +55,3 @@ class ContextView {
     return engine;
   }
 }
-
-export = ContextView;

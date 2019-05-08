@@ -3,8 +3,8 @@
  */
 import lodash = require('lodash');
 // @ts-ignore typings missed
-import KoaRouter = require('koa-router');
-import compose = require('koa-compose');
+import * as KoaRouter from 'koa-router';
+import * as compose from 'koa-compose';
 
 import { MiddlewareFactory, IConstructor } from '../../../../definitions';
 import { IInnerApplication } from '../../../../definitions/core';

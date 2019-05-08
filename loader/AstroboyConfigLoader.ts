@@ -2,7 +2,7 @@ import lodash from 'lodash';
 import { Loader } from '../core/Loader';
 import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
-import * as Util from '../core/lib/util';
+import { outputJsonSync } from '../core/lib/util';
 
 class AstroboyConfigLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
   load() {
@@ -22,7 +22,7 @@ class AstroboyConfigLoader extends Loader<Partial<IOptions>, IInnerApplication<P
     });
 
     this.app.config = config;
-    Util.outputJsonSync(`${this.app.ROOT_PATH}/run/config.json`, config);
+    outputJsonSync(`${this.app.ROOT_PATH}/run/config.json`, config);
   }
 }
 

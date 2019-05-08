@@ -1,7 +1,7 @@
 /**
  * 扩展 Koa Context 对象
  */
-import assert = require('assert');
+import * as assert from 'assert';
 import { IPureAstroboyApplication } from '../../definitions/extends/app';
 import { IPureAstroboyContext, IAstroboyCtxExtends } from '../../definitions/extends/context';
 import { IInnerApplication } from '../../definitions/core';

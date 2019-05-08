@@ -1,7 +1,7 @@
 /**
  * CSRF
  */
-import Token = require('../lib/token');
+import { Token } from '../lib/token';
 import { MiddlewareFactory } from '../../../../definitions';
 import { ICsrfOptions } from '../../../../definitions/plugins/astroboy-security/middleware';
 

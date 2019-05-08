@@ -1,5 +1,5 @@
 import lodash from 'lodash';
-import xss = require('xss');
+import * as xss from 'xss';
 import { MiddlewareFactory } from '../../../../definitions';
 
 function deepXss(value: any, deep = true) {

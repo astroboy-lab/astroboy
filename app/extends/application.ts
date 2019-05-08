@@ -1,7 +1,7 @@
 /**
  * 扩展 Koa Application 对象
  */
-import assert = require('assert');
+import * as assert from 'assert';
 
 import { IAstroboyAppExtends, IPureAstroboyApplication } from '../../definitions/extends/app';
 import { IInnerApplication } from '../../definitions/core';

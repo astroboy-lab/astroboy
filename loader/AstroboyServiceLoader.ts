@@ -1,4 +1,4 @@
-import fs = require('fs-extra');
+import * as fs from 'fs-extra';
 import { Loader } from '../core/Loader';
 import { IInnerApplication, PureObject } from '../definitions/core';
 import { IOptions } from '../definitions/config';

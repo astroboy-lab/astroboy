@@ -3,7 +3,7 @@
  * https://en.wikipedia.org/wiki/P3P
  * @param {String/Object} options
  */
-import assert = require('assert');
+import * as assert from 'assert';
 import { MiddlewareFactory } from '../../../../definitions';
 
 const factory: MiddlewareFactory<{ value?: string } | string, any> = function(options, app) {

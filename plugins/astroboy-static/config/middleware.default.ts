@@ -1,6 +1,6 @@
 import { IAstroboyStaticPluginMiddlewareExtends } from '../../../definitions/plugins/astroboy-static/middleware';
 
-import path = require('path');
+import * as path from 'path';
 
 const config: IAstroboyStaticPluginMiddlewareExtends = {
   'astroboy-static': {
