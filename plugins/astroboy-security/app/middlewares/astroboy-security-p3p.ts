@@ -3,12 +3,13 @@
  * https://en.wikipedia.org/wiki/P3P
  * @param {String/Object} options
  */
-const assert = require('assert');
+import assert = require('assert');
+import { MiddlewareFactory } from '../../../../definitions';
 
-module.exports = function(options, app) {
+const factory: MiddlewareFactory<{ value?: string } | string, any> = function(options, app) {
   if (typeof options === 'string') {
     options = {
-      value: options
+      value: options,
     };
   }
   options = options || {};
@@ -16,7 +17,9 @@ module.exports = function(options, app) {
   assert(typeof options.value === 'string', 'options.value should be a string');
 
   return async function p3p(ctx, next) {
-    ctx.set('P3P', options.value);
+    ctx.set('P3P', (<any>options).value);
     await next();
   };
 };
+
+export = factory;

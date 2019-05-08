@@ -2,20 +2,20 @@
  * 扩展 Koa Context 对象
  */
 import assert = require('assert');
-import { IAstroboyApplication } from '../../definitions/extends/app';
-import { IAstroboyContext, IAstroboyCtxExtends } from '../../definitions/extends/context';
+import { IPureAstroboyApplication } from '../../definitions/extends/app';
+import { IPureAstroboyContext, IAstroboyCtxExtends } from '../../definitions/extends/context';
 import { IInnerApplication } from '../../definitions/core';
 
-const ctxExtends: IAstroboyCtxExtends<any, IAstroboyApplication> = {
-  getConfig(this: IAstroboyContext<any, any>, ...args: any[]) {
+const ctxExtends: IAstroboyCtxExtends<any, IPureAstroboyApplication> = {
+  getConfig(this: IPureAstroboyContext<any, any>, ...args: any[]) {
     return this.app.getConfig(...args);
   },
 
-  getServiceClass(this: IAstroboyContext<any, IAstroboyApplication>, ...args) {
+  getServiceClass(this: IPureAstroboyContext<any, IPureAstroboyApplication>, ...args) {
     return this.app.getServiceClass(...args);
   },
 
-  getService(this: IAstroboyContext<any, IInnerApplication>, packageName, serviceName) {
+  getService(this: IPureAstroboyContext<any, IInnerApplication>, packageName, serviceName) {
     assert(packageName, 'Package name cannot be empty!');
     assert(serviceName, 'Service name cannot be empty!');
     if (this.app.services && this.app.services[packageName] && this.app.services[packageName][serviceName]) {
@@ -26,7 +26,12 @@ const ctxExtends: IAstroboyCtxExtends<any, IAstroboyApplication> = {
     }
   },
 
-  async callService(this: IAstroboyContext<any, IInnerApplication>, service: string, method: string, ...args: any[]) {
+  async callService(
+    this: IPureAstroboyContext<any, IInnerApplication>,
+    service: string,
+    method: string,
+    ...args: any[]
+  ) {
     const keys = service.split('/');
     let packageName: string = undefined!;
     let serviceName: string = undefined!;
@@ -50,7 +55,13 @@ const ctxExtends: IAstroboyCtxExtends<any, IAstroboyApplication> = {
     }
   },
 
-  async invokeServiceMethod(this: IAstroboyContext<any, IInnerApplication>, pkgName, serviceName, methodName, ...args) {
+  async invokeServiceMethod(
+    this: IPureAstroboyContext<any, IInnerApplication>,
+    pkgName,
+    serviceName,
+    methodName,
+    ...args
+  ) {
     if (this.app.services && this.app.services[pkgName] && this.app.services[pkgName][serviceName]) {
       const ServiceClass = this.app.services[pkgName][serviceName];
       const service = new ServiceClass(this);
@@ -64,7 +75,7 @@ const ctxExtends: IAstroboyCtxExtends<any, IAstroboyApplication> = {
     }
   },
 
-  getLib(this: IAstroboyContext<any, IAstroboyApplication>, ...args) {
+  getLib(this: IPureAstroboyContext<any, IPureAstroboyApplication>, ...args) {
     return this.app.getLib(...args);
   },
 };

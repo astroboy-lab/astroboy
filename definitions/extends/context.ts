@@ -1,10 +1,8 @@
 import { PureObject, IBaseApplication, IBaseContext } from '../core';
 import { IAstroboyAppExtends } from './app';
 
-export interface IAstroboyCtxExtends<
-  CONF extends PureObject = PureObject,
-  APP extends IBaseApplication = IBaseApplication<CONF>
-> extends IAstroboyAppExtends<CONF> {
+export interface IAstroboyCtxExtends<CONF extends PureObject = PureObject, APP extends any = IBaseApplication<CONF>>
+  extends IAstroboyAppExtends<CONF> {
   /**
    * 获取一个 Service 类实例
    * @param {String} packageName 包名
@@ -31,6 +29,7 @@ export interface IAstroboyCtxExtends<
   invokeServiceMethod(pkgName: string, serviceName: string, methodName: string, ...args: any[]): Promise<any>;
 }
 
-export interface IAstroboyContext<CONF extends PureObject = {}, APP extends IBaseApplication = IBaseApplication<CONF>>
-  extends IAstroboyCtxExtends<CONF & PureObject, APP & IBaseApplication<CONF>>,
-    IBaseContext<CONF & PureObject, APP & IBaseApplication<CONF>> {}
+export interface IPureAstroboyContext<
+  CONF extends PureObject = {},
+  APP extends IBaseApplication = IBaseApplication<CONF>
+> extends IAstroboyCtxExtends<CONF, APP>, IBaseContext<CONF, APP> {}

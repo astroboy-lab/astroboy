@@ -1,4 +1,5 @@
 import { PureObject, IBaseContext, IBaseApplication } from '../../definitions/core';
+import { IAstroboyApplication, IAstroboyContext } from '../../definitions';
 
 /**
  * ctx Context 请求上下文对象
@@ -6,9 +7,9 @@ import { PureObject, IBaseContext, IBaseApplication } from '../../definitions/co
  * config 应用配置对象
  */
 export class BaseClass<
-  CTX extends PureObject = IBaseContext,
-  APP extends PureObject = IBaseApplication,
-  CONF extends PureObject = PureObject
+  CONF extends PureObject = PureObject,
+  APP extends any = IAstroboyApplication<CONF>,
+  CTX extends any = IAstroboyContext<CONF, APP>
 > {
   protected app: APP;
   protected config: CONF;

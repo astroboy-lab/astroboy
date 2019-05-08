@@ -26,9 +26,15 @@ export interface IInnerApplication<F extends PureObject = PureObject> extends IB
   pkg: PureObject<any>;
 }
 
-export type MiddlewareFactory = (options: any, app: any) => (ctx: any, next: () => Promise<any>) => Promise<any>;
+export type MiddlewareFactory<OPTS extends any = any, APP extends IBaseApplication = IBaseApplication> = (
+  options: OPTS,
+  app: APP
+) => (ctx: any, next: () => Promise<any>) => Promise<any>;
 
-export type NormalizedMiddleware<T = any> = (ctx: T, next: () => Promise<any>) => Promise<any>;
+export type NormalizedMiddleware<T extends IBaseContext = IBaseContext> = (
+  ctx: T,
+  next: () => Promise<any>
+) => Promise<any>;
 
 export interface IDir {
   baseDir: string;
@@ -73,18 +79,20 @@ export interface IDefaultLoaders {
   loaderConfigPattern: string;
 }
 
-export interface IPathMatchOptions extends ITrueOptions {
+export interface IPathMatchOptions<OPT = any> extends ITrueOptions<OPT> {
   match: ValidOperator | ValidOperators;
 }
 
-export interface IPathIgnoreOptions extends ITrueOptions {
+export interface IPathIgnoreOptions<OPT = any> extends ITrueOptions<OPT> {
   ignore: ValidOperator | ValidOperators;
 }
 
-export interface ITrueOptions {
-  options?: any;
+export interface ITrueOptions<OPT = any> {
+  options: OPT;
 }
 
-export type PathIgnoreOptions = IPathMatchOptions | IPathIgnoreOptions;
+export type PathIgnoreOptions<OPT = any> = Partial<
+  IPathMatchOptions<OPT> | IPathIgnoreOptions<OPT> | ITrueOptions<OPT>
+>;
 
 export type PureObject<T = any> = { [prop: string]: T };

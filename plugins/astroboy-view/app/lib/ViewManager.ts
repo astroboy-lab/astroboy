@@ -1,13 +1,16 @@
-const assert = require('assert');
-const path = require('path');
-const fs = require('fs-extra');
+import assert = require('assert');
+import path = require('path');
+import fs = require('fs-extra');
 
 class ViewManager extends Map {
+  private config: any;
+  private extMap: Map<any, any>;
+  private fileMap: Map<any, any>;
 
   /**
    * @param {Application} app - application instance
    */
-  constructor(app) {
+  constructor(app: any) {
     super();
     this.config = app.config.view;
     if (typeof this.config.root === 'string') {
@@ -35,7 +38,7 @@ class ViewManager extends Map {
    * @param {String} name - the name of view engine
    * @param {Object} viewEngine - the class of view engine
    */
-  use(name, viewEngine) {
+  public use(name: string, viewEngine: any) {
     assert(name, 'name is required');
     assert(!this.has(name), `${name} has been registered`);
 
@@ -46,7 +49,7 @@ class ViewManager extends Map {
     this.set(name, viewEngine);
   }
 
-  async resolve(name) {
+  async resolve(name: string) {
     const config = this.config;
 
     // check cache
@@ -63,7 +66,7 @@ class ViewManager extends Map {
     return filename;
   }
 
-  resolvePath(names, root) {
+  private resolvePath(names: string[], root: string) {
     for (const name of names) {
       for (const dir of root) {
         const filename = path.resolve(dir, name);
@@ -73,7 +76,6 @@ class ViewManager extends Map {
       }
     }
   }
-
 }
 
-module.exports = ViewManager;
+export = ViewManager;

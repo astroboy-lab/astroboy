@@ -18,6 +18,6 @@ export interface IAstroboyAppExtends<CONF extends PureObject = PureObject> {
   getLib(packageName: string, libName: string): any;
 }
 
-export interface IAstroboyApplication<CONF extends PureObject = {}>
-  extends IAstroboyAppExtends<CONF & PureObject>,
-    IBaseApplication<CONF & PureObject> {}
+export interface IPureAstroboyApplication<CONF extends PureObject = {}>
+  extends IAstroboyAppExtends<CONF>,
+    IBaseApplication<CONF> {}

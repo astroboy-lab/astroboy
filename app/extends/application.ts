@@ -3,11 +3,11 @@
  */
 import assert = require('assert');
 
-import { IAstroboyAppExtends, IAstroboyApplication } from '../../definitions/extends/app';
+import { IAstroboyAppExtends, IPureAstroboyApplication } from '../../definitions/extends/app';
 import { IInnerApplication } from '../../definitions/core';
 
 const appExtends: IAstroboyAppExtends = {
-  getConfig(this: IAstroboyApplication<any>, key?: string) {
+  getConfig(this: IPureAstroboyApplication<any>, key?: string) {
     if (!key) {
       return this.config;
     } else {

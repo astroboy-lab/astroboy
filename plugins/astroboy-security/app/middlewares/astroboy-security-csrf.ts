@@ -1,30 +1,36 @@
 /**
  * CSRF
  */
-const Token = require('../lib/token');
+import Token = require('../lib/token');
+import { MiddlewareFactory } from '../../../../definitions';
+import { ICsrfOptions } from '../../../../definitions/plugins/astroboy-security/middleware';
 
 class CsrfError extends Error {
-  constructor(code, msg) {
+  public errorContent: any;
+  public errorType: any;
+  constructor(code: number, msg: string) {
     super(`code: ${code}, msg: ${msg}`);
     this.errorContent = {
       code,
-      msg
+      msg,
     };
     this.errorType = 'CsrfError';
   }
 }
 
-module.exports = function (options = {}, app) {
+const factory: MiddlewareFactory<Partial<ICsrfOptions>, any> = function(options = {}, app) {
   let token = new Token({
     saltLength: options.saltLength,
-    secretLength: options.secretLength
+    secretLength: options.secretLength,
   });
 
   return async function csrf(ctx, next) {
-    if (options.excluded.indexOf(ctx.method) === -1 &&
-      options.env.indexOf(process.env.NODE_ENV) > -1) {
+    if (
+      (options.excluded || []).indexOf(ctx.method) === -1 &&
+      (options.env || []).indexOf(process.env.NODE_ENV!) > -1
+    ) {
       const csrfSecret = ctx.cookies.get(options.csrfSecretName);
-      const csrfToken = ctx.header[options.csrfTokenName];
+      const csrfToken = ctx.header[options.csrfTokenName!];
 
       // token 或 secret 不存在
       if (!csrfSecret || !csrfToken) {
@@ -44,13 +50,14 @@ module.exports = function (options = {}, app) {
       const newToken = token.create(secret);
 
       ctx.cookies.set(options.csrfSecretName, secret, {
-        maxAge: options.maxAge
+        maxAge: options.maxAge,
       });
       ctx.cookies.set(options.csrfTokenName, newToken, {
         maxAge: options.maxAge,
-        httpOnly: false
+        httpOnly: false,
       });
     }
-
   };
 };
+
+export = factory;

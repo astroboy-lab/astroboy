@@ -1,23 +1,26 @@
-const path = require('path');
-const assert = require('assert');
+import path = require('path');
+import assert = require('assert');
+
 const RENDER = Symbol.for('contextView#render');
 const RENDER_STRING = Symbol.for('contextView#renderString');
 const GET_VIEW_ENGINE = Symbol.for('contextView#getViewEngine');
 
 class ContextView {
+  private app: any;
+  private viewManager: any;
+  private config: any;
 
-  constructor(ctx) {
-    this.ctx = ctx;
+  constructor(private ctx: any) {
     this.app = this.ctx.app;
     this.viewManager = this.app.view;
     this.config = this.app.view.config;
   }
 
-  render(...args) {
-    return this[RENDER](...args);
+  public render(...args: any[]) {
+    return (this[RENDER] as any)(...args);
   }
 
-  async [RENDER](name, state = {}, options = {}) {
+  private async [RENDER](name: string, state: any = {}, options: any = {}) {
     const filename = await this.viewManager.resolve(name);
 
     // get the name of view engine,
@@ -40,7 +43,7 @@ class ContextView {
     return await view.render(filename, state, options);
   }
 
-  [GET_VIEW_ENGINE](name) {
+  private [GET_VIEW_ENGINE](name: string) {
     const ViewEngine = this.viewManager.get(name);
     assert(ViewEngine, `Can't find ViewEngine "${name}"`);
 
@@ -51,7 +54,6 @@ class ContextView {
     // if (engine.renderString) engine.renderString = this.app.toAsyncFunction(engine.renderString);
     return engine;
   }
-
 }
 
-module.exports = ContextView;
+export = ContextView;

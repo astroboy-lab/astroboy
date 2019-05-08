@@ -1,12 +1,15 @@
-const crypto = require('crypto');
-const randomString = require('./randomString');
+import crypto = require('crypto');
+import randomString = require('./randomString');
 
 class Token {
+  private options: any;
+  private saltLength: number;
+  private secretLength: number;
 
   get defaultOptions() {
     return {
       saltLength: 10,
-      secretLength: 18
+      secretLength: 18,
     };
   }
 
@@ -20,24 +23,22 @@ class Token {
     return randomString(this.secretLength);
   }
 
-  create(secret) {
+  create(secret: any) {
     const salt = randomString(this.saltLength);
     return this.tokenize(secret, salt);
   }
 
-  tokenize(secret, salt) {
+  tokenize(secret: any, salt: any) {
     const hash = crypto
       .createHash('sha1')
-      .update(secret, 'utf-8')
+      .update(secret, 'utf8')
       .digest('base64');
 
     return salt + '-' + hash;
   }
 
-  verify(secret, token) {
-    if (!secret || !token ||
-      typeof secret !== 'string' ||
-      typeof token !== 'string') {
+  verify(secret: any, token: any) {
+    if (!secret || !token || typeof secret !== 'string' || typeof token !== 'string') {
       return false;
     }
 
@@ -50,7 +51,6 @@ class Token {
 
     return expected === token;
   }
-
 }
 
-module.exports = Token;
+export = Token;

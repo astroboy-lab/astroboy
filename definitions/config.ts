@@ -1,3 +1,5 @@
+import { PathIgnoreOptions } from './core';
+
 export interface IPriority {
   priority: number;
 }
@@ -40,3 +42,12 @@ export interface IBasePluginConfig {
   'astroboy-static': IPluginOptions;
   'astroboy-view': IPluginOptions;
 }
+
+export type IMiddlewareOptions<OPT = any> = PathIgnoreOptions<OPT> & {
+  enable?: boolean;
+  priority?: number;
+};
+
+export interface IBaseMiddlewareConfig {}
+
+export interface IBaseProjectConfig {}
