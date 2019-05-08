@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import Koa = require('koa');
 import { CoreLoader } from './CoreLoader';
 import { BaseClass as AstroboyClassBase } from './base/BaseClass';
-import { IBaseApplication, PureObject, IAstroboyOptions, IBaseContext } from './contract';
+import { IBaseApplication, PureObject, IAstroboyOptions, IBaseContext } from '../definitions/core';
 
 export class Astroboy<
   CTX extends PureObject = IBaseContext,

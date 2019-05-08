@@ -1,4 +1,4 @@
-import { PureObject, IBaseContext, IBaseApplication } from '../contract';
+import { PureObject, IBaseContext, IBaseApplication } from '../../definitions/core';
 
 /**
  * ctx Context 请求上下文对象

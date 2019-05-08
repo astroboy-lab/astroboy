@@ -12,7 +12,7 @@ import {
   PriorityDefine as IPriority,
   IDefaultLoaders,
   NormalizedMiddleware,
-} from './contract';
+} from '../definitions/core';
 
 export interface ICoreLoaderOptions<A extends IInnerApplication, F extends PureObject> extends ILoaderOptions<A, F> {
   astroboy: any;

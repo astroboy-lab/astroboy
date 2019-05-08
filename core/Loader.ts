@@ -1,7 +1,7 @@
 import glob = require('fast-glob');
 import path = require('path');
 import { EntryItem } from 'fast-glob/out/types/entries';
-import { IInnerApplication, PureObject, IDir, ILoaderOptions, IPluginEntry } from './contract';
+import { IInnerApplication, PureObject, IDir, ILoaderOptions, IPluginEntry } from '../definitions/core';
 
 const TYPING_FILE_EXTS = '.d.ts';
 const APP_EXTENSIONS = ['js', 'ts'];
