@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "Astroboy（阿童木）is a Nodejs SFB(Separation of Front and Back ends) framework, built on koa2.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "release": "sh release.sh",
     "docs:deploy": "sh deploy.sh",

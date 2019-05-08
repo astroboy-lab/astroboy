@@ -63,3 +63,5 @@ static/
 .vscode/
 _book/
 docs/.vuepress/dist/**/*
+
+dist
