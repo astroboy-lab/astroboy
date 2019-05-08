@@ -1,9 +1,5 @@
 import Koa from 'koa';
 
-export interface IConstructor<T> {
-  new (...args: any[]): T;
-}
-
 export interface IBaseApplication extends Koa {}
 
 export interface IBaseContext extends Koa.Context {

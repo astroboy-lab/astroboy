@@ -1,10 +1,12 @@
+import { IBaseLoaderConfig } from '../definitions/config';
+
 /**
  * 配置加载器加载顺序
  */
 const SUPPORT_EXT = '(js|ts)';
 const NODE_ENV = process.env.NODE_ENV;
 
-module.exports = {
+const defaultLoaderConfig: IBaseLoaderConfig = {
   AstroboyPkgLoader: {
     priority: 10,
   },
@@ -21,7 +23,7 @@ module.exports = {
     priority: 20,
     options: {
       // 注意：为了控制配置合并顺序，不要这么写 `/config/config.(default|${NODE_ENV}).js`
-      pattern: ['/config/config.default.js', `/config/config.${NODE_ENV}.js`],
+      pattern: [`/config/config.default.${SUPPORT_EXT}`, `/config/config.${NODE_ENV}.${SUPPORT_EXT}`],
     },
   },
   AstroboyMiddlewareLoader: {
@@ -29,7 +31,7 @@ module.exports = {
     options: {
       pattern: `/app/middlewares/*.${SUPPORT_EXT}`,
       // 注意：为了控制配置合并顺序，不要这么写 `/config/config.(default|${NODE_ENV}).js`
-      configPattern: ['/config/middleware.default.js', `/config/middleware.${NODE_ENV}.js`],
+      configPattern: [`/config/middleware.default.${SUPPORT_EXT}`, `/config/middleware.${NODE_ENV}.${SUPPORT_EXT}`],
     },
   },
   AstroboyLibLoader: {
@@ -69,3 +71,5 @@ module.exports = {
     },
   },
 };
+
+export = defaultLoaderConfig;
