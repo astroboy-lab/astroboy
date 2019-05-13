@@ -10,6 +10,7 @@ import {
 import { IBaseMiddlewareConfig, IBaseProjectConfig, IBasePluginConfig } from './config';
 import { IPureAstroboyContext } from './extends/context';
 import { IPureAstroboyApplication } from './extends/app';
+import { IAstroboyOptions as BootstrapOptions } from './core';
 
 export {
   IBaseApplication,
@@ -30,6 +31,16 @@ export {
   IPriorityOptions,
 } from './config';
 export * from './base';
+
+/**
+ * astroboy 框架的配置参数
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyBootsrrapOptions
+ * @extends {BootstrapOptions}
+ */
+export interface IAstroboyBootsrrapOptions extends BootstrapOptions {}
 
 /**
  * ## astroboy 基础app结构

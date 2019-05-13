@@ -1,6 +1,17 @@
 import { PureObject, IBaseApplication, IBaseContext } from '../core';
 import { IAstroboyAppExtends } from './app';
 
+/**
+ * ## astroboy框架扩展的ctx定义
+ * - 不包含plugins
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyCtxExtends
+ * @extends {IAstroboyAppExtends<CONF>}
+ * @template CONF
+ * @template APP
+ */
 export interface IAstroboyCtxExtends<CONF extends PureObject = PureObject, APP extends any = IBaseApplication<CONF>>
   extends IAstroboyAppExtends<CONF> {
   /**
@@ -29,6 +40,18 @@ export interface IAstroboyCtxExtends<CONF extends PureObject = PureObject, APP e
   invokeServiceMethod(pkgName: string, serviceName: string, methodName: string, ...args: any[]): Promise<any>;
 }
 
+/**
+ * ## 纯粹的astroboy框架ctx定义
+ * - 不含plugins部分
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IPureAstroboyContext
+ * @extends {IAstroboyCtxExtends<CONF, APP>}
+ * @extends {IBaseContext<CONF, APP>}
+ * @template CONF
+ * @template APP
+ */
 export interface IPureAstroboyContext<
   CONF extends PureObject = {},
   APP extends IBaseApplication = IBaseApplication<CONF>
