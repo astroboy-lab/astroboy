@@ -3,7 +3,7 @@
  */
 import { Token } from '../lib/token';
 import { MiddlewareFactory } from '../../../../definitions';
-import { ICsrfOptions } from '../../../../definitions/plugins/astroboy-security/middleware';
+import { ICsrfOptions } from '../../contract';
 
 class CsrfError extends Error {
   public errorContent: any;

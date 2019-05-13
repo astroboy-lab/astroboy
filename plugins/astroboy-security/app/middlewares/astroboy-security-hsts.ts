@@ -4,7 +4,7 @@
  */
 import * as assert from 'assert';
 import { MiddlewareFactory } from '../../../../definitions';
-import { IHstsOptions } from '../../../../definitions/plugins/astroboy-security/middleware';
+import { IHstsOptions } from '../../contract';
 
 const factory: MiddlewareFactory<Partial<IHstsOptions> | number, any> = function(options, app) {
   if (typeof options === 'number') {

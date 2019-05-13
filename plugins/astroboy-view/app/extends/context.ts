@@ -3,7 +3,7 @@ import { IAstroboyViewPluginCtxExtends, IContextView } from '../../contract';
 
 const VIEW = Symbol('Context#view');
 
-const ctx: IAstroboyViewPluginCtxExtends<IContextView> = {
+const ctx: IAstroboyViewPluginCtxExtends = {
   get view() {
     if (!(<any>this)[VIEW]) {
       (<any>this)[VIEW] = new ContextView(this);
@@ -21,9 +21,9 @@ const ctx: IAstroboyViewPluginCtxExtends<IContextView> = {
     return this.view.render(...args);
   },
 
-  renderString(...args) {
-    return this.view.renderString(...args); // NOTE: 不存在这个方法
-  },
+  // renderString(...args) {
+  //   return this.view.renderString(...args); // NOTE: 不存在这个方法
+  // },
 };
 
 export = ctx;

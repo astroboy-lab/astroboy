@@ -1,8 +1,9 @@
 import * as assert from 'assert';
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import { IViewManager } from '../../contract';
 
-export class ViewManager extends Map {
+export class ViewManager extends Map implements IViewManager {
   private config: any;
   private extMap: Map<any, any>;
   private fileMap: Map<any, any>;
