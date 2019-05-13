@@ -4,13 +4,13 @@ import * as Koa from 'koa';
 import chalk from 'chalk';
 import { CoreLoader } from './CoreLoader';
 import { BaseClass as AstroboyClassBase } from './base/BaseClass';
-import { PureObject, IAstroboyOptions, IInnerApplication } from '../definitions/core';
+import { PureObject, IAstroboyOptions, IInnerApplication, IBaseApplication, IBaseContext } from '../definitions/core';
 import { IAstroboyApplication, IAstroboyContext } from '../definitions';
 
 export class Astroboy<
   CONF extends PureObject = PureObject,
-  APP extends any = IAstroboyApplication<CONF>,
-  CTX extends any = IAstroboyContext<CONF, APP>
+  APP extends IBaseApplication = IAstroboyApplication<CONF>,
+  CTX extends IBaseContext = IAstroboyContext<CONF, APP>
 > extends EventEmitter {
   protected app!: APP;
   protected options!: IAstroboyOptions;
