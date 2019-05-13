@@ -1,4 +1,4 @@
-import { PureObject } from '../../definitions/core';
+import { PureObject, IBaseApplication, IBaseContext } from '../../definitions/core';
 import { IAstroboyApplication, IAstroboyContext } from '../../definitions';
 import { IAstroboyCtxExtends } from '../../definitions/extends/context';
 
@@ -9,14 +9,14 @@ import { IAstroboyCtxExtends } from '../../definitions/extends/context';
  */
 export class BaseClass<
   CONF extends PureObject = PureObject,
-  APP extends any = IAstroboyApplication<CONF>,
-  CTX extends any = IAstroboyContext<CONF, APP>
+  APP extends IBaseApplication = IAstroboyApplication<CONF>,
+  CTX extends IBaseContext = IAstroboyContext<CONF, APP>
 > implements IAstroboyCtxExtends<CONF, APP> {
   protected app: APP;
   protected config: CONF;
   constructor(protected ctx: CTX) {
-    this.app = ctx && ctx.app;
-    this.config = ctx && ctx.app && ctx.app.config;
+    this.app = <any>(ctx && ctx.app);
+    this.config = <any>(ctx && ctx.app && ctx.app.config);
   }
 
   public getConfig(): CONF;
