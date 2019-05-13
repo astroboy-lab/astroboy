@@ -1,5 +1,6 @@
 'use strict';
 const glob = require('fast-glob');
+const path = require('path');
 const APP_EXTENSIONS = ['js', 'ts'];
 
 class Loader {
