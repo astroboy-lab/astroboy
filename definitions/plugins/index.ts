@@ -1,10 +1,12 @@
-import { IAstroboyBodyPluginMiddlewareExtends } from './astroboy-body/middleware';
-import { IAstroboyRouterPluginMiddlewareExtends } from './astroboy-router/middleware';
-import { IAstroboySecurityPluginMiddlewareExtends } from './astroboy-security/middleware';
-import { IAstroboyStaticPluginMiddlewareExtends } from './astroboy-static/middleware';
-import { IAstroboyViewPluginAppExtends } from './astroboy-view/app';
-import { IAstroboyViewPluginCtxExtends } from './astroboy-view/context';
-import { IAstroboyViewPluginConfigExtends } from './astroboy-view/config';
+import { IAstroboyBodyPluginMiddlewareExtends } from '../../plugins/astroboy-body/contract';
+import { IAstroboyRouterPluginMiddlewareExtends } from '../../plugins/astroboy-router/contract';
+import { IAstroboySecurityPluginMiddlewareExtends } from '../../plugins/astroboy-security/contract';
+import { IAstroboyStaticPluginMiddlewareExtends } from '../../plugins/astroboy-static/contract';
+import {
+  IAstroboyViewPluginAppExtends,
+  IAstroboyViewPluginCtxExtends,
+  IAstroboyViewPluginConfigExtends,
+} from '../../plugins/astroboy-view/contract';
 
 export interface IAstroboyPluginAppMixins extends IAstroboyViewPluginAppExtends {}
 

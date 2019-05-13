@@ -1,4 +1,4 @@
-import { IAstroboyStaticPluginMiddlewareExtends } from '../../../definitions/plugins/astroboy-static/middleware';
+import { IAstroboyStaticPluginMiddlewareExtends } from '../contract';
 
 const config: IAstroboyStaticPluginMiddlewareExtends = {
   'astroboy-static': {

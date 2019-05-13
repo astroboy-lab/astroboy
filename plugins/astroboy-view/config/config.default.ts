@@ -1,8 +1,7 @@
-import { IAstroboyPluginConfigMixins } from '../../../definitions/plugins';
-
 import * as path from 'path';
+import { IAstroboyViewPluginConfigExtends } from '../contract';
 
-const config: (app: any) => IAstroboyPluginConfigMixins = app => {
+const config: (app: any) => IAstroboyViewPluginConfigExtends = app => {
   return {
     view: {
       root: path.join(app.ROOT_PATH, 'app/views'),

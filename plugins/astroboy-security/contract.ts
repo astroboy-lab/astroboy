@@ -1,4 +1,4 @@
-import { IMiddlewareOptions } from '../../config';
+import { IMiddlewareOptions } from '../../definitions/config';
 
 export interface ICsrfOptions {
   env: string[];

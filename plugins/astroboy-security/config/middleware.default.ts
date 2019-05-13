@@ -1,4 +1,4 @@
-import { IAstroboySecurityPluginMiddlewareExtends } from '../../../definitions/plugins/astroboy-security/middleware';
+import { IAstroboySecurityPluginMiddlewareExtends } from '../contract';
 
 const config: Partial<IAstroboySecurityPluginMiddlewareExtends> = {
   'astroboy-security-csrf': {

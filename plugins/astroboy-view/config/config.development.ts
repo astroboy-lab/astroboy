@@ -1,6 +1,6 @@
-import { IAstroboyPluginConfigMixins } from '../../../definitions/plugins';
+import { IAstroboyViewPluginConfigExtends } from '../contract';
 
-const config: IAstroboyPluginConfigMixins = {
+const config: IAstroboyViewPluginConfigExtends = {
   view: {
     cache: false,
   },

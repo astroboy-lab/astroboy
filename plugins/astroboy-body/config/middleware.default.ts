@@ -1,6 +1,5 @@
-import { IAstroboyBodyPluginMiddlewareExtends } from '../../../definitions/plugins/astroboy-body/middleware';
-
 import * as path from 'path';
+import { IAstroboyBodyPluginMiddlewareExtends } from '../contract';
 
 const config: IAstroboyBodyPluginMiddlewareExtends = {
   'astroboy-body': {

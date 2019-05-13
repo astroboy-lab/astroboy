@@ -1,10 +1,9 @@
-import { IAstroboyViewPluginCtxExtends } from '../../../../definitions/plugins/astroboy-view/context';
-
 import { ContextView } from '../lib/ContextView';
+import { IAstroboyViewPluginCtxExtends, IContextView } from '../../contract';
 
 const VIEW = Symbol('Context#view');
 
-const ctx: IAstroboyViewPluginCtxExtends = {
+const ctx: IAstroboyViewPluginCtxExtends<IContextView> = {
   get view() {
     if (!(<any>this)[VIEW]) {
       (<any>this)[VIEW] = new ContextView(this);

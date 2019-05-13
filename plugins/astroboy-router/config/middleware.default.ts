@@ -1,4 +1,4 @@
-import { IAstroboyRouterPluginMiddlewareExtends } from '../../../definitions/plugins/astroboy-router/middleware';
+import { IAstroboyRouterPluginMiddlewareExtends } from '../contract';
 
 const config: IAstroboyRouterPluginMiddlewareExtends = {
   'astroboy-router': {

@@ -1,11 +1,12 @@
 import * as path from 'path';
 import * as assert from 'assert';
+import { IContextView } from '../../contract';
 
 const RENDER = Symbol.for('contextView#render');
 const RENDER_STRING = Symbol.for('contextView#renderString');
 const GET_VIEW_ENGINE = Symbol.for('contextView#getViewEngine');
 
-export class ContextView {
+export class ContextView implements IContextView {
   private app: any;
   private viewManager: any;
   private config: any;
