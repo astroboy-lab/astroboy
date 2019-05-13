@@ -21,9 +21,9 @@ const ctx: IAstroboyViewPluginCtxExtends = {
     return this.view.render(...args);
   },
 
-  // renderString(...args) {
-  //   return this.view.renderString(...args); // NOTE: 不存在这个方法
-  // },
+  renderString(...args) {
+    return this.view.render(...args);
+  },
 };
 
 export = ctx;

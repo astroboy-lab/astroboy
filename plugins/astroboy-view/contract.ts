@@ -41,5 +41,5 @@ export interface IAstroboyViewPluginCtxExtends {
    */
   renderView(...args: any[]): Promise<any>;
 
-  // renderString(...args: any[]): Promise<any>;
+  renderString(...args: any[]): Promise<any>;
 }
