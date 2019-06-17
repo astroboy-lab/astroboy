@@ -1,5 +1,4 @@
 module.exports = {
-
   'astroboy-security-csrf': {
     priority: 2,
     enable: false,
@@ -10,39 +9,39 @@ module.exports = {
       csrfTokenName: 'csrf_token',
       saltLength: 10,
       secretLength: 18,
-      maxAge: 3 * 3600 * 1000
-    }
+      maxAge: 3 * 3600 * 1000,
+    },
   },
 
   'astroboy-security-cto': {
     priority: 10,
     enable: true,
-    options: 'nosniff'
+    options: 'nosniff',
   },
 
   'astroboy-security-frameOptions': {
     priority: 10,
     enable: true,
-    options: 'SAMEORIGIN'
+    options: 'SAMEORIGIN',
   },
 
   'astroboy-security-hsts': {
     priority: 10,
     enable: true,
     options: {
-      maxAge: 365 * 24 * 3600
-    }
+      maxAge: 365 * 24 * 3600,
+    },
   },
 
   'astroboy-security-xss': {
     enable: true,
-    priority: 20
+    priority: 20,
+    options: {},
   },
 
   'astroboy-security-xssProtection': {
     priority: 10,
     enable: true,
-    options: '1; mode=block'
+    options: '1; mode=block',
   },
-
 };
