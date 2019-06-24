@@ -38,6 +38,7 @@ const config: Partial<IAstroboySecurityPluginMiddlewareExtends> = {
   'astroboy-security-xss': {
     enable: true,
     priority: 20,
+    options: {},
   },
 
   'astroboy-security-xssProtection': {
