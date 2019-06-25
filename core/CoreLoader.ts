@@ -1,7 +1,7 @@
 // @ts-ignore no types matched
 import * as pathMatching from 'path-matching';
 import * as path from 'path';
-import lodash from 'lodash';
+import * as lodash from 'lodash';
 import { outputJsonSync } from './lib/util';
 import { Loader } from './Loader';
 import {
