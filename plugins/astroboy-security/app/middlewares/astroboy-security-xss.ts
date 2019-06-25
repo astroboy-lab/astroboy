@@ -1,4 +1,4 @@
-import lodash from 'lodash';
+import * as lodash from 'lodash';
 import * as xss from 'xss';
 import { MiddlewareFactory } from '../../../../definitions';
 

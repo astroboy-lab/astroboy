@@ -1,5 +1,5 @@
 import * as path from 'path';
-import lodash from 'lodash';
+import * as lodash from 'lodash';
 import { Loader } from '../core/Loader';
 import { IInnerApplication, PureObject, MiddlewareFactory, PriorityDefine } from '../definitions/core';
 import { IOptions } from '../definitions/config';

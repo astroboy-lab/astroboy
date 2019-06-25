@@ -1,7 +1,7 @@
 /**
  * 框架路由中间件
  */
-import lodash = require('lodash');
+import * as lodash from 'lodash';
 // @ts-ignore typings missed
 import * as KoaRouter from 'koa-router';
 import * as compose from 'koa-compose';
