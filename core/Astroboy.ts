@@ -1,7 +1,7 @@
-import * as EventEmitter from 'events';
+import chalk from 'chalk';
 import * as path from 'path';
 import * as Koa from 'koa';
-import chalk from 'chalk';
+import { EventEmitter } from 'events';
 import { CoreLoader } from './CoreLoader';
 import { BaseClass as AstroboyClassBase } from './base/BaseClass';
 import { PureObject, IAstroboyOptions, IInnerApplication, IBaseApplication, IBaseContext } from '../definitions/core';
