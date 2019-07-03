@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as Koa from 'koa';
 import { EventEmitter } from 'events';
 import { CoreLoader } from './CoreLoader';
-import { BaseClass as AstroboyClassBase } from './base/BaseClass';
 import { PureObject, IAstroboyOptions, IInnerApplication, IBaseApplication, IBaseContext } from '../definitions/core';
 import { IAstroboyApplication, IAstroboyContext } from '../definitions';
 
@@ -64,18 +63,4 @@ export class Astroboy<
       }
     }, 3000);
   }
-}
-
-export namespace Astroboy {
-  export const BaseClass = AstroboyClassBase;
-  export type BaseClass = AstroboyClassBase;
-
-  export const Controller = AstroboyClassBase;
-  export type Controller = AstroboyClassBase;
-
-  export const Service = AstroboyClassBase;
-  export type Service = AstroboyClassBase;
-
-  export const Helper = AstroboyClassBase;
-  export type Helper = AstroboyClassBase;
 }
