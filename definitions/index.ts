@@ -65,12 +65,15 @@ export interface IAstroboyApplication<CONFIG extends PureObject = PureObject>
  * @extends {IAstroboyPluginCtxMixins}
  * @extends {IAstroboyCtxExtends<CONFIG, A>}
  * @template CONFIG
- * @template A
+ * @template APP
  */
 export interface IAstroboyContext<
   CONFIG extends PureObject = PureObject,
-  A extends IBaseApplication = IBaseApplication<CONFIG>
-> extends IAstroboyPluginCtxMixins, IPureAstroboyContext<CONFIG, A> {}
+  APP extends IBaseApplication = IBaseApplication<CONFIG>,
+  SERVICES extends PureObject = PureObject,
+  CONTROLLERS extends PureObject = PureObject,
+  LIBS extends PureObject = PureObject
+> extends IAstroboyPluginCtxMixins, IPureAstroboyContext<CONFIG, APP, SERVICES, CONTROLLERS, LIBS> {}
 
 /**
  * astroboy 基础configs结构

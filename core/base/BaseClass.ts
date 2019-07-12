@@ -1,5 +1,5 @@
 import { PureObject, IBaseApplication, IBaseContext } from '../../definitions/core';
-import { IAstroboyApplication, IAstroboyContext } from '../../definitions';
+import { IAstroboyApplication, IAstroboyContext, IConstructor } from '../../definitions';
 import {
   IAstroboyCtxExtends,
   IArgumentsExtractor,
@@ -15,14 +15,15 @@ import {
 export class BaseClass<
   CONF extends PureObject = PureObject,
   APP extends IBaseApplication = IAstroboyApplication<CONF>,
-  CTX extends IBaseContext = IAstroboyContext<CONF, APP>,
-  SERVICES extends PureObject = PureObject,
-  CONTROLLERS extends PureObject = PureObject,
-  LIBS extends PureObject = PureObject
-> implements IAstroboyCtxExtends<CONF, APP> {
+  SERVICES extends PureObject = {},
+  CONTROLLERS extends PureObject = {},
+  LIBS extends PureObject = {}
+> implements IAstroboyCtxExtends<CONF, APP, SERVICES, CONTROLLERS, LIBS> {
   protected app: APP;
   protected config: CONF;
-  constructor(protected ctx: CTX) {
+  protected ctx: IBaseContext;
+  constructor(ctx: any) {
+    this.ctx = <any>ctx;
     this.app = <any>(ctx && ctx.app);
     this.config = <any>(ctx && ctx.app && ctx.app.config);
   }

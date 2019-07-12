@@ -29,9 +29,9 @@ export interface IServiceProtected {
 export interface IAstroboyCtxExtends<
   CONF extends PureObject = PureObject,
   APP extends any = IBaseApplication<CONF>,
-  SERVICES extends PureObject = PureObject,
-  CONTROLLERS extends PureObject = PureObject,
-  LIBS extends PureObject = PureObject
+  SERVICES extends PureObject = {},
+  CONTROLLERS extends PureObject = {},
+  LIBS extends PureObject = {}
 > extends IAstroboyAppExtends<CONF> {
   /**
    * @description 获取完成配置字典
@@ -40,11 +40,10 @@ export interface IAstroboyCtxExtends<
 
   /**
    * @description 获取具体某个 config 字段的值
-   * @template K 字段 key
-   * @template V 字段 value
+   * @template K keyod key
    * @param {string} key
    */
-  getConfig<K extends keyof CONF, V = CONF[K]>(key: string): V;
+  getConfig<K extends keyof CONF>(key: K): CONF[K];
 
   /**
    * @description 获取某个具体的 Lib 函数
@@ -142,5 +141,8 @@ export interface IAstroboyCtxExtends<
  */
 export interface IPureAstroboyContext<
   CONF extends PureObject = {},
-  APP extends IBaseApplication = IBaseApplication<CONF>
-> extends IAstroboyCtxExtends<CONF, APP>, IBaseContext<CONF, APP> {}
+  APP extends IBaseApplication = IBaseApplication<CONF>,
+  SERVICES extends PureObject = {},
+  CONTROLLERS extends PureObject = {},
+  LIBS extends PureObject = {}
+> extends IAstroboyCtxExtends<CONF, APP, SERVICES, CONTROLLERS, LIBS>, IBaseContext<CONF, APP> {}
