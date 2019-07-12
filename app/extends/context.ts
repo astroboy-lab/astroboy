@@ -11,8 +11,8 @@ const ctxExtends: IAstroboyCtxExtends<any, IPureAstroboyApplication> = {
     return this.app.getConfig(...args);
   },
 
-  getServiceClass(this: IPureAstroboyContext<any, IPureAstroboyApplication>, ...args) {
-    return this.app.getServiceClass(...args);
+  getServiceClass(this: IPureAstroboyContext<any, IPureAstroboyApplication>, ...args: any[]) {
+    return this.app.getServiceClass(...(<[string, string]>args));
   },
 
   getService(this: IPureAstroboyContext<any, IInnerApplication>, packageName, serviceName) {
@@ -55,18 +55,12 @@ const ctxExtends: IAstroboyCtxExtends<any, IPureAstroboyApplication> = {
     }
   },
 
-  async invokeServiceMethod(
-    this: IPureAstroboyContext<any, IInnerApplication>,
-    pkgName,
-    serviceName,
-    methodName,
-    ...args
-  ) {
+  invokeServiceMethod(this: IPureAstroboyContext<any, IInnerApplication>, pkgName, serviceName, methodName, ...args) {
     if (this.app.services && this.app.services[pkgName] && this.app.services[pkgName][serviceName]) {
       const ServiceClass = this.app.services[pkgName][serviceName];
       const service = new ServiceClass(this);
       if (service[methodName]) {
-        return await service[methodName](...args);
+        return service[methodName](...args) as any;
       } else {
         throw new Error(`method name ${methodName} is not found.`);
       }
@@ -76,7 +70,7 @@ const ctxExtends: IAstroboyCtxExtends<any, IPureAstroboyApplication> = {
   },
 
   getLib(this: IPureAstroboyContext<any, IPureAstroboyApplication>, ...args) {
-    return this.app.getLib(...args);
+    return this.app.getLib(...(<[string, string]>args));
   },
 };
 
