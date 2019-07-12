@@ -18,8 +18,8 @@ const ctxExtends: IAstroboyCtxExtends<any, IPureAstroboyApplication> = {
   getService(this: IPureAstroboyContext<any, IInnerApplication>, packageName, serviceName) {
     assert(packageName, 'Package name cannot be empty!');
     assert(serviceName, 'Service name cannot be empty!');
-    if (this.app.services && this.app.services[packageName] && this.app.services[packageName][serviceName]) {
-      const ServiceClass = this.app.services[packageName][serviceName];
+    if (this.app.services && this.app.services[packageName] && (this.app.services[packageName] as any)[serviceName]) {
+      const ServiceClass = (this.app.services[packageName] as any)[serviceName];
       return new ServiceClass(this);
     } else {
       throw new Error(`Service ${packageName} ${serviceName} is not found.`);
@@ -56,8 +56,8 @@ const ctxExtends: IAstroboyCtxExtends<any, IPureAstroboyApplication> = {
   },
 
   invokeServiceMethod(this: IPureAstroboyContext<any, IInnerApplication>, pkgName, serviceName, methodName, ...args) {
-    if (this.app.services && this.app.services[pkgName] && this.app.services[pkgName][serviceName]) {
-      const ServiceClass = this.app.services[pkgName][serviceName];
+    if (this.app.services && this.app.services[pkgName] && (<any>this.app.services[pkgName])[serviceName]) {
+      const ServiceClass = (<any>this.app.services[pkgName])[serviceName];
       const service = new ServiceClass(this);
       if (service[methodName]) {
         return service[methodName](...args) as any;
