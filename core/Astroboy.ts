@@ -3,17 +3,14 @@ import * as path from 'path';
 import * as Koa from 'koa';
 import { EventEmitter } from 'events';
 import { CoreLoader } from './CoreLoader';
-import { PureObject, IAstroboyOptions, IInnerApplication, IBaseApplication, IBaseContext } from '../definitions/core';
-import { IAstroboyApplication, IAstroboyContext } from '../definitions';
+import { IAstroboyOptions, IInnerApplication } from '../definitions/core';
+import { IAstroboyContextDefine } from '../definitions';
+import { IBaseContextDefine } from '../definitions/extends/context';
 
-export class Astroboy<
-  CONF extends PureObject = PureObject,
-  APP extends IBaseApplication = IAstroboyApplication<CONF>,
-  CTX extends IBaseContext = IAstroboyContext<CONF, APP>
-> extends EventEmitter {
-  protected app!: APP;
+export class Astroboy<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine> extends EventEmitter {
+  protected app!: DEFINE['app'];
   protected options!: IAstroboyOptions;
-  private loader!: CoreLoader<CONF, any>;
+  private loader!: CoreLoader<DEFINE['config'], any>;
 
   protected get [Symbol.for('BASE_DIR')]() {
     return path.join(__dirname, '..');
@@ -38,7 +35,7 @@ export class Astroboy<
     (<IInnerApplication>(<unknown>this.app)).ROOT_PATH = this.options.ROOT_PATH;
     (<IInnerApplication>(<unknown>this.app)).ROOT_NAME = path.basename(this.options.ROOT_PATH);
 
-    this.loader = new CoreLoader<CONF, any>({
+    this.loader = new CoreLoader<DEFINE['config'], any>({
       astroboy: this,
       app: this.app,
     });
@@ -50,7 +47,7 @@ export class Astroboy<
       console.log(chalk.green(`访问地址：${chalk.blue('http://127.0.0.1:' + this.options.NODE_PORT)}`));
       this.emit('start', this.app);
     });
-    this.app.on('error', (err: any, ctx: CTX) => {
+    this.app.on('error', (err: any, ctx: DEFINE['ctx']) => {
       this.emit('error', err, ctx);
     });
     // 添加默认的 error 事件监听器

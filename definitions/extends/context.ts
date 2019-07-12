@@ -1,6 +1,4 @@
 import { PureObject, IBaseApplication, IBaseContext } from '../core';
-import { IAstroboyAppExtends } from './app';
-
 export type ReturnAnyType<T = any> = T extends (...args: any[]) => infer R ? R : any;
 export type IArgumentsExtractor<T> = T extends (...params: infer P) => infer R ? P : any[];
 export interface IServiceProtected {
@@ -15,6 +13,15 @@ export interface IServiceProtected {
   invokeServiceMethod: any;
 }
 
+export interface IBaseContextDefine {
+  ctx: any;
+  app: any;
+  config: any;
+  services: any;
+  controllers: any;
+  libs: any;
+}
+
 /**
  * ## astroboy框架扩展的ctx定义
  * - 不包含plugins
@@ -26,24 +33,18 @@ export interface IServiceProtected {
  * @template CONF
  * @template APP
  */
-export interface IAstroboyCtxExtends<
-  CONF extends PureObject = PureObject,
-  APP extends any = IBaseApplication<CONF>,
-  SERVICES extends PureObject = {},
-  CONTROLLERS extends PureObject = {},
-  LIBS extends PureObject = {}
-> extends IAstroboyAppExtends<CONF> {
+export interface IAstroboyCtxExtends<DEFINE extends Partial<IBaseContextDefine> = IBaseContextDefine> {
   /**
    * @description 获取完成配置字典
    */
-  getConfig(): CONF;
+  getConfig(): DEFINE['config'];
 
   /**
    * @description 获取具体某个 config 字段的值
    * @template K keyod key
    * @param {string} key
    */
-  getConfig<K extends keyof CONF>(key: K): CONF[K];
+  getConfig<K extends keyof DEFINE['config']>(key: K): DEFINE['config'][K];
 
   /**
    * @description 获取某个具体的 Lib 函数
@@ -53,7 +54,11 @@ export interface IAstroboyCtxExtends<
    * @param {PkgName} pkgName
    * @param {LibName} libName
    */
-  getLib<PkgName extends keyof LIBS, LibName extends keyof LIBS[PkgName], LibMethods = LIBS[PkgName][LibName]>(
+  getLib<
+    PkgName extends keyof DEFINE['libs'],
+    LibName extends keyof DEFINE['libs'][PkgName],
+    LibMethods extends DEFINE['libs'][PkgName][LibName]
+  >(
     pkgName: PkgName,
     libName: LibName
   ): LibMethods;
@@ -67,9 +72,9 @@ export interface IAstroboyCtxExtends<
    * @param {ServiceName} serviceName
    */
   getServiceClass<
-    PkgName extends keyof SERVICES,
-    ServiceName extends keyof SERVICES[PkgName],
-    ServiceClass = SERVICES[PkgName][ServiceName]
+    PkgName extends keyof DEFINE['services'],
+    ServiceName extends keyof DEFINE['services'][PkgName],
+    ServiceClass extends DEFINE['services'][PkgName][ServiceName]
   >(
     pkgName: PkgName,
     serviceName: ServiceName
@@ -84,9 +89,9 @@ export interface IAstroboyCtxExtends<
    * @param {String} serviceName 服务名
    */
   getService<
-    PkgName extends keyof SERVICES,
-    ServiceName extends keyof SERVICES[PkgName],
-    ServiceInstance = InstanceType<SERVICES[PkgName][ServiceName]>
+    PkgName extends keyof DEFINE['services'],
+    ServiceName extends keyof DEFINE['services'][PkgName],
+    ServiceInstance extends InstanceType<DEFINE['services'][PkgName][ServiceName]>
   >(
     pkgName: PkgName,
     serviceName: ServiceName
@@ -114,11 +119,11 @@ export interface IAstroboyCtxExtends<
    * @param {Object} args 参数
    */
   invokeServiceMethod<
-    PkgName extends keyof SERVICES,
-    ServiceName extends keyof SERVICES[PkgName],
-    MethodName extends Exclude<keyof InstanceType<SERVICES[PkgName][ServiceName]>, keyof IServiceProtected>,
-    MethodArgs extends IArgumentsExtractor<InstanceType<SERVICES[PkgName][ServiceName]>[MethodName]>,
-    Result extends ReturnAnyType<InstanceType<SERVICES[PkgName][ServiceName]>[MethodName]>
+    PkgName extends keyof DEFINE['services'],
+    ServiceName extends keyof DEFINE['services'][PkgName],
+    MethodName extends Exclude<keyof InstanceType<DEFINE['services'][PkgName][ServiceName]>, keyof IServiceProtected>,
+    MethodArgs extends IArgumentsExtractor<InstanceType<DEFINE['services'][PkgName][ServiceName]>[MethodName]>,
+    Result extends ReturnAnyType<InstanceType<DEFINE['services'][PkgName][ServiceName]>[MethodName]>
   >(
     pkgName: PkgName,
     serviceName: ServiceName,
@@ -139,10 +144,6 @@ export interface IAstroboyCtxExtends<
  * @template CONF
  * @template APP
  */
-export interface IPureAstroboyContext<
-  CONF extends PureObject = {},
-  APP extends IBaseApplication = IBaseApplication<CONF>,
-  SERVICES extends PureObject = {},
-  CONTROLLERS extends PureObject = {},
-  LIBS extends PureObject = {}
-> extends IAstroboyCtxExtends<CONF, APP, SERVICES, CONTROLLERS, LIBS>, IBaseContext<CONF, APP> {}
+export interface IPureAstroboyContext<DEFINE extends Partial<IBaseContextDefine> = IBaseContextDefine>
+  extends IAstroboyCtxExtends<DEFINE>,
+    IBaseContext<DEFINE['config'], DEFINE['app']> {}

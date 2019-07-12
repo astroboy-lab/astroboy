@@ -9,6 +9,9 @@ export interface IBaseContext<F extends PureObject = PureObject, A extends IBase
   extends Koa.Context {
   app: A;
   config: F;
+  request: Koa.Request & {
+    body: any;
+  };
 }
 
 export interface IInnerApplication<F extends PureObject = PureObject> extends IBaseApplication<F> {

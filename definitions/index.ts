@@ -1,4 +1,4 @@
-import { PureObject, IBaseApplication } from './core';
+import { PureObject, IBaseContext } from './core';
 
 import {
   IAstroboyPluginMiddlewareMixins,
@@ -8,7 +8,7 @@ import {
   IAstroboyPluginCtxMixins,
 } from './plugins';
 import { IBaseMiddlewareConfig, IBaseProjectConfig, IBasePluginConfig } from './config';
-import { IPureAstroboyContext } from './extends/context';
+import { IPureAstroboyContext, IBaseContextDefine } from './extends/context';
 import { IPureAstroboyApplication } from './extends/app';
 import { IAstroboyOptions as BootstrapOptions } from './core';
 
@@ -43,6 +43,23 @@ export * from './base';
 export interface IAstroboyBootsrrapOptions extends BootstrapOptions {}
 
 /**
+ * ## astroboy 基础上下文扩展结构
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyContextDefine
+ * @extends {IBaseContextDefine}
+ */
+export interface IAstroboyContextDefine extends IBaseContextDefine {
+  ctx: IBaseContext;
+  app: IAstroboyApplication;
+  config: PureObject;
+  services: {};
+  controllers: {};
+  libs: {};
+}
+
+/**
  * ## astroboy 基础app结构
  *
  * @author Big Mogician
@@ -67,13 +84,9 @@ export interface IAstroboyApplication<CONFIG extends PureObject = PureObject>
  * @template CONFIG
  * @template APP
  */
-export interface IAstroboyContext<
-  CONFIG extends PureObject = PureObject,
-  APP extends IBaseApplication = IBaseApplication<CONFIG>,
-  SERVICES extends PureObject = PureObject,
-  CONTROLLERS extends PureObject = PureObject,
-  LIBS extends PureObject = PureObject
-> extends IAstroboyPluginCtxMixins, IPureAstroboyContext<CONFIG, APP, SERVICES, CONTROLLERS, LIBS> {}
+export interface IAstroboyContext<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine>
+  extends IAstroboyPluginCtxMixins,
+    IPureAstroboyContext<DEFINE> {}
 
 /**
  * astroboy 基础configs结构
