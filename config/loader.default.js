@@ -15,6 +15,7 @@ module.exports = {
       contextPattern: [`/app/extends/context/*.${SUPPORT_EXT}`, `/app/extends/context.${SUPPORT_EXT}`],
       requestPattern: `/app/extends/request.${SUPPORT_EXT}`,
       responsePattern: `/app/extends/response.${SUPPORT_EXT}`,
+      controllerPattern: `/app/extends/controller.${SUPPORT_EXT}`,
     },
   },
   AstroboyConfigLoader: {

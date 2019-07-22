@@ -5,6 +5,7 @@ const contextProto = require('koa/lib/context');
 const applicationProto = require('koa/lib/application').prototype;
 const completeAssign = require('complete-assign');
 const Loader = require('../core/Loader');
+const baseClassProto = require('../core/base/BaseClass').prototype;
 
 class AstroboyExtendLoader extends Loader {
   load() {
@@ -33,6 +34,13 @@ class AstroboyExtendLoader extends Loader {
     this.globDirs(this.config.responsePattern, entries => {
       entries.forEach(entry => {
         completeAssign(responseProto, require(entry));
+      });
+    });
+
+    // controller extend
+    this.globDirs(this.config.controllerPattern, entries => {
+      entries.forEach(entry => {
+        completeAssign(baseClassProto, require(entry));
       });
     });
   }
