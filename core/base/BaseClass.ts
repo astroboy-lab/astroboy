@@ -12,7 +12,7 @@ import {
  * app Koa Application 实例对象
  * config 应用配置对象
  */
-export = class BaseClass<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine>
+export class BaseClass<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine>
   implements IAstroboyCtxExtends<DEFINE> {
   protected app: DEFINE['app'];
   protected config: DEFINE['config'];
@@ -72,4 +72,4 @@ export = class BaseClass<DEFINE extends Partial<IBaseContextDefine> = IAstroboyC
   public invokeServiceMethod(...args: any[]): any {
     return this.ctx.invokeServiceMethod(...args);
   }
-};
+}
