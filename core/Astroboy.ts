@@ -2,12 +2,18 @@ import chalk from 'chalk';
 import * as path from 'path';
 import * as Koa from 'koa';
 import { EventEmitter } from 'events';
-import { CoreLoader } from './CoreLoader';
 import { IAstroboyOptions, IInnerApplication } from '../definitions/core';
 import { IAstroboyContextDefine } from '../definitions';
 import { IBaseContextDefine } from '../definitions/extends/context';
+import { CoreLoader } from './CoreLoader';
+import BaseClass = require('./base/BaseClass');
 
-export class Astroboy<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine> extends EventEmitter {
+export = class Astroboy<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine> extends EventEmitter {
+  public static BaseClass = BaseClass;
+  public static Controller = BaseClass;
+  public static Service = BaseClass;
+  public static Helper = BaseClass;
+
   protected app!: DEFINE['app'];
   protected options!: IAstroboyOptions;
   private loader!: CoreLoader<DEFINE['config'], any>;
@@ -60,4 +66,4 @@ export class Astroboy<DEFINE extends Partial<IBaseContextDefine> = IAstroboyCont
       }
     }, 3000);
   }
-}
+};

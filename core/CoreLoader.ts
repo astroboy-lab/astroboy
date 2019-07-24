@@ -3,7 +3,6 @@ import * as pathMatching from 'path-matching';
 import * as path from 'path';
 import * as lodash from 'lodash';
 import { outputJsonSync } from './lib/util';
-import { Loader } from './Loader';
 import {
   IInnerApplication,
   PureObject,
@@ -13,6 +12,7 @@ import {
   NormalizedMiddleware,
   ICoreLoaderOptions,
 } from '../definitions/core';
+import { Loader } from './Loader';
 
 export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> extends Loader<F, A> {
   protected options!: Partial<ICoreLoaderOptions<F, A>>;
