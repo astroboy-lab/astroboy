@@ -3,16 +3,16 @@ import * as path from 'path';
 import * as Koa from 'koa';
 import { EventEmitter } from 'events';
 import { IAstroboyOptions, IInnerApplication } from '../definitions/core';
-import { IAstroboyContextDefine } from '../definitions';
+import { IAstroboyContextDefine, IConstructor } from '../definitions';
 import { IBaseContextDefine } from '../definitions/extends/context';
 import { CoreLoader } from './CoreLoader';
 import BaseClass = require('./base/BaseClass');
 
 export = class Astroboy<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine> extends EventEmitter {
-  public static BaseClass = BaseClass;
-  public static Controller = BaseClass;
-  public static Service = BaseClass;
-  public static Helper = BaseClass;
+  public static BaseClass: IConstructor<BaseClass> = BaseClass;
+  public static Controller: IConstructor<BaseClass> = BaseClass;
+  public static Service: IConstructor<BaseClass> = BaseClass;
+  public static Helper: IConstructor<BaseClass> = BaseClass;
 
   protected app!: DEFINE['app'];
   protected options!: IAstroboyOptions;
