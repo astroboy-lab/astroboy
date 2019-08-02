@@ -34,6 +34,7 @@ export interface IBaseLoaderConfig {
 export interface IPluginOptions {
   enable: boolean;
   path?: string;
+  package?: string;
 }
 
 export interface IBasePluginConfig {
