@@ -8,7 +8,9 @@
     "release": "sh release.sh",
     "docs:deploy": "sh deploy.sh",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "publish:normal": "make publish",
+    "publish:beta": "make beta"
   },
   "repository": {
     "type": "git",

@@ -1,9 +1,19 @@
 compile:
 	rm -rf dist
 	tsc
-	cp package.json dist/
 	cp README.md dist/
 	cp CHANGELOG dist/
 
-publish:
+copy-package:
+	cp package.json dist/
+
+build: compile copy-package
+
+publish-only:
 	cd dist && npm publish
+
+publish: compile
+	npx bmpub publish --config publish.config.json
+
+beta: compile
+	npx bmpub publish --config publish.beta.json

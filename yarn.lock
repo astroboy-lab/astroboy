@@ -670,6 +670,14 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@bigmogician/publisher@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.npmjs.org/@bigmogician/publisher/-/publisher-1.0.12.tgz#b4812572d92ca3c90bc14c1bc7075360caaa38f0"
+  integrity sha512-Jw2UHQm7g/WOcn+dhekQ5FzeeHjfob0doW/SQjbLuERaRIarfucxeEV8XuJuT8g0LMzBBAXdLCuXKItONJc1bQ==
+  dependencies:
+    chalk "^2.4.2"
+    commander "^2.19.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npmjs.org/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -2048,7 +2056,7 @@ commander@2.17.x:
   resolved "https://registry.npmjs.org/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
   integrity sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==
 
-commander@^2.20.0, commander@^2.9.0:
+commander@^2.19.0, commander@^2.20.0, commander@^2.9.0:
   version "2.20.0"
   resolved "https://registry.npmjs.org/commander/-/commander-2.20.0.tgz#d58bb2b5c1ee8f87b0d340027e9e94e222c5a422"
   integrity sha512-7j2y+40w61zy6YC2iRNpUe/NwhNyoXrYpHMrSunaMG64nRnaf96zO/KMQR4OyN/UnE5KLyEBnKHd4aG3rskjpQ==
