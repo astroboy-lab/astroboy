@@ -41,6 +41,7 @@
     "xss": "0.3.7"
   },
   "devDependencies": {
+    "@bigmogician/publisher": "^1.0.12",
     "vuepress": "^1.0.0-alpha.42"
   }
 }
