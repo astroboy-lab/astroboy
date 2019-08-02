@@ -11,6 +11,7 @@ export interface IOptions {
   contextPattern: string | string[];
   requestPattern: string | string[];
   responsePattern: string | string[];
+  controllerPattern: string | string[];
 }
 
 export interface IPriorityOptions extends IPriority {

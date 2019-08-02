@@ -37,7 +37,7 @@ const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}
                 if (ControllerClass.prototype[beforeMethod]) {
                   await controller[beforeMethod]();
                 }
-                if (ctx.status !== 301 && ctx.status !== 302) {
+                if (ctx.status !== 301 && ctx.status !== 302 && !ctx.body) {
                   await controller[method](ctx, next);
                 } else {
                   break;
