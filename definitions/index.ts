@@ -32,15 +32,17 @@ export {
 } from './config';
 export * from './base';
 
+/** @deprecated use `IAstroboyBootstrapOptions` */
+export interface IAstroboyBootsrrapOptions extends BootstrapOptions {}
 /**
  * astroboy 框架的配置参数
  *
  * @author Big Mogician
  * @export
- * @interface IAstroboyBootsrrapOptions
+ * @interface IAstroboyBootstrapOptions
  * @extends {BootstrapOptions}
  */
-export interface IAstroboyBootsrrapOptions extends BootstrapOptions {}
+export interface IAstroboyBootstrapOptions extends BootstrapOptions {}
 
 /**
  * ## astroboy 基础上下文扩展结构
