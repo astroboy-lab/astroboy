@@ -4,10 +4,10 @@ compile:
 	cp README.md dist/
 	cp CHANGELOG dist/
 
-copy-package:
+copy-pkg:
 	cp package.json dist/
 
-build: compile copy-package
+build: compile copy-pkg
 
-publish:
+publish: build
 	cd dist && npm publish

@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-alias exec_publish="make build; cd dist; npm publish"
 set -e
 echo "Enter release version: "
 read VERSION
@@ -21,5 +20,5 @@ then
     git push origin refs/tags/v$VERSION
   fi
 
-  exec_publish
+  make publish
 fi
