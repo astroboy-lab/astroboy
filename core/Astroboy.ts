@@ -6,7 +6,7 @@ import { IAstroboyOptions, IInnerApplication } from '../definitions/core';
 import { IAstroboyFrameworkDefine } from '../definitions';
 import { IBaseFrameworkDefine } from '../definitions/extends/context';
 import { CoreLoader } from './CoreLoader';
-import { BaseClass } from './base/BaseClass';
+import { BaseClass as AstroboyBaseClass } from './base/BaseClass';
 
 /**
  * ## Astroboy Framework
@@ -17,35 +17,6 @@ import { BaseClass } from './base/BaseClass';
  * @template DEFINE Framework Definition, defalut is `IAstroboyFrameworkDefine`.
  */
 class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFrameworkDefine> extends EventEmitter {
-  /**
-   * ### Astroboy BaseClass
-   *
-   * @static
-   * @memberof Astroboy
-   */
-  public static BaseClass = BaseClass;
-  /**
-   * ### Astroboy Controller Base
-   *
-   * @static
-   * @memberof Astroboy
-   */
-  public static Controller = BaseClass;
-  /**
-   * ### Astroboy Service Base
-   *
-   * @static
-   * @memberof Astroboy
-   */
-  public static Service = BaseClass;
-  /**
-   * ### Astroboy <Helper&Utils> Base
-   *
-   * @static
-   * @memberof Astroboy
-   */
-  public static Helper = BaseClass;
-
   protected app!: DEFINE['app'];
   protected options!: IAstroboyOptions;
   private loader!: CoreLoader<DEFINE['config'], any>;
@@ -98,6 +69,24 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
       }
     }, 3000);
   }
+}
+
+namespace Astroboy {
+  /** ### Astroboy Base Class */
+  export const BaseClass = AstroboyBaseClass;
+  export type BaseClass = AstroboyBaseClass;
+
+  /** ### Astroboy Controller Base */
+  export const Controller = AstroboyBaseClass;
+  export type Controller = AstroboyBaseClass;
+
+  /** ### Astroboy Service Base */
+  export const Service = AstroboyBaseClass;
+  export type Service = AstroboyBaseClass;
+
+  /** ### Astroboy <Helper&Utils> Base */
+  export const Helper = AstroboyBaseClass;
+  export type Helper = AstroboyBaseClass;
 }
 
 export = Astroboy;
