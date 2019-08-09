@@ -13,7 +13,7 @@ export interface IServiceProtected {
   invokeServiceMethod: any;
 }
 
-export interface IBaseContextDefine {
+export interface IBaseFrameworkDefine {
   ctx: any;
   app: any;
   config: any;
@@ -21,6 +21,9 @@ export interface IBaseContextDefine {
   controllers: any;
   libs: any;
 }
+
+/** @deprecated use `IBaseFrameworkDefine` instead */
+export interface IBaseContextDefine extends IBaseFrameworkDefine {}
 
 /**
  * ## astroboy框架扩展的ctx定义
@@ -33,26 +36,36 @@ export interface IBaseContextDefine {
  * @template CONF
  * @template APP
  */
-export interface IAstroboyCtxExtends<DEFINE extends Partial<IBaseContextDefine> = IBaseContextDefine> {
+export interface IAstroboyCtxExtends<DEFINE extends Partial<IBaseFrameworkDefine> = IBaseFrameworkDefine> {
   /**
-   * @description 获取完成配置字典
+   * ### Get Config
+   *
+   * @author Big Mogician
+   * @returns {DEFINE['config']}
+   * @memberof IAstroboyCtxExtends
    */
   getConfig(): DEFINE['config'];
-
   /**
-   * @description 获取具体某个 config 字段的值
-   * @template K keyod key
-   * @param {string} key
+   * ### Get Config By Key
+   *
+   * @author Big Mogician
+   * @template K
+   * @param {K} key
+   * @returns {DEFINE['config'][K]}
+   * @memberof IAstroboyCtxExtends
    */
   getConfig<K extends keyof DEFINE['config']>(key: K): DEFINE['config'][K];
-
   /**
-   * @description 获取某个具体的 Lib 函数
-   * @template PkgName 字符串包名
-   * @template LibName 字符串 Lib 函数名
-   * @template LibFunction 某个具体 Lib 函数
+   * ### Get Lib
+   *
+   * @author Big Mogician
+   * @template PkgName
+   * @template LibName
+   * @template LibMethods
    * @param {PkgName} pkgName
    * @param {LibName} libName
+   * @returns {LibMethods}
+   * @memberof IAstroboyCtxExtends
    */
   getLib<
     PkgName extends keyof DEFINE['libs'],
@@ -62,14 +75,17 @@ export interface IAstroboyCtxExtends<DEFINE extends Partial<IBaseContextDefine> 
     pkgName: PkgName,
     libName: LibName
   ): LibMethods;
-
   /**
-   * @description 获取某个 Service 的构造函数
-   * @template PkgName 字符串包名
-   * @template ServiceName 字符串类名
-   * @template ServiceClass 具体某个 Service 构造函数
+   * ### Get Service Class
+   *
+   * @author Big Mogician
+   * @template PkgName
+   * @template ServiceName
+   * @template ServiceClass
    * @param {PkgName} pkgName
    * @param {ServiceName} serviceName
+   * @returns {ServiceClass}
+   * @memberof IAstroboyCtxExtends
    */
   getServiceClass<
     PkgName extends keyof DEFINE['services'],
@@ -79,14 +95,17 @@ export interface IAstroboyCtxExtends<DEFINE extends Partial<IBaseContextDefine> 
     pkgName: PkgName,
     serviceName: ServiceName
   ): ServiceClass;
-
   /**
-   * 获取一个 Service 类实例
-   * @template PkgName 字符串包名
-   * @template ServiceName 字符串类名
-   * @template ServiceInstance 具体某个 Service 的实例
-   * @param {String} packageName 包名
-   * @param {String} serviceName 服务名
+   * ### Get Service Instance
+   *
+   * @author Big Mogician
+   * @template PkgName
+   * @template ServiceName
+   * @template ServiceInstance
+   * @param {PkgName} pkgName
+   * @param {ServiceName} serviceName
+   * @returns {ServiceInstance}
+   * @memberof IAstroboyCtxExtends
    */
   getService<
     PkgName extends keyof DEFINE['services'],
@@ -96,27 +115,33 @@ export interface IAstroboyCtxExtends<DEFINE extends Partial<IBaseContextDefine> 
     pkgName: PkgName,
     serviceName: ServiceName
   ): ServiceInstance;
-
   /**
-   * 调用服务
-   * @param {String} service 服务名
-   * @param {String} method 方法名
-   * @param {Object} args 参数
+   * ### Call Service Method Directly
+   *
+   * @author Big Mogician
+   * @param {string} service
+   * @param {string} method
+   * @param {...any[]} args
+   * @returns {Promise<any>}
+   * @memberof IAstroboyCtxExtends
    */
   callService(service: string, method: string, ...args: any[]): Promise<any>;
   callService(method: string, ...args: any[]): Promise<any>;
-
   /**
-   * 调用服务(定义支持)
-   * @template PkgName 字符串包名
-   * @template ServiceName 字符串类名
-   * @template MethodName 具体某个 Service 的某个方法名
-   * @template MethodArgs 具体某个 Service 的某个方法名的参数
-   * @template Result 具体某个 Service 的某个方法的返回类型
-   * @param {String} pkgName 包名
-   * @param {String} serviceName 服务名
-   * @param {String} methodName 方法名
-   * @param {Object} args 参数
+   * ### Invoke Service Method Directly And Use The Return Values
+   *
+   * @author Big Mogician
+   * @template PkgName
+   * @template ServiceName
+   * @template MethodName
+   * @template MethodArgs
+   * @template Result
+   * @param {PkgName} pkgName
+   * @param {ServiceName} serviceName
+   * @param {MethodName} methodName
+   * @param {...MethodArgs} args
+   * @returns {Result}
+   * @memberof IAstroboyCtxExtends
    */
   invokeServiceMethod<
     PkgName extends keyof DEFINE['services'],
@@ -144,6 +169,6 @@ export interface IAstroboyCtxExtends<DEFINE extends Partial<IBaseContextDefine> 
  * @template CONF
  * @template APP
  */
-export interface IPureAstroboyContext<DEFINE extends Partial<IBaseContextDefine> = IBaseContextDefine>
+export interface IPureAstroboyContext<DEFINE extends Partial<IBaseFrameworkDefine> = IBaseFrameworkDefine>
   extends IAstroboyCtxExtends<DEFINE>,
     IBaseContext<DEFINE['config'], DEFINE['app']> {}

@@ -14,6 +14,17 @@ import {
 } from '../definitions/core';
 import { Loader } from './Loader';
 
+/**
+ * ## Core Loader
+ * - decide how to build application.
+ *
+ * @author Big Mogician
+ * @export
+ * @class CoreLoader
+ * @extends {Loader<F, A>}
+ * @template F
+ * @template A
+ */
 export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> extends Loader<F, A> {
   protected options!: Partial<ICoreLoaderOptions<F, A>>;
   protected patterns!: IDefaultLoaders;
@@ -42,6 +53,14 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     this.init();
   }
 
+  /**
+   * ### `init` hook
+   *
+   * @virtual
+   * @author Big Mogician
+   * @protected
+   * @memberof CoreLoader
+   */
   protected init() {
     this.loadCoreDirs(this.app.ROOT_PATH);
     this.loadPluginConfig();
@@ -52,11 +71,22 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     this.useMiddlewares();
   }
 
+  /**
+   * ### `load` hook
+   *
+   * @virtual
+   * @author Big Mogician
+   * @memberof CoreLoader
+   */
   public load() {}
 
   /**
-   * 加载核心目录，包括 app、framework，但不包括 plugin
-   * @param baseDir
+   * ### 加载核心目录，包括 app、framework，但不包括 plugin
+   *
+   * @author Big Mogician
+   * @protected
+   * @param {string} baseDir
+   * @memberof CoreLoader
    */
   protected loadCoreDirs(baseDir: string) {
     const coreDirs: IDir[] = [
@@ -84,7 +114,13 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     outputJsonSync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
   }
 
-  /** 获取插件配置 */
+  /**
+   * ### 获取插件配置
+   *
+   * @author Big Mogician
+   * @protected
+   * @memberof CoreLoader
+   */
   protected loadPluginConfig() {
     let pluginConfig: PureObject = {};
     this.coreDirs.forEach(item => {
@@ -99,7 +135,13 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     outputJsonSync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
   }
 
-  /** 获取遍历目录 */
+  /**
+   * ### 获取遍历目录
+   *
+   * @author Big Mogician
+   * @protected
+   * @memberof CoreLoader
+   */
   protected loadFullDirs() {
     let dirs: IDir[] = [];
     this.coreDirs.forEach(item => {
@@ -111,10 +153,17 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     outputJsonSync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
   }
 
-  /** 获取需要遍历的插件目录 */
+  /**
+   * ### 获取需要遍历的插件目录
+   *
+   * @author Big Mogician
+   * @protected
+   * @param {string} baseDir
+   * @returns
+   * @memberof CoreLoader
+   */
   protected getPluginDirs(baseDir: string) {
     const config = this.getPluginConfig(baseDir);
-
     const ret: IDir[] = [];
     if (lodash.isPlainObject(config)) {
       for (let name in config) {
@@ -131,6 +180,15 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     return ret;
   }
 
+  /**
+   * ### 获取需要遍历的插件配置
+   *
+   * @author Big Mogician
+   * @protected
+   * @param {string} baseDir
+   * @returns
+   * @memberof CoreLoader
+   */
   protected getPluginConfig(baseDir: string) {
     let config: PureObject = {};
     this.globDir(baseDir, this.patterns.pluginPattern, entries => {
@@ -141,7 +199,13 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     return config;
   }
 
-  /** 获取加载器执行队列 */
+  /**
+   * ### 获取加载器执行队列
+   *
+   * @author Big Mogician
+   * @protected
+   * @memberof CoreLoader
+   */
   protected loadLoaderQueue() {
     let loaderConfig: PureObject = {};
     this.globDirs(this.patterns.loaderConfigPattern, entries => {
@@ -149,7 +213,6 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
         return lodash.merge(previousValue, require(currentValue as string));
       }, loaderConfig);
     });
-
     let queue: IPriority[] = [];
     Object.keys(loaderConfig).forEach(item => {
       queue.push(
@@ -168,7 +231,13 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     this.loaderQueue = queue;
   }
 
-  /** 获取加载器 */
+  /**
+   * ### 获取加载器
+   *
+   * @author Big Mogician
+   * @protected
+   * @memberof CoreLoader
+   */
   protected loadLoaders() {
     let loaders: PureObject = {};
     this.globDirs(this.patterns.loaderPattern, entries => {
@@ -180,11 +249,16 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     this.loaders = loaders;
   }
 
-  /** 执行加载器 */
+  /**
+   * ### 执行加载器
+   *
+   * @author Big Mogician
+   * @protected
+   * @memberof CoreLoader
+   */
   protected runLoaders() {
     const app = this.app;
     const loaders = this.loaders;
-
     this.loaderQueue.forEach(item => {
       if (loaders[item.name]) {
         const loader = new loaders[item.name]({
@@ -202,6 +276,13 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     });
   }
 
+  /**
+   * ### Use Middlewares
+   *
+   * @author Big Mogician
+   * @protected
+   * @memberof CoreLoader
+   */
   protected useMiddlewares() {
     const app = this.app;
     const middlewares = app.middlewares;
@@ -218,6 +299,16 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     });
   }
 
+  /**
+   * ### Wrap Middlewares
+   *
+   * @author Big Mogician
+   * @protected
+   * @param {NormalizedMiddleware} middleware
+   * @param {IPriority} options
+   * @returns
+   * @memberof CoreLoader
+   */
   protected wrapMiddleware(middleware: NormalizedMiddleware, options: IPriority) {
     const match: (ctx: any) => boolean = pathMatching(options);
     let fn: any = async function(ctx: any, next: () => Promise<any>) {

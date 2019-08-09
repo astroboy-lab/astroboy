@@ -6,10 +6,27 @@ import { PureObject, IDir, ILoaderOptions, IPluginEntry, IBaseApplication } from
 const TYPING_FILE_EXTS = '.d.ts';
 const APP_EXTENSIONS = ['js', 'ts'];
 
+/**
+ * ### Check the file is typing file or not.
+ *
+ * @author Big Mogician
+ * @param {EntryItem} entry
+ * @returns
+ */
 function fileIsNotTypingFile(entry: EntryItem) {
   return typeof entry === 'string' ? !entry.endsWith(TYPING_FILE_EXTS) : !entry.path.endsWith(TYPING_FILE_EXTS);
 }
 
+/**
+ * ### Base Loader
+ *
+ * @author Big Mogician
+ * @export
+ * @abstract
+ * @class Loader
+ * @template F
+ * @template A
+ */
 export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>> {
   protected dirs!: IDir[];
   protected app!: A;
@@ -23,18 +40,47 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
 
   abstract load(): void;
 
-  protected resolveExtensions(path: string, resolveDevide = false) {
+  /**
+   * ### Resolve Extensions
+   *
+   * @author Big Mogician
+   * @protected
+   * @param {string} path
+   * @param {boolean} [resolveDevide=false]
+   * @returns
+   * @memberof Loader
+   */
+  protected resolveExtensions(path: string, resolveDevide: boolean = false) {
     let newPath = path;
     APP_EXTENSIONS.forEach(ext => (newPath = newPath.replace(`.${ext}`, '')));
     return resolveDevide ? newPath.replace(/\//g, '.') : newPath;
   }
 
+  /**
+   * ### Get Dirs
+   *
+   * @author Big Mogician
+   * @protected
+   * @param {(string | string[])} patterns
+   * @param {(files: EntryItem[]) => void} callback
+   * @memberof Loader
+   */
   protected globDirs(patterns: string | string[], callback: (files: EntryItem[]) => void) {
     this.dirs.forEach(item => {
       this.globDir(item.baseDir, patterns, callback);
     });
   }
 
+  /**
+   * ### Resolve Dir
+   *
+   * @author Big Mogician
+   * @protected
+   * @param {string} baseDir
+   * @param {(string | string[])} patterns
+   * @param {(files: EntryItem[]) => void} callback
+   * @memberof Loader
+   */
   protected globDir(baseDir: string, patterns: string | string[], callback: (files: EntryItem[]) => void) {
     let newPatterns: string[] = [];
     if (typeof patterns === 'string') {
@@ -50,9 +96,14 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
   }
 
   /**
-   * 获取插件的根目录
+   * ### 获取插件的根目录
+   * - 要求插件的入口文件必须放在插件根目录
    *
-   * 要求插件的入口文件必须放在插件根目录
+   * @author Big Mogician
+   * @protected
+   * @param {IPluginEntry} plugin
+   * @returns
+   * @memberof Loader
    */
   protected getPluginPath(plugin: IPluginEntry) {
     if (plugin.path) {

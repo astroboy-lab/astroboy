@@ -3,15 +3,47 @@ import * as path from 'path';
 import * as Koa from 'koa';
 import { EventEmitter } from 'events';
 import { IAstroboyOptions, IInnerApplication } from '../definitions/core';
-import { IAstroboyContextDefine } from '../definitions';
-import { IBaseContextDefine } from '../definitions/extends/context';
+import { IAstroboyFrameworkDefine } from '../definitions';
+import { IBaseFrameworkDefine } from '../definitions/extends/context';
 import { CoreLoader } from './CoreLoader';
 import { BaseClass } from './base/BaseClass';
 
-export = class Astroboy<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine> extends EventEmitter {
+/**
+ * ## Astroboy Framework
+ *
+ * @author Big Mogician
+ * @class Astroboy
+ * @extends {EventEmitter}
+ * @template DEFINE Framework Definition, defalut is `IAstroboyFrameworkDefine`.
+ */
+class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFrameworkDefine> extends EventEmitter {
+  /**
+   * ### Astroboy BaseClass
+   *
+   * @static
+   * @memberof Astroboy
+   */
   public static BaseClass = BaseClass;
+  /**
+   * ### Astroboy Controller Base
+   *
+   * @static
+   * @memberof Astroboy
+   */
   public static Controller = BaseClass;
+  /**
+   * ### Astroboy Service Base
+   *
+   * @static
+   * @memberof Astroboy
+   */
   public static Service = BaseClass;
+  /**
+   * ### Astroboy <Helper&Utils> Base
+   *
+   * @static
+   * @memberof Astroboy
+   */
   public static Helper = BaseClass;
 
   protected app!: DEFINE['app'];
@@ -66,4 +98,6 @@ export = class Astroboy<DEFINE extends Partial<IBaseContextDefine> = IAstroboyCo
       }
     }, 3000);
   }
-};
+}
+
+export = Astroboy;

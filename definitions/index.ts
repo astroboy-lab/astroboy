@@ -8,7 +8,7 @@ import {
   IAstroboyPluginCtxMixins,
 } from './plugins';
 import { IBaseMiddlewareConfig, IBaseProjectConfig, IBasePluginConfig } from './config';
-import { IPureAstroboyContext, IBaseContextDefine } from './extends/context';
+import { IPureAstroboyContext, IBaseFrameworkDefine } from './extends/context';
 import { IPureAstroboyApplication } from './extends/app';
 import { IAstroboyOptions as BootstrapOptions } from './core';
 
@@ -32,8 +32,6 @@ export {
 } from './config';
 export * from './base';
 
-/** @deprecated use `IAstroboyBootstrapOptions` */
-export interface IAstroboyBootsrrapOptions extends BootstrapOptions {}
 /**
  * astroboy 框架的配置参数
  *
@@ -43,16 +41,18 @@ export interface IAstroboyBootsrrapOptions extends BootstrapOptions {}
  * @extends {BootstrapOptions}
  */
 export interface IAstroboyBootstrapOptions extends BootstrapOptions {}
+/** @deprecated use `IAstroboyBootstrapOptions` instead */
+export interface IAstroboyBootsrrapOptions extends IAstroboyBootstrapOptions {}
 
 /**
  * ## astroboy 基础上下文扩展结构
  *
  * @author Big Mogician
  * @export
- * @interface IAstroboyContextDefine
- * @extends {IBaseContextDefine}
+ * @interface IAstroboyFrameworkDefine
+ * @extends {IBaseFrameworkDefine}
  */
-export interface IAstroboyContextDefine extends IBaseContextDefine {
+export interface IAstroboyFrameworkDefine extends IBaseFrameworkDefine {
   ctx: IBaseContext;
   app: IAstroboyApplication;
   config: PureObject;
@@ -60,6 +60,8 @@ export interface IAstroboyContextDefine extends IBaseContextDefine {
   controllers: {};
   libs: {};
 }
+/** @deprecated use `IAstroboyFrameworkDefine` instead */
+export interface IAstroboyContextDefine extends IAstroboyFrameworkDefine {}
 
 /**
  * ## astroboy 基础app结构
@@ -86,7 +88,7 @@ export interface IAstroboyApplication<CONFIG extends PureObject = PureObject>
  * @template CONFIG
  * @template APP
  */
-export interface IAstroboyContext<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine>
+export interface IAstroboyContext<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFrameworkDefine>
   extends IAstroboyPluginCtxMixins,
     IPureAstroboyContext<DEFINE> {}
 

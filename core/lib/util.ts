@@ -1,6 +1,15 @@
 import * as fs from 'fs-extra';
 
-export function outputJsonSync(file: string, data: any, options = {}) {
+/**
+ * ### 输出内容到文件
+ *
+ * @author Big Mogician
+ * @export
+ * @param {string} file
+ * @param {*} data
+ * @param {*} [options={}]
+ */
+export function outputJsonSync(file: string, data: any, options: any = {}) {
   options = Object.assign(
     {
       spaces: 2,

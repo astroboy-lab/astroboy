@@ -1,18 +1,25 @@
-import { IAstroboyContextDefine } from '../../definitions';
+import { IAstroboyFrameworkDefine } from '../../definitions';
 import {
   IAstroboyCtxExtends,
   IArgumentsExtractor,
   IServiceProtected,
   ReturnAnyType,
-  IBaseContextDefine,
+  IBaseFrameworkDefine,
 } from '../../definitions/extends/context';
 
 /**
- * ctx Context 请求上下文对象
- * app Koa Application 实例对象
- * config 应用配置对象
+ * ## Astroboy Base Class
+ * - `ctx` Context 请求上下文对象
+ * - `app` Koa Application 实例对象
+ * - `config` 应用配置对象
+ *
+ * @author Big Mogician
+ * @export
+ * @class BaseClass
+ * @implements {IAstroboyCtxExtends<DEFINE>}
+ * @template DEFINE Framework Definition, default is `IAstroboyFrameworkDefine`
  */
-export class BaseClass<DEFINE extends Partial<IBaseContextDefine> = IAstroboyContextDefine>
+export class BaseClass<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFrameworkDefine>
   implements IAstroboyCtxExtends<DEFINE> {
   protected app: DEFINE['app'];
   protected config: DEFINE['config'];

@@ -1,10 +1,29 @@
 import Koa from 'koa';
 import { IConstructor } from './base';
 
+/**
+ * ## Base Framework Application
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IBaseApplication
+ * @extends {Koa}
+ * @template F
+ */
 export interface IBaseApplication<F extends PureObject = PureObject> extends Koa {
   config: F;
 }
 
+/**
+ * ## Base Framework Context
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IBaseContext
+ * @extends {Koa.Context}
+ * @template F
+ * @template A
+ */
 export interface IBaseContext<F extends PureObject = PureObject, A extends IBaseApplication = IBaseApplication<F>>
   extends Koa.Context {
   app: A;
@@ -14,6 +33,15 @@ export interface IBaseContext<F extends PureObject = PureObject, A extends IBase
   };
 }
 
+/**
+ * ## Inner Framework Application
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IInnerApplication
+ * @extends {IBaseApplication<F>}
+ * @template F
+ */
 export interface IInnerApplication<F extends PureObject = PureObject> extends IBaseApplication<F> {
   ROOT_PATH: string;
   ROOT_NAME: string;
