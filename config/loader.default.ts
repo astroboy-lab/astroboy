@@ -24,7 +24,7 @@ const defaultLoaderConfig: IBaseLoaderConfig = {
     priority: 20,
     options: {
       // 注意：为了控制配置合并顺序，不要这么写 `/config/config.(default|${NODE_ENV}).js`
-      pattern: [`/config/config.default.${SUPPORT_EXT}`, `/config/config.${NODE_ENV}.${SUPPORT_EXT}`],
+      pattern: [`/config/config.default.js`, `/config/config.${NODE_ENV}.js`],
     },
   },
   AstroboyMiddlewareLoader: {
@@ -32,7 +32,7 @@ const defaultLoaderConfig: IBaseLoaderConfig = {
     options: {
       pattern: `/app/middlewares/*.${SUPPORT_EXT}`,
       // 注意：为了控制配置合并顺序，不要这么写 `/config/config.(default|${NODE_ENV}).js`
-      configPattern: [`/config/middleware.default.${SUPPORT_EXT}`, `/config/middleware.${NODE_ENV}.${SUPPORT_EXT}`],
+      configPattern: [`/config/middleware.default.js`, `/config/middleware.${NODE_ENV}.js`],
     },
   },
   AstroboyLibLoader: {
