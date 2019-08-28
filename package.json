@@ -39,6 +39,7 @@
     "xss": "0.3.7"
   },
   "devDependencies": {
-    "vuepress": "^1.0.0-alpha.42"
+    "@types/koa": "^2.0.46",
+    "vuepress": "^1.0.3"
   }
 }
