@@ -184,7 +184,9 @@ class CoreLoader extends Loader {
     app.middlewareQueue.forEach(item => {
       if (middlewares[item.name]) {
         let fn = middlewares[item.name](item.options, app);
-        fn = this.wrapMiddleware(fn, item);
+        if (item.match || item.ignore) {
+          fn = this.wrapMiddleware(fn, item);
+        }
         if (fn) {
           app.use(fn);
         }
