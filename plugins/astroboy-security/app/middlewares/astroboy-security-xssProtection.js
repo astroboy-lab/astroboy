@@ -6,8 +6,8 @@
  * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
  */
 module.exports = function(options = '1; mode=block', app) {
-  return async function xssProtection(ctx, next) {
+  return function xssProtection(ctx, next) {
     ctx.set('X-XSS-Protection', options);
-    await next();
+    return next();
   };
 };

@@ -6,8 +6,8 @@
  * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/X-Frame-Options
  */
 module.exports = function(options = 'SAMEORIGIN', app) {
-  return async function frameOptions(ctx, next) {
+  return function frameOptions(ctx, next) {
     ctx.set('X-Frame-Options', options);
-    await next();
+    return next();
   };
 };

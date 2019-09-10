@@ -30,9 +30,9 @@ module.exports = (options, app) => {
     );
   };
 
-  return async function xss(ctx, next) {
+  return function xss(ctx, next) {
     ctx.query = deepXss(ctx.query);
     ctx.request.body = deepXss(ctx.request.body);
-    await next();
+    return next();
   };
 };

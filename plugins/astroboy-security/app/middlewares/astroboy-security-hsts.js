@@ -7,8 +7,8 @@ const assert = require('assert');
 module.exports = function(options, app) {
   if (typeof options === 'number') {
     options = {
-      maxAge: options
-    }
+      maxAge: options,
+    };
   }
   options = options || {};
   assert(typeof options.maxAge === 'number', 'options.maxAge should be a number');
@@ -21,8 +21,8 @@ module.exports = function(options, app) {
     value += '; preload';
   }
 
-  return async function hsts(ctx, next) {
+  return function hsts(ctx, next) {
     ctx.set('Strict-Transport-Security', value);
-    await next();
-  }
+    return next();
+  };
 };
