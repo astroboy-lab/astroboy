@@ -8,9 +8,9 @@ import { MiddlewareFactory } from '../../../../definitions';
  * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/X-Frame-Options
  */
 const factory: MiddlewareFactory<string, any> = function(options = 'SAMEORIGIN', app) {
-  return async function frameOptions(ctx, next) {
+  return function frameOptions(ctx, next) {
     ctx.set('X-Frame-Options', options);
-    await next();
+    return next();
   };
 };
 

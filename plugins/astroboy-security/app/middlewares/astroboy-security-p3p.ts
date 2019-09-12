@@ -16,9 +16,9 @@ const factory: MiddlewareFactory<{ value?: string } | string, any> = function(op
   options.value = options.value || 'p3p';
   assert(typeof options.value === 'string', 'options.value should be a string');
 
-  return async function p3p(ctx, next) {
+  return function p3p(ctx, next) {
     ctx.set('P3P', (<any>options).value);
-    await next();
+    return next();
   };
 };
 

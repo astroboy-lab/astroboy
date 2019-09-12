@@ -5,9 +5,9 @@ import { MiddlewareFactory } from '../../../../definitions';
  * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-Content-Type-Options
  */
 const factory: MiddlewareFactory<string, any> = function(options = 'nosniff', app) {
-  return async function cto(ctx, next) {
+  return function cto(ctx, next) {
     ctx.set('X-Content-Type-Options', options);
-    await next();
+    return next();
   };
 };
 

@@ -289,7 +289,10 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     app.middlewareQueue.forEach(item => {
       if (middlewares[item.name]) {
         let fn = middlewares[item.name](item.options, app);
-        fn = this.wrapMiddleware(fn, item);
+        // 定义扩宽，match和ignore实际上只有一个存在并生效
+        if ((<any>item).match || (<any>item).ignore) {
+          fn = this.wrapMiddleware(fn, item);
+        }
         if (fn) {
           app.use(fn);
         }

@@ -23,9 +23,9 @@ const factory: MiddlewareFactory<Partial<IHstsOptions> | number, any> = function
     value += '; preload';
   }
 
-  return async function hsts(ctx, next) {
+  return function hsts(ctx, next) {
     ctx.set('Strict-Transport-Security', value);
-    await next();
+    return next();
   };
 };
 

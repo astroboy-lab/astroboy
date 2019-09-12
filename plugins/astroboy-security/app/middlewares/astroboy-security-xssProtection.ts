@@ -8,9 +8,9 @@ import { MiddlewareFactory } from '../../../../definitions';
  * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-XSS-Protection
  */
 const factory: MiddlewareFactory<string, any> = function(options = '1; mode=block', app) {
-  return async function xssProtection(ctx, next) {
+  return function xssProtection(ctx, next) {
     ctx.set('X-XSS-Protection', options);
-    await next();
+    return next();
   };
 };
 
