@@ -30,6 +30,7 @@ class CoreLoader extends Loader {
     this.loadLoaderQueue();
     this.loadLoaders();
     this.runLoaders();
+    this.useFns();
     this.useMiddlewares();
   }
 
@@ -175,6 +176,24 @@ class CoreLoader extends Loader {
       } else {
         throw new Error(`Loader ${item.name} is not found.`);
       }
+    });
+  }
+
+  useFns() {
+    const app = this.app;
+    const fns = app.fns;
+    const loop = function() {};
+
+    app.use(async function(ctx, next) {
+      app.fnQueue.forEach(item => {
+        if (fns[item.name]) {
+          let fn = fns[item.name](item.options, app);
+          if (fn) {
+            fn(ctx, loop);
+          }
+        }
+      });
+      return await next();
     });
   }
 

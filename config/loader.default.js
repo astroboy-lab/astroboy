@@ -69,4 +69,11 @@ module.exports = {
       pattern: '/config/version*.json',
     },
   },
+  AstroboyFnLoader: {
+    priority: 60,
+    options: {
+      pattern: `/app/fns/*.${SUPPORT_EXT}`,
+      configPattern: ['/config/fn.default.js', `/config/fn.${NODE_ENV}.js`],
+    },
+  },
 };
