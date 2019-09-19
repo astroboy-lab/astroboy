@@ -39,7 +39,7 @@ module.exports = [
 ];
 ```
 
-**注意**：一旦 `app/routers` 目录存在 `index.js` 文件，框架就只会加载改文件。
+**注意**：一旦 `app/routers` 目录存在 `index.js` 文件，框架就只会加载该文件。
 
 ### 真实业务场景实例
 
