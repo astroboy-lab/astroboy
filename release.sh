@@ -20,5 +20,5 @@ then
     git push origin refs/tags/v$VERSION
   fi
 
-  npm publish
+  make publish
 fi
