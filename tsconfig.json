@@ -11,7 +11,8 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "skipLibCheck": true
   },
   "include": ["app", "config", "core", "loader", "plugins", "definitions", "index.ts"]
 }

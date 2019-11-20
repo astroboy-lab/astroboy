@@ -71,6 +71,12 @@ const defaultLoaderConfig: IBaseLoaderConfig = {
       pattern: '/config/version*.json',
     },
   },
+  AstroboyFnLoader: {
+    priority: 60,
+    options: {
+      pattern: `/app/fns/**/*.${SUPPORT_EXT}`,
+    },
+  },
 };
 
 export = defaultLoaderConfig;
