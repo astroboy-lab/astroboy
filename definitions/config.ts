@@ -58,6 +58,7 @@ export interface IBaseLoaderConfig {
   AstroboyServiceLoader: IPriorityOptions;
   AstroboyRouterLoader: IPriorityOptions;
   AstroboyVersionFileLoader: IPriorityOptions;
+  AstroboyFnLoader: IPriorityOptions;
 }
 
 /**
