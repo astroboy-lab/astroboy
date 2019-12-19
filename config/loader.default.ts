@@ -4,7 +4,7 @@ import { IBaseLoaderConfig } from '../definitions/config';
  * 配置加载器加载顺序
  */
 const SUPPORT_EXT = '(js|ts)';
-const NODE_ENV = process.env.NODE_ENV;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const defaultLoaderConfig: IBaseLoaderConfig = {
   AstroboyPkgLoader: {
@@ -75,6 +75,7 @@ const defaultLoaderConfig: IBaseLoaderConfig = {
     priority: 60,
     options: {
       pattern: `/app/fns/**/*.${SUPPORT_EXT}`,
+      configPattern: [`/config/fn.default.js`, `/config/fn.${NODE_ENV}.js`],
     },
   },
 };

@@ -56,6 +56,7 @@ export interface IInnerApplication<F extends PureObject = PureObject> extends IB
   versionMap: PureObject<any>;
   pkg: PureObject<any>;
   fns: PureObject<Function>;
+  fnConfig: PureObject<any>;
 }
 
 export type MiddlewareFactory<OPTS extends any = any, APP extends IBaseApplication = IBaseApplication> = (
