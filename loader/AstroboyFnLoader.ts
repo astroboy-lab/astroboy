@@ -21,7 +21,7 @@ class AstroboyFnLoader extends Loader<Partial<IOptions>, IInnerApplication<Parti
           (<string[]>entries).forEach(entry => {
             const key = this.resolveExtensions(entry.split('fns/')[1], true);
             const config = fnConfig[key] || {};
-            fns[key] = require(entry)(config);
+            fns[key] = require(entry)(config.options || {});
           });
         }
       });
