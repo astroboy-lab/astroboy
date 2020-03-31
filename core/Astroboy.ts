@@ -19,6 +19,7 @@ import { BaseClass as AstroboyBaseClass } from './base/BaseClass';
 class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFrameworkDefine> extends EventEmitter {
   protected app!: DEFINE['app'];
   protected options!: IAstroboyOptions;
+  protected listener!: any;
   private loader!: CoreLoader<DEFINE['config'], any>;
 
   protected get [Symbol.for('BASE_DIR')]() {
@@ -51,7 +52,7 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
   }
 
   private start() {
-    this.app.listen(this.options.NODE_PORT, () => {
+    this.listener = this.app.listen(this.options.NODE_PORT, () => {
       console.log(chalk.green('应用启动成功'));
       console.log(chalk.green(`访问地址：${chalk.blue('http://127.0.0.1:' + this.options.NODE_PORT)}`));
       this.emit('start', this.app);
