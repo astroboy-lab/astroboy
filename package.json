@@ -19,9 +19,6 @@
   "author": "KK",
   "license": "MIT",
   "dependencies": {
-    "@types/fs-extra": "^5.1.0",
-    "@types/koa": "^2.0.46",
-    "@types/lodash": "^4.14.123",
     "chalk": "2.4.0",
     "complete-assign": "0.0.2",
     "fast-glob": "2.2.6",
@@ -40,7 +37,9 @@
     "xss": "0.3.7"
   },
   "devDependencies": {
+    "@types/fs-extra": "^5.1.0",
     "@types/koa": "^2.0.46",
+    "@types/lodash": "^4.14.123",
     "chokidar": "^3.1.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.6.3",
