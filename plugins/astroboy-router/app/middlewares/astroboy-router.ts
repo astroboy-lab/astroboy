@@ -19,7 +19,7 @@ const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}
         for (let i = 0; i < router.controllerMethod.length; i++) {
           if (!ControllerClass.prototype[router.controllerMethod[i]]) {
             throw new Error(
-              `注册路由失败，verb:${router.method} path:${router.path}, method:${router.controllerMethod[i]} is not found.`
+              `注册路由失败，method:${router.method} path:${router.path}, method:${router.controllerMethod[i]} is not found.`
             );
           }
         }
@@ -48,12 +48,12 @@ const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}
         });
       } else {
         throw new Error(
-          `注册路由失败，verb:${router.method} path:${router.path}, controllerName:${router.controllerName} is not a function.`
+          `注册路由失败，method:${router.method} path:${router.path}, controllerName:${router.controllerName} is not a function.`
         );
       }
     } else {
       throw new Error(
-        `注册路由失败，verb:${router.method} path:${router.path}, controllerName:${router.controllerName} is undefined.`
+        `注册路由失败，method:${router.method} path:${router.path}, controllerName:${router.controllerName} is undefined.`
       );
     }
   });
