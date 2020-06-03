@@ -29,11 +29,12 @@ class AstroboyRouterLoader extends Loader<Partial<IOptions>, IInnerApplication<P
         router.unshift('');
       }
       newRouters.push({
+        version: 'v1',
         name: router[0],
-        verb: router[1].toLowerCase(),
+        method: router[1].toLowerCase(),
         path: Array.isArray(router[2]) ? router[2] : [router[2]],
-        controller: controllers[router[3]],
-        methods: Array.isArray(router[4]) ? router[4] : [router[4]],
+        controllerClass: controllers[router[3]],
+        controllerMethod: Array.isArray(router[4]) ? router[4] : [router[4]],
         controllerName: router[3],
       });
     });
