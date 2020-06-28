@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import * as fs from 'fs';
 import * as glob from 'fast-glob';
 import * as lodash from 'lodash';
 // @ts-ignore typings missing
