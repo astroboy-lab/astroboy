@@ -65,3 +65,5 @@ _book/
 docs/.vuepress/dist/**/*
 
 dist
+
+package-lock.json
