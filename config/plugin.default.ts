@@ -20,11 +20,6 @@ const defaultPluginConfig: IBasePluginConfig = {
     path: path.resolve(__dirname, '../plugins/astroboy-security'),
   },
 
-  'astroboy-static': {
-    enable: true,
-    path: path.resolve(__dirname, '../plugins/astroboy-static'),
-  },
-
   'astroboy-view': {
     enable: true,
     path: path.resolve(__dirname, '../plugins/astroboy-view'),

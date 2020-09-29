@@ -85,7 +85,6 @@ export interface IBasePluginConfig {
   'astroboy-body': IPluginOptions;
   'astroboy-router': IPluginOptions;
   'astroboy-security': IPluginOptions;
-  'astroboy-static': IPluginOptions;
   'astroboy-view': IPluginOptions;
 }
 

@@ -1,7 +1,6 @@
 import { IAstroboyBodyPluginMiddlewareExtends } from '../../plugins/astroboy-body/contract';
 import { IAstroboyRouterPluginMiddlewareExtends } from '../../plugins/astroboy-router/contract';
 import { IAstroboySecurityPluginMiddlewareExtends } from '../../plugins/astroboy-security/contract';
-import { IAstroboyStaticPluginMiddlewareExtends } from '../../plugins/astroboy-static/contract';
 import {
   IAstroboyViewPluginAppExtends,
   IAstroboyViewPluginCtxExtends,
@@ -17,7 +16,6 @@ export interface IAstroboyPluginConfigMixins extends IAstroboyViewPluginConfigEx
 export interface IAstroboyPluginMiddlewareMixins
   extends IAstroboyBodyPluginMiddlewareExtends,
     IAstroboyRouterPluginMiddlewareExtends,
-    IAstroboySecurityPluginMiddlewareExtends,
-    IAstroboyStaticPluginMiddlewareExtends {}
+    IAstroboySecurityPluginMiddlewareExtends {}
 
 export interface IAstroboyPluginRegisterMixins {}
