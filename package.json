@@ -5,8 +5,6 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "watch": "TS_PROJECT=tsconfig.dev.json ts-node scripts/watch.ts",
-    "release": "sh release.sh",
     "docs:deploy": "sh deploy.sh",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs"
