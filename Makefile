@@ -1,17 +1,25 @@
-clean:
-	rm -rf dist
+usage = "\
+Usage:	make <option> \n\n\
+dev		Local development mode \n\
+link		Symlink a package folder \n\
+build		Build a package \n\
+publish 	Publish a package \n"
 
-compile:
-	tsc
+default:
+	@echo $(usage)
+
+dev:
+	yarn tsc --watch -p ./tsconfig.json
+
+link: build
+	cd dist && yarn link
+
+build:
+	rm -rf dist
+	yarn tsc -p ./tsconfig.json
 	cp README.md dist/
 	cp CHANGELOG dist/
-
-re-compile: clean compile
-
-copy-pkg:
 	cp package.json dist/
 
-build: re-compile copy-pkg
-
-publish: build
-	cd dist && npm publish
+publish:
+	sh release.sh
