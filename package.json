@@ -19,23 +19,22 @@
   "author": "KK",
   "license": "MIT",
   "dependencies": {
-    "@types/fs-extra": "^5.1.0",
+    "@types/fs-extra": "^9.0.1",
     "@types/koa": "^2.0.46",
     "@types/lodash": "^4.14.123",
-    "chalk": "2.4.0",
+    "chalk": "4.1.0",
     "complete-assign": "0.0.2",
     "fast-glob": "2.2.6",
-    "fs-extra": "5.0.0",
+    "fs-extra": "9.0.1",
     "koa": "2.5.0",
     "koa-body": "2.5.0",
     "koa-bodyparser": "4.2.1",
-    "koa-compose": "4.0.0",
+    "koa-compose": "4.1.0",
     "koa-router": "7.4.0",
     "koa-static": "4.0.2",
     "lodash": "4.17.11",
     "methods": "1.1.2",
     "path-matching": "0.0.2",
-    "path-to-regexp": "2.2.1",
     "tslib": "1.9.3",
     "xss": "0.3.7"
   },
@@ -43,7 +42,7 @@
     "@types/koa": "^2.0.46",
     "chokidar": "^3.1.0",
     "ts-node": "^7.0.1",
-    "typescript": "^3.6.3",
+    "typescript": "3.8.3",
     "vuepress": "^1.0.3"
   }
 }
