@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import * as path from 'path';
-import * as fs from 'fs-extra';
+import * as fs from 'fs';
 import { IViewManager } from '../../contract';
 
 export class ViewManager extends Map implements IViewManager {

@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import * as fse from 'fs-extra';
 
 /**
  * ### 输出内容到文件
@@ -17,5 +17,5 @@ export function outputJsonSync(file: string, data: any, options: any = {}) {
     },
     options
   );
-  fs.outputJsonSync(file, data, options);
+  fse.outputJsonSync(file, data, options);
 }
