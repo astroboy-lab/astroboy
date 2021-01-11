@@ -79,6 +79,7 @@ export interface IAstroboyOptions {
   NODE_ENV: string;
   NODE_PORT: string;
   ROOT_PATH: string;
+  PROXY: boolean;
 }
 
 export interface ILoaderOptions<F extends PureObject, A extends IBaseApplication> {
