@@ -1,8 +1,7 @@
 /**
  * 框架路由中间件
  */
-import * as lodash from 'lodash';
-// @ts-ignore typings missed
+// @ts-ignore
 import * as KoaRouter from 'koa-router';
 import * as compose from 'koa-compose';
 
@@ -13,50 +12,25 @@ const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}
   const koaRouter = new KoaRouter();
 
   app.routers.forEach((router: any) => {
-    const ControllerClass: IConstructor<any> = router.controller;
-    if (ControllerClass) {
-      if (lodash.isFunction(ControllerClass)) {
-        for (let i = 0; i < router.methods.length; i++) {
-          if (!ControllerClass.prototype[router.methods[i]]) {
-            throw new Error(
-              `注册路由失败，verb:${router.verb} path:${router.path}, method:${router.methods[i]} is not found.`
-            );
+    for (let i = 0; i < router.method.length; i++) {
+      const method = router.method[i];
+      for (let j = 0; j < router.path.length; j++) {
+        const path = router.path[j];
+        koaRouter[method](router.name, path, async function(ctx: any, next: () => Promise<any>) {
+          const ControllerClass: IConstructor<any> = router.controller;
+          const controller = new (<any>ControllerClass)(ctx);
+          const controllerMethods = router.controllerMethods;
+
+          for (let k = 0; k < controllerMethods.length; k++) {
+            const action = controllerMethods[k];
+            if (ctx.status !== 301 && ctx.status !== 302 && !ctx.body) {
+              await controller[action](ctx, next);
+            } else {
+              break;
+            }
           }
-        }
-        router.path.forEach((item: any) => {
-          koaRouter[router.verb](router.name, item, async function(ctx: any, next: () => Promise<any>) {
-            const controller = new (<any>ControllerClass)(ctx);
-            // init 是 Controller 类初始化后调用的一个方法
-            if (ControllerClass.prototype.init) {
-              await controller['init']();
-            }
-            if (ctx.status !== 301 && ctx.status !== 302) {
-              for (let i = 0; i < router.methods.length; i++) {
-                let method = router.methods[i];
-                const beforeMethod = 'before' + method.slice(0, 1).toUpperCase() + method.slice(1);
-                if (ControllerClass.prototype[beforeMethod]) {
-                  await controller[beforeMethod]();
-                }
-                if (ctx.status !== 301 && ctx.status !== 302 && !ctx.body) {
-                  await controller[method](ctx, next);
-                } else {
-                  break;
-                }
-              }
-            }
-          });
         });
-      } else {
-        throw new Error(
-          `注册路由失败，verb:${router.verb} path:${router.path}, controllerName:${
-            router.controllerName
-          } is not a function.`
-        );
       }
-    } else {
-      throw new Error(
-        `注册路由失败，verb:${router.verb} path:${router.path}, controllerName:${router.controllerName} is undefined.`
-      );
     }
   });
 
