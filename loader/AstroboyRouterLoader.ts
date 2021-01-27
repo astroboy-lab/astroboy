@@ -6,6 +6,13 @@ import { Loader } from '../core/Loader';
 import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
 
+const Ajv = require('ajv');
+const ajv = new Ajv();
+
+function check(data: any) {
+  return Object.prototype.toString.call(data) === '[object Object]' && Object.keys(data).length > 0;
+}
+
 /**
  * 加载所有路由文件
  */
@@ -13,7 +20,10 @@ function loadRouters(rootPath: string, pattern: any): any[] {
   let routerArr: any[] = [];
   const indexFile = `${rootPath}/app/routers/index.js`;
   if (fs.existsSync(indexFile)) {
-    routerArr = require(indexFile);
+    const content = require(indexFile);
+    if (Array.isArray(content)) {
+      routerArr = content;
+    }
   } else {
     const entries = glob.sync([`${rootPath}${pattern}`], {
       dot: true,
@@ -35,7 +45,7 @@ function parseOldRouter(router: any): any {
   }
   return {
     name: router[0],
-    method: Array.isArray(router[1]) ? router[1].map(item => item.toLowerCase()) : [router[1].toLowerCase()],
+    method: Array.isArray(router[1]) ? router[1] : [router[1]],
     path: Array.isArray(router[2]) ? router[2] : [router[2]],
     controllerName: router[3],
     controllerMethods: Array.isArray(router[4]) ? router[4] : [router[4]],
@@ -63,9 +73,7 @@ function parseNewRouter(router: any): any {
 
   return {
     name: router.name,
-    method: Array.isArray(router.method)
-      ? router.method.map((item: string) => item.toLowerCase())
-      : [router.method.toLowerCase()],
+    method: Array.isArray(router.method) ? router.method : [router.method],
     path: Array.isArray(router.path) ? router.path : [router.path],
     controllerName: splitArr[0],
     controllerMethods,
@@ -110,6 +118,17 @@ class AstroboyRouterLoader extends Loader<Partial<IOptions>, IInnerApplication<P
         }
       });
       router.controllerMethods = newControllerMethods;
+
+      router.compiledSchema = {};
+      if (check(router.schema.header)) {
+        router.compiledSchema.header = ajv.compile(router.schema.header);
+      }
+      if (check(router.schema.query)) {
+        router.compiledSchema.query = ajv.compile(router.schema.query);
+      }
+      if (check(router.schema.body)) {
+        router.compiledSchema.body = ajv.compile(router.schema.body);
+      }
 
       routers.push(router);
     });
