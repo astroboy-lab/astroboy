@@ -40,6 +40,7 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
   protected init() {
     this.app = <any>new Koa();
     this.app.env = this.options.NODE_ENV;
+    this.app.proxy = this.options.PROXY;
     (<IInnerApplication>(<unknown>this.app)).NODE_ENV = this.options.NODE_ENV;
     (<IInnerApplication>(<unknown>this.app)).ROOT_PATH = this.options.ROOT_PATH;
     (<IInnerApplication>(<unknown>this.app)).ROOT_NAME = path.basename(this.options.ROOT_PATH);
