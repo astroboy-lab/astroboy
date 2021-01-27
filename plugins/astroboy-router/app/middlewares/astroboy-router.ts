@@ -4,6 +4,7 @@
 // @ts-ignore
 import * as KoaRouter from 'koa-router';
 import * as compose from 'koa-compose';
+import chalk from 'chalk';
 
 import { MiddlewareFactory, IConstructor } from '../../../../definitions';
 import { IInnerApplication } from '../../../../definitions/core';
@@ -11,11 +12,13 @@ import { IInnerApplication } from '../../../../definitions/core';
 const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}, app) {
   const koaRouter = new KoaRouter();
 
+  console.log(chalk.green('开始注册路由 ===>'));
   app.routers.forEach((router: any) => {
     for (let i = 0; i < router.method.length; i++) {
       const method = router.method[i].toLowerCase();
       for (let j = 0; j < router.path.length; j++) {
         const path = router.path[j];
+
         console.log(
           `注册路由：${method} ${path} ==> ${router.controllerName}: ${router.controllerMethods.join(' > ')}`
         );
@@ -72,6 +75,7 @@ const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}
       }
     }
   });
+  console.log(chalk.green(`所有路由注册成功，共注册 ${chalk.blue(app.routers.length)} 个路由\n`));
 
   let fn = compose([koaRouter.routes(), koaRouter.allowedMethods()]);
   (<any>fn)._name = 'astroboy-router';

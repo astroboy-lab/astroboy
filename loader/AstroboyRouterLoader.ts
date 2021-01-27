@@ -45,6 +45,7 @@ function parseOldRouter(router: any): any {
   }
   return {
     name: router[0],
+    description: '',
     method: Array.isArray(router[1]) ? router[1] : [router[1]],
     path: Array.isArray(router[2]) ? router[2] : [router[2]],
     controllerName: router[3],
@@ -73,6 +74,7 @@ function parseNewRouter(router: any): any {
 
   return {
     name: router.name,
+    description: router.description || '',
     method: Array.isArray(router.method) ? router.method : [router.method],
     path: Array.isArray(router.path) ? router.path : [router.path],
     controllerName: splitArr[0],
