@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import * as path from 'path';
 import * as Koa from 'koa';
 import { EventEmitter } from 'events';
@@ -53,8 +52,8 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
 
   private start() {
     this.app.listen(this.options.NODE_PORT, () => {
-      console.log(chalk.green('应用启动成功'));
-      console.log(chalk.green(`访问地址：${chalk.blue('http://127.0.0.1:' + this.options.NODE_PORT)}`));
+      console.log('应用启动成功');
+      console.log(`访问地址：${'http://127.0.0.1:' + this.options.NODE_PORT}`);
       this.emit('start', this.app);
     });
     this.app.on('error', (err: any, ctx: DEFINE['ctx']) => {
