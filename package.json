@@ -1,6 +1,6 @@
 {
   "name": "astroboy",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Astroboy（阿童木）is a Nodejs SFB(Separation of Front and Back ends) framework, built on koa2.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -21,7 +21,6 @@
     "@types/koa": "^2.0.46",
     "@types/lodash": "^4.14.123",
     "ajv": "^6.12.6",
-    "chalk": "4.1.0",
     "complete-assign": "0.0.2",
     "fast-glob": "2.2.6",
     "fs-extra": "9.0.1",
