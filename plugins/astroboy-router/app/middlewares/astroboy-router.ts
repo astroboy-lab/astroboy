@@ -12,13 +12,18 @@ const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}
   const koaRouter = new KoaRouter();
 
   console.log('开始注册路由 ===>');
+  let counter = 0;
   app.routers.forEach((router: any) => {
     for (let i = 0; i < router.method.length; i++) {
       const method = router.method[i].toLowerCase();
       for (let j = 0; j < router.path.length; j++) {
         const path = router.path[j];
+        const name = router.name || '';
+        const controllerName = router.controllerName;
+        const controllerMethods = router.controllerMethods || [];
 
-        console.log(`注册路由：${method} ${path} ==> ${router.controllerName}:${router.controllerMethods.join(' > ')}`);
+        counter++;
+        console.log(`${name}：${method} ${path} ==> ${controllerName}:${controllerMethods.join(' > ')}`);
         koaRouter[method](router.name, path, async function(ctx: any, next: () => Promise<any>) {
           if (router.compiledSchema.header) {
             const valid = router.compiledSchema.header(ctx.headers);
@@ -72,7 +77,7 @@ const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}
       }
     }
   });
-  console.log(`所有路由注册成功，共注册 ${app.routers.length} 个路由\n`);
+  console.log(`所有路由注册成功，共注册 ${counter} 个路由\n`);
 
   let fn = compose([koaRouter.routes(), koaRouter.allowedMethods()]);
   (<any>fn)._name = 'astroboy-router';

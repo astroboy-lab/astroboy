@@ -1,9 +1,8 @@
-
 ## astroboy-cli 工具介绍
 
 ### 1. astroboy-cli 工具是用来做什么的？
 
-
+astroboy-cli 是 Astroboy 框架提供的一个用于本地开发调试的命令行工具。
 
 ### 2. 安装
 
@@ -14,7 +13,6 @@ npm install -g astroboy-cli
 ### 3. 命令介绍
 
 #### ast dev
-
 
 ast dev --help
 
@@ -43,4 +41,3 @@ ast dev --help
     $ ast dev --port 8201
     $ ast dev --env qa --port 8201
 ```
-
