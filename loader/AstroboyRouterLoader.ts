@@ -79,7 +79,7 @@ function parseNewRouter(router: any): any {
     path: Array.isArray(router.path) ? router.path : [router.path],
     controllerName: splitArr[0],
     controllerMethods,
-    schema: router.schema,
+    schema: router.schema || {},
   };
 }
 
