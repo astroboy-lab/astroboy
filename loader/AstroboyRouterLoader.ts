@@ -7,7 +7,9 @@ import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
 
 const Ajv = require('ajv');
-const ajv = new Ajv();
+const ajv = new Ajv({
+  coerceTypes: true,
+});
 
 function check(data: any) {
   return Object.prototype.toString.call(data) === '[object Object]' && Object.keys(data).length > 0;
