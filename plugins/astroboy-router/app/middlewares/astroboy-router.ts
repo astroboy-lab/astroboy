@@ -50,7 +50,7 @@ const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}
           }
 
           if (router.compiledSchema.body) {
-            const valid = router.compiledSchema.body(ctx.body);
+            const valid = router.compiledSchema.body(ctx.request.body);
             if (!valid) {
               ctx.body = {
                 code: 'ERR_HTTP_REQUEST_BODY_VALID_FAILED',
