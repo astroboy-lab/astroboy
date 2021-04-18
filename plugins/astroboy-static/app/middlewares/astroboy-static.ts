@@ -6,10 +6,10 @@ import { MiddlewareFactory } from '../../../../definitions';
 // @ts-ignore typings missed
 import staticM = require('koa-static');
 
-const factory: MiddlewareFactory<{ root?: string }, any> = function(options, app) {
+const astroboyStaticFactory: MiddlewareFactory<{ root?: string }, any> = function(options, app) {
   let fn = staticM(options.root, options);
   fn._name = 'static';
   return fn;
 };
 
-export = factory;
+export = astroboyStaticFactory;

@@ -2,7 +2,7 @@ import * as lodash from 'lodash';
 import * as xss from 'xss';
 import { MiddlewareFactory } from '../../../../definitions';
 
-const factory: MiddlewareFactory<any, any> = (options, app) => {
+const astroboySecurityXSSFactory: MiddlewareFactory<any, any> = (options, app) => {
   const myxss = new xss.FilterXSS(options);
   const deepXss = function(value: any, deep = true) {
     let res: any;
@@ -38,4 +38,4 @@ const factory: MiddlewareFactory<any, any> = (options, app) => {
   };
 };
 
-export = factory;
+export = astroboySecurityXSSFactory;

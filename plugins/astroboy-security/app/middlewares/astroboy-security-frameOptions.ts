@@ -7,11 +7,11 @@ import { MiddlewareFactory } from '../../../../definitions';
  * ALLOW-FROM uri 表示该页面可以在指定来源的 frame 中展示。
  * https://developer.mozilla.org/zh-CN/docs/Web/HTTP/X-Frame-Options
  */
-const factory: MiddlewareFactory<string, any> = function(options = 'SAMEORIGIN', app) {
+const astroboySecurityFrameOptionsFactory: MiddlewareFactory<string, any> = function(options = 'SAMEORIGIN', app) {
   return function frameOptions(ctx, next) {
     ctx.set('X-Frame-Options', options);
     return next();
   };
 };
 
-export = factory;
+export = astroboySecurityFrameOptionsFactory;
