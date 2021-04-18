@@ -53,6 +53,7 @@ function parseOldRouter(router: any): any {
     controllerName: router[3],
     controllerMethods: Array.isArray(router[4]) ? router[4] : [router[4]],
     schema: {},
+    middleware: [],
   };
 }
 
@@ -82,6 +83,7 @@ function parseNewRouter(router: any): any {
     controllerName: splitArr[0],
     controllerMethods,
     schema: router.schema || {},
+    middleware: router.middleware || [],
   };
 }
 
@@ -89,6 +91,8 @@ class AstroboyRouterLoader extends Loader<Partial<IOptions>, IInnerApplication<P
   load() {
     const routerArr: any[] = loadRouters(this.app.ROOT_PATH, this.config.pattern);
     const controllers = this.app.controllers;
+    const middlewares = this.app.middlewares;
+    const middlewareConfig = this.app.middlewareConfig;
     const routers: any[] = [];
 
     routerArr.forEach(item => {
@@ -100,6 +104,17 @@ class AstroboyRouterLoader extends Loader<Partial<IOptions>, IInnerApplication<P
           throw new Error(`注册路由失败，请求方法 ${method} 不是一个标准的 HTTP 请求方法！`);
         }
       });
+
+      console.log(router.middleware);
+      for (let i = 0; i < router.middleware.length; i++) {
+        const middleware = router.middleware[i];
+        if (!middlewares[middleware]) {
+          throw new Error(`注册路由失败，中间件 ${middleware} 不存在`);
+        } else {
+          router.middleware[i] = middlewares[middleware];
+        }
+      }
+
       if (!router.controller) {
         throw new Error(`注册路由失败，控制器 ${router.controllerName} 未找到！`);
       }
