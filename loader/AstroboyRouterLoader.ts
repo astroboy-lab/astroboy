@@ -105,13 +105,13 @@ class AstroboyRouterLoader extends Loader<Partial<IOptions>, IInnerApplication<P
         }
       });
 
-      console.log(router.middleware);
       for (let i = 0; i < router.middleware.length; i++) {
-        const middleware = router.middleware[i];
-        if (!middlewares[middleware]) {
-          throw new Error(`注册路由失败，中间件 ${middleware} 不存在`);
+        const middlewareKey = router.middleware[i];
+        if (!middlewares[middlewareKey]) {
+          throw new Error(`注册路由失败，中间件 ${middlewareKey} 不存在`);
         } else {
-          router.middleware[i] = middlewares[middleware];
+          const middlewareOptions = middlewareConfig[middlewareKey] && middlewareConfig[middlewareKey].options;
+          router.middleware[i] = middlewares[middlewareKey](middlewareOptions, this.app);
         }
       }
 

@@ -7,7 +7,7 @@ import { outputJsonSync } from '../core/lib/util';
 
 class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
   load() {
-    // 加载中间件配置
+    // 加载中间件配置文件
     let middlewareConfig: PureObject = {};
     this.globDirs(this.config.configPattern || [], entries => {
       entries.forEach(entry => {
@@ -16,7 +16,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
     });
     this.app.middlewareConfig = middlewareConfig;
 
-    // 加载中间件
+    // 加载中间件文件
     let middlewares: PureObject<MiddlewareFactory> = {};
     this.globDirs(this.config.pattern || [], entries => {
       entries.forEach(entry => {
