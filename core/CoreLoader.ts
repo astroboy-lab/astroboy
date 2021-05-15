@@ -13,6 +13,7 @@ import {
   ICoreLoaderOptions,
 } from '../definitions/core';
 import { Loader } from './Loader';
+import { Middleware } from 'koa'
 
 /**
  * ## Core Loader
@@ -34,6 +35,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
   protected coreDirs!: IDir[];
   protected loaderQueue!: IPriority[];
   protected NODE_ENV!: string;
+  middlewareList: Middleware[] = [];
 
   get defaultPatterns(): IDefaultLoaders {
     return {
@@ -286,6 +288,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
   protected useMiddlewares() {
     const app = this.app;
     const middlewares = app.middlewares;
+    const self = this
     app.middlewareQueue.forEach(item => {
       if (middlewares[item.name]) {
         let fn = middlewares[item.name](item.options, app);
@@ -295,6 +298,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
         }
         if (fn) {
           app.use(fn);
+          self.middlewareList.push(fn)
         }
       } else {
         throw new Error(`middleware ${item.name} is not found.`);

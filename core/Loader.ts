@@ -109,6 +109,7 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
     if (plugin.path) {
       return plugin.path;
     }
+
     const name = plugin.package || plugin.name!;
     const entryFile = require.resolve(name);
     return path.dirname(entryFile);
