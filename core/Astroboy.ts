@@ -7,6 +7,16 @@ import { IBaseFrameworkDefine } from '../definitions/extends/context';
 import { CoreLoader } from './CoreLoader';
 import { BaseClass as AstroboyBaseClass } from './base/BaseClass';
 
+const completeAssign = require('complete-assign');
+
+import {
+  request as mockRequest,
+  response as mockResponse,
+  context as mockContext,
+  application as mockApplication,
+} from '../core/lib/mockKoa';
+
+import * as compose from 'koa-compose';
 /**
  * ## Astroboy Framework
  *
@@ -20,6 +30,13 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
   protected options!: IAstroboyOptions;
   private loader!: CoreLoader<DEFINE['config'], any>;
 
+  protected extends = {
+    app: null,
+    context: null,
+    request: null,
+    response: null,
+  };
+
   protected get [Symbol.for('BASE_DIR')]() {
     return path.join(__dirname, '..');
   }
@@ -31,9 +48,50 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
     options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || '8201';
     options.ROOT_PATH = options.ROOT_PATH || process.cwd();
     this.options = <IAstroboyOptions>options;
+    if (!this.options.MODE_AE) {
+      this.init();
+      this.start();
+    }
+  }
 
-    this.init();
-    this.start();
+  initAe() {
+    this.app = <any>new Koa();
+    this.app.env = this.options.NODE_ENV;
+    this.app.proxy = this.options.PROXY;
+    this.app.MODE_AE = this.options.MODE_AE;
+    (<IInnerApplication>(<unknown>this.app)).NODE_ENV = this.options.NODE_ENV;
+    (<IInnerApplication>(<unknown>this.app)).ROOT_PATH = this.options.ROOT_PATH;
+    (<IInnerApplication>(<unknown>this.app)).ROOT_NAME = path.basename(this.options.ROOT_PATH);
+    this.loader = new CoreLoader<DEFINE['config'], any>({
+      astroboy: this,
+      app: this.app,
+    });
+    completeAssign(mockApplication, this.app);
+  }
+
+  handleCtx(ctx: any) {
+    Object.setPrototypeOf(
+      ctx.app,
+      (this.extends.app = this.extends.app ?? Object.setPrototypeOf(mockApplication, Object.getPrototypeOf(ctx.app)))
+    );
+
+    Object.setPrototypeOf(
+      ctx.request,
+      (this.extends.request =
+        this.extends.request ?? Object.setPrototypeOf(mockRequest, Object.getPrototypeOf(ctx.request)))
+    );
+
+    Object.setPrototypeOf(
+      ctx.response,
+      (this.extends.response =
+        this.extends.response ?? Object.setPrototypeOf(mockResponse, Object.getPrototypeOf(ctx.response)))
+    );
+
+    Object.setPrototypeOf(
+      ctx,
+      (this.extends.context = this.extends.context ?? Object.setPrototypeOf(mockContext, Object.getPrototypeOf(ctx)))
+    );
+    return compose(this.loader.middlewareList)(ctx);
   }
 
   protected init() {
