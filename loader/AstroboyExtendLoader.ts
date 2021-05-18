@@ -11,12 +11,12 @@ const applicationProto = require('koa/lib/application').prototype;
 
 const completeAssign = require('complete-assign');
 
-const {
-  request: mockRequest,
-  response: mockResponse,
-  context: mockContext,
-  application: mockApplication,
-} = require('../core/lib/mockKoa');
+
+import {
+  request as mockRequest,
+  response as mockResponse,
+  context as mockContext,
+} from '../core/lib/mockKoa';
 
 class AstroboyExtendLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
   load() {
@@ -25,7 +25,6 @@ class AstroboyExtendLoader extends Loader<Partial<IOptions>, IInnerApplication<P
       entries.forEach(entry => {
         if (this.app.MODE_AE) {
           completeAssign(this.app, require(entry as string));
-          completeAssign(mockApplication, require(entry as string));
         } else {
           completeAssign(applicationProto, require(entry as string));
         }
