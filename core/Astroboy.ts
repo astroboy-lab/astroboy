@@ -9,12 +9,12 @@ import { BaseClass as AstroboyBaseClass } from './base/BaseClass';
 
 const completeAssign = require('complete-assign');
 
-const {
-  request: mockRequest,
-  response: mockResponse,
-  context: mockContext,
-  application: mockApplication,
-} = require('../core/lib/mockKoa');
+import {
+  request as mockRequest,
+  response as mockResponse,
+  context as mockContext,
+  application as mockApplication,
+} from '../core/lib/mockKoa';
 
 import * as compose from 'koa-compose';
 /**
@@ -104,7 +104,7 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
     (<IInnerApplication>(<unknown>this.app)).NODE_ENV = this.options.NODE_ENV;
     (<IInnerApplication>(<unknown>this.app)).ROOT_PATH = this.options.ROOT_PATH;
     (<IInnerApplication>(<unknown>this.app)).ROOT_NAME = path.basename(this.options.ROOT_PATH);
-    
+
     this.loader = new CoreLoader<DEFINE['config'], any>({
       astroboy: this,
       app: this.app,
