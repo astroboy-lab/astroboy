@@ -48,15 +48,13 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
     options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || '8201';
     options.ROOT_PATH = options.ROOT_PATH || process.cwd();
     this.options = <IAstroboyOptions>options;
-    if (this.options.MODE_AE) {
-      this.initAe();
-    } else {
+    if (!this.options.MODE_AE) {
       this.init();
       this.start();
     }
   }
 
-  protected initAe() {
+  initAe() {
     this.app = <any>new Koa();
     this.app.env = this.options.NODE_ENV;
     this.app.proxy = this.options.PROXY;
@@ -93,7 +91,6 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
       ctx,
       (this.extends.context = this.extends.context ?? Object.setPrototypeOf(mockContext, Object.getPrototypeOf(ctx)))
     );
-
     return compose(this.loader.middlewareList)(ctx);
   }
 
