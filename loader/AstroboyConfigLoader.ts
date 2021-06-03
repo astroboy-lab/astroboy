@@ -5,9 +5,9 @@ import { IOptions } from '../definitions/config';
 import { outputJsonSync } from '../core/lib/util';
 
 class AstroboyConfigLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
-  load() {
+  async load() {
     let config: Partial<IOptions> = {};
-    this.globDirs(this.config.pattern || [], entries => {
+    await this.globDirs(this.config.pattern || [], entries => {
       config = entries.reduce((a, b) => {
         let content = require(b as string);
         // 配置文件支持两种写法：

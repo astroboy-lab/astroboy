@@ -4,14 +4,15 @@ import { IInnerApplication, PureObject } from '../definitions/core';
 import { IOptions } from '../definitions/config';
 
 class AstroboyLibLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
-  load() {
+  async load() {
     let libs: PureObject = {};
-    this.dirs.forEach(item => {
+
+    for (const item of this.dirs) {
       const indexFile = `${item.baseDir}/app/lib/index.js`;
       if (fs.existsSync(indexFile)) {
         libs[item.name] = require(indexFile);
       } else {
-        this.globDir(item.baseDir, this.config.pattern || [], entries => {
+        await this.globDir(item.baseDir, this.config.pattern || [], entries => {
           if (entries.length > 0) {
             libs[item.name] = {};
             entries.forEach(entry => {
@@ -21,7 +22,7 @@ class AstroboyLibLoader extends Loader<Partial<IOptions>, IInnerApplication<Part
           }
         });
       }
-    });
+    }
 
     this.app.libs = libs;
   }

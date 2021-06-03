@@ -19,3 +19,7 @@ export function outputJsonSync(file: string, data: any, options: any = {}) {
   );
   fse.outputJsonSync(file, data, options);
 }
+
+export function isAsyncFunction(func: Function) {
+  return Object.prototype.toString.call(func) === '[object AsyncFunction]'
+}

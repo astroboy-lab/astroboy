@@ -2,6 +2,7 @@ import * as glob from 'fast-glob';
 import * as path from 'path';
 import { EntryItem } from 'fast-glob/out/types/entries';
 import { PureObject, IDir, ILoaderOptions, IPluginEntry, IBaseApplication } from '../definitions/core';
+import { isAsyncFunction } from './lib/util';
 
 const TYPING_FILE_EXTS = '.d.ts';
 const APP_EXTENSIONS = ['js', 'ts'];
@@ -38,7 +39,7 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
     this.app = <A>options.app || {};
   }
 
-  abstract load(): void;
+  abstract load(): Promise<void>;
 
   /**
    * ### Resolve Extensions
@@ -65,10 +66,10 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
    * @param {(files: EntryItem[]) => void} callback
    * @memberof Loader
    */
-  protected globDirs(patterns: string | string[], callback: (files: EntryItem[]) => void) {
-    this.dirs.forEach(item => {
-      this.globDir(item.baseDir, patterns, callback);
-    });
+  protected async globDirs(patterns: string | string[], callback: (files: EntryItem[]) => Promise<void> | void) {
+    for (const item of this.dirs) {
+      await this.globDir(item.baseDir, patterns, callback);
+    }
   }
 
   /**
@@ -81,7 +82,7 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
    * @param {(files: EntryItem[]) => void} callback
    * @memberof Loader
    */
-  protected globDir(baseDir: string, patterns: string | string[], callback: (files: EntryItem[]) => void) {
+  protected async globDir(baseDir: string, patterns: string | string[], callback: (files: EntryItem[]) => Promise<void> | void) {
     let newPatterns: string[] = [];
     if (typeof patterns === 'string') {
       newPatterns = [`${baseDir}${patterns}`];
@@ -90,9 +91,12 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
         return `${baseDir}${pattern}`;
       });
     }
-    const entries = glob.sync(newPatterns, { dot: true });
-
-    callback(entries.filter(fileIsNotTypingFile));
+    const entries = await glob(newPatterns, { dot: true });
+    if (isAsyncFunction(callback)) {
+      await callback(entries.filter(fileIsNotTypingFile));
+    } else {
+      callback(entries.filter(fileIsNotTypingFile))
+    }
   }
 
   /**

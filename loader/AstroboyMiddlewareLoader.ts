@@ -6,10 +6,10 @@ import { IOptions } from '../definitions/config';
 import { outputJsonSync } from '../core/lib/util';
 
 class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
-  load() {
+  async load() {
     // 加载中间件配置
     let middlewareConfig: PureObject = {};
-    this.globDirs(this.config.configPattern || [], entries => {
+    await this.globDirs(this.config.configPattern || [], entries => {
       entries.forEach(entry => {
         middlewareConfig = lodash.merge(middlewareConfig, require(entry as string));
       });
@@ -18,7 +18,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
 
     // 加载中间件
     let middlewares: PureObject<MiddlewareFactory> = {};
-    this.globDirs(this.config.pattern || [], entries => {
+    await this.globDirs(this.config.pattern || [], entries => {
       entries.forEach(entry => {
         const key = this.resolveExtensions(path.basename(entry as string));
         middlewares[key] = require(entry as string);
