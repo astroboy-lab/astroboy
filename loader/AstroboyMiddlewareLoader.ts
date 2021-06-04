@@ -3,7 +3,7 @@ import * as lodash from 'lodash';
 import { Loader } from '../core/Loader';
 import { IInnerApplication, PureObject, MiddlewareFactory, PriorityDefine } from '../definitions/core';
 import { IOptions } from '../definitions/config';
-import { outputJsonSync } from '../core/lib/util';
+import { outputJsonAsync } from '../core/lib/util';
 
 class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
   async load() {
@@ -47,7 +47,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
         return a.priority - b.priority;
       });
     this.app.middlewareQueue = middlewareQueue;
-    outputJsonSync(`${this.app.ROOT_PATH}/run/middlewares.json`, middlewareQueue);
+    await outputJsonAsync(`${this.app.ROOT_PATH}/run/middlewares.json`, middlewareQueue);
   }
 }
 

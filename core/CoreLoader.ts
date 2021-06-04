@@ -2,7 +2,7 @@
 import * as pathMatching from 'path-matching';
 import * as path from 'path';
 import * as lodash from 'lodash';
-import { outputJsonSync } from './lib/util';
+import { outputJsonAsync } from './lib/util';
 import {
   IInnerApplication,
   PureObject,
@@ -112,7 +112,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
       }
     }
     this.coreDirs = coreDirs.reverse();
-    outputJsonSync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
+    await outputJsonAsync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
   }
 
   /**
@@ -135,7 +135,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     }
 
     this.pluginConfig = pluginConfig;
-    outputJsonSync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
+    await outputJsonAsync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
   }
 
   /**
@@ -154,7 +154,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     }
 
     this.dirs = dirs;
-    outputJsonSync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
+    await outputJsonAsync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
   }
 
   /**
