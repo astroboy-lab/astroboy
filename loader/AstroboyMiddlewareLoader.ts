@@ -9,20 +9,18 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
   async load() {
     // 加载中间件配置
     let middlewareConfig: PureObject = {};
-    await this.globDirs(this.config.configPattern || [], entries => {
-      entries.forEach(entry => {
-        middlewareConfig = lodash.merge(middlewareConfig, require(entry as string));
-      });
+    const configEntries = await this.globDirs(this.config.configPattern || []);
+    configEntries.forEach(entry => {
+      middlewareConfig = lodash.merge(middlewareConfig, require(entry as string));
     });
     this.app.middlewareConfig = middlewareConfig;
 
     // 加载中间件
     let middlewares: PureObject<MiddlewareFactory> = {};
-    await this.globDirs(this.config.pattern || [], entries => {
-      entries.forEach(entry => {
-        const key = this.resolveExtensions(path.basename(entry as string));
-        middlewares[key] = require(entry as string);
-      });
+    const entries = await this.globDirs(this.config.pattern || []);
+    entries.forEach(entry => {
+      const key = this.resolveExtensions(path.basename(entry as string));
+      middlewares[key] = require(entry as string);
     });
     this.app.middlewares = middlewares;
 

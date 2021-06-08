@@ -128,12 +128,11 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     let pluginConfig: PureObject = {};
 
     for (const item of this.coreDirs) {
-      await this.globDir(item.baseDir, this.patterns.pluginPattern, entries => {
-        pluginConfig = entries.reduce((a, b) => {
-          const content = require(b as string);
-          return lodash.merge(a, content);
-        }, pluginConfig);
-      });
+      const entries = await this.globDir(item.baseDir, this.patterns.pluginPattern);
+      pluginConfig = entries.reduce((a, b) => {
+        const content = require(b as string);
+        return lodash.merge(a, content);
+      }, pluginConfig);
     }
 
     this.pluginConfig = pluginConfig;
@@ -197,11 +196,10 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    */
   protected async getPluginConfig(baseDir: string) {
     let config: PureObject = {};
-    await this.globDir(baseDir, this.patterns.pluginPattern, entries => {
-      config = entries.reduce((a, b) => {
-        return lodash.merge(a, require(b as string));
-      }, {});
-    });
+    const entries = await this.globDir(baseDir, this.patterns.pluginPattern);
+    config = entries.reduce((a, b) => {
+      return lodash.merge(a, require(b as string));
+    }, {});
     return config;
   }
 
@@ -214,11 +212,10 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    */
   protected async loadLoaderQueue() {
     let loaderConfig: PureObject = {};
-    await this.globDirs(this.patterns.loaderConfigPattern, entries => {
-      loaderConfig = entries.reduce((previousValue, currentValue) => {
-        return lodash.merge(previousValue, require(currentValue as string));
-      }, loaderConfig);
-    });
+    const entries = await this.globDirs(this.patterns.loaderConfigPattern);
+    loaderConfig = entries.reduce((previousValue, currentValue) => {
+      return lodash.merge(previousValue, require(currentValue as string));
+    }, loaderConfig);
     let queue: IPriority[] = [];
     Object.keys(loaderConfig).forEach(item => {
       queue.push(
@@ -246,11 +243,10 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    */
   protected async loadLoaders() {
     let loaders: PureObject = {};
-    await this.globDirs(this.patterns.loaderPattern, entries => {
-      entries.forEach(entry => {
-        const key = this.resolveExtensions(path.basename(entry as string));
-        loaders[key] = require(entry as string);
-      });
+    const entries = await this.globDirs(this.patterns.loaderPattern);
+    entries.forEach(entry => {
+      const key = this.resolveExtensions(path.basename(entry as string));
+      loaders[key] = require(entry as string);
     });
     this.loaders = loaders;
   }
