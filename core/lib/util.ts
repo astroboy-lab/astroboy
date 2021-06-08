@@ -40,19 +40,3 @@ export function outputJsonSync(file: string, data: any, options: any = {}) {
   );
   await fse.outputJson(file, data, options);
 }
-
-/**
- * ### 判断函数是否是异步函数
- *
- * @author yidafu
- * @export
- * @param {Function} func
- * @returns {boolean}
- * @example
- *
- * isAsyncFunction(async () => {}); // ==> true
- * isAsyncFunction(() => {}); // ==> false
- */
-export function isAsyncFunction(func: Function) {
-  return Object.prototype.toString.call(func) === '[object AsyncFunction]'
-}

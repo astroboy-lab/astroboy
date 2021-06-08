@@ -12,15 +12,14 @@ class AstroboyLibLoader extends Loader<Partial<IOptions>, IInnerApplication<Part
       if (fs.existsSync(indexFile)) {
         libs[item.name] = require(indexFile);
       } else {
-        await this.globDir(item.baseDir, this.config.pattern || [], entries => {
-          if (entries.length > 0) {
-            libs[item.name] = {};
-            entries.forEach(entry => {
-              const key = this.resolveExtensions((<string>entry).split('lib/')[1], true);
-              libs[item.name][key] = require(entry as string);
-            });
-          }
-        });
+        const entries = await this.globDir(item.baseDir, this.config.pattern || []);
+        if (entries.length > 0) {
+          libs[item.name] = {};
+          entries.forEach(entry => {
+            const key = this.resolveExtensions((<string>entry).split('lib/')[1], true);
+            libs[item.name][key] = require(entry as string);
+          });
+        }
       }
     }
 

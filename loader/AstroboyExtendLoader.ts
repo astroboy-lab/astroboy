@@ -12,38 +12,30 @@ const completeAssign = require('complete-assign');
 class AstroboyExtendLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
   async load() {
     // application extend
-    await this.globDirs(this.config.applicationPattern || [], entries => {
-      entries.forEach(entry => {
-        completeAssign(applicationProto, require(entry as string));
-      });
+    const applicationEntries = await this.globDirs(this.config.applicationPattern || []);
+    applicationEntries.forEach(entry => {
+      completeAssign(applicationProto, require(entry as string));
     });
-
     // context extend
-    await this.globDirs(this.config.contextPattern || [], entries => {
-      entries.forEach(entry => {
-        completeAssign(contextProto, require(entry as string));
-      });
+    const contextEntries = await this.globDirs(this.config.contextPattern || []);
+    contextEntries.forEach(entry => {
+      completeAssign(contextProto, require(entry as string));
     });
-
     // request extend
-    await this.globDirs(this.config.requestPattern || [], entries => {
-      entries.forEach(entry => {
-        completeAssign(requestProto, require(entry as string));
-      });
+    const requestEntries = await this.globDirs(this.config.requestPattern || []);
+    requestEntries.forEach(entry => {
+      completeAssign(requestProto, require(entry as string));
     });
 
     // response extend
-    await this.globDirs(this.config.responsePattern || [], entries => {
-      entries.forEach(entry => {
-        completeAssign(responseProto, require(entry as string));
-      });
+    const responseEntries = await this.globDirs(this.config.responsePattern || []);
+    responseEntries.forEach(entry => {
+      completeAssign(responseProto, require(entry as string));
     });
-
     // controller extend
-    await this.globDirs(this.config.controllerPattern || [], entries => {
-      entries.forEach(entry => {
-        completeAssign(BaseClass.prototype, require(entry as string));
-      });
+    const controllerEntries = await this.globDirs(this.config.controllerPattern || []);
+    controllerEntries.forEach(entry => {
+      completeAssign(BaseClass.prototype, require(entry as string));
     });
   }
 }
