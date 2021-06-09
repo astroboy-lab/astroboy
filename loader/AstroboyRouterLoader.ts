@@ -7,13 +7,13 @@ import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
 
 class AstroboyRouterLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
-  load() {
+  async load() {
     let routers: any[] = [];
     const indexFile = `${this.app.ROOT_PATH}/app/routers/index.js`;
     if (fs.existsSync(indexFile)) {
       routers = require(indexFile);
     } else {
-      const entries = glob.sync([`${this.app.ROOT_PATH}${this.config.pattern}`], {
+      const entries = await glob([`${this.app.ROOT_PATH}${this.config.pattern}`], {
         dot: true,
       });
       entries.forEach(entry => {

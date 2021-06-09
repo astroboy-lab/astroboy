@@ -2,7 +2,7 @@
 import * as pathMatching from 'path-matching';
 import * as path from 'path';
 import * as lodash from 'lodash';
-import { outputJsonSync } from './lib/util';
+import { outputJsonAsync } from './lib/util';
 import {
   IInnerApplication,
   PureObject,
@@ -52,7 +52,6 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     this.app = this.options.app || this.app;
     this.NODE_ENV = this.app.NODE_ENV || 'development';
     this.patterns = Object.assign({}, this.defaultPatterns);
-    this.init();
   }
 
   /**
@@ -63,13 +62,13 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @protected
    * @memberof CoreLoader
    */
-  protected init() {
-    this.loadCoreDirs(this.app.ROOT_PATH);
-    this.loadPluginConfig();
-    this.loadFullDirs();
-    this.loadLoaderQueue();
-    this.loadLoaders();
-    this.runLoaders();
+  protected async init() {
+    await this.loadCoreDirs(this.app.ROOT_PATH);
+    await this.loadPluginConfig();
+    await this.loadFullDirs();
+    await this.loadLoaderQueue();
+    await this.loadLoaders();
+    await this.runLoaders();
     this.useMiddlewares();
   }
 
@@ -80,7 +79,9 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @author Big Mogician
    * @memberof CoreLoader
    */
-  public load() {}
+  public async load() {
+    await this.init();
+  }
 
   /**
    * ### 加载核心目录，包括 app、framework，但不包括 plugin
@@ -90,7 +91,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @param {string} baseDir
    * @memberof CoreLoader
    */
-  protected loadCoreDirs(baseDir: string) {
+  protected async loadCoreDirs(baseDir: string) {
     const coreDirs: IDir[] = [
       {
         baseDir: baseDir,
@@ -113,7 +114,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
       }
     }
     this.coreDirs = coreDirs.reverse();
-    outputJsonSync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
+    await outputJsonAsync(`${this.app.ROOT_PATH}/run/coreDirs.json`, this.coreDirs);
   }
 
   /**
@@ -123,18 +124,19 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @protected
    * @memberof CoreLoader
    */
-  protected loadPluginConfig() {
+  protected async loadPluginConfig() {
     let pluginConfig: PureObject = {};
-    this.coreDirs.forEach(item => {
-      this.globDir(item.baseDir, this.patterns.pluginPattern, entries => {
-        pluginConfig = entries.reduce((a, b) => {
-          const content = require(b as string);
-          return lodash.merge(a, content);
-        }, pluginConfig);
-      });
-    });
+
+    for (const item of this.coreDirs) {
+      const entries = await this.globDir(item.baseDir, this.patterns.pluginPattern);
+      pluginConfig = entries.reduce((a, b) => {
+        const content = require(b as string);
+        return lodash.merge(a, content);
+      }, pluginConfig);
+    }
+
     this.pluginConfig = pluginConfig;
-    outputJsonSync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
+    await outputJsonAsync(`${this.app.ROOT_PATH}/run/pluginConfig.json`, pluginConfig);
   }
 
   /**
@@ -144,15 +146,16 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @protected
    * @memberof CoreLoader
    */
-  protected loadFullDirs() {
+  protected async loadFullDirs() {
     let dirs: IDir[] = [];
-    this.coreDirs.forEach(item => {
-      dirs = dirs.concat(<IDir[]>this.getPluginDirs(item.baseDir).reverse());
+
+    for (const item of this.coreDirs) {
+      dirs = dirs.concat((await this.getPluginDirs(item.baseDir)).reverse());
       dirs.push(item);
-    });
+    }
 
     this.dirs = dirs;
-    outputJsonSync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
+    await outputJsonAsync(`${this.app.ROOT_PATH}/run/dirs.json`, dirs);
   }
 
   /**
@@ -164,8 +167,8 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @returns
    * @memberof CoreLoader
    */
-  protected getPluginDirs(baseDir: string) {
-    const config = this.getPluginConfig(baseDir);
+  protected async getPluginDirs(baseDir: string) {
+    const config = await this.getPluginConfig(baseDir);
     const ret: IDir[] = [];
     if (lodash.isPlainObject(config)) {
       for (let name in config) {
@@ -191,13 +194,12 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @returns
    * @memberof CoreLoader
    */
-  protected getPluginConfig(baseDir: string) {
+  protected async getPluginConfig(baseDir: string) {
     let config: PureObject = {};
-    this.globDir(baseDir, this.patterns.pluginPattern, entries => {
-      config = entries.reduce((a, b) => {
-        return lodash.merge(a, require(b as string));
-      }, {});
-    });
+    const entries = await this.globDir(baseDir, this.patterns.pluginPattern);
+    config = entries.reduce((a, b) => {
+      return lodash.merge(a, require(b as string));
+    }, {});
     return config;
   }
 
@@ -208,13 +210,12 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @protected
    * @memberof CoreLoader
    */
-  protected loadLoaderQueue() {
+  protected async loadLoaderQueue() {
     let loaderConfig: PureObject = {};
-    this.globDirs(this.patterns.loaderConfigPattern, entries => {
-      loaderConfig = entries.reduce((previousValue, currentValue) => {
-        return lodash.merge(previousValue, require(currentValue as string));
-      }, loaderConfig);
-    });
+    const entries = await this.globDirs(this.patterns.loaderConfigPattern);
+    loaderConfig = entries.reduce((previousValue, currentValue) => {
+      return lodash.merge(previousValue, require(currentValue as string));
+    }, loaderConfig);
     let queue: IPriority[] = [];
     Object.keys(loaderConfig).forEach(item => {
       queue.push(
@@ -240,13 +241,12 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @protected
    * @memberof CoreLoader
    */
-  protected loadLoaders() {
+  protected async loadLoaders() {
     let loaders: PureObject = {};
-    this.globDirs(this.patterns.loaderPattern, entries => {
-      entries.forEach(entry => {
-        const key = this.resolveExtensions(path.basename(entry as string));
-        loaders[key] = require(entry as string);
-      });
+    const entries = await this.globDirs(this.patterns.loaderPattern);
+    entries.forEach(entry => {
+      const key = this.resolveExtensions(path.basename(entry as string));
+      loaders[key] = require(entry as string);
     });
     this.loaders = loaders;
   }
@@ -258,10 +258,10 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
    * @protected
    * @memberof CoreLoader
    */
-  protected runLoaders() {
+  protected async runLoaders() {
     const app = this.app;
     const loaders = this.loaders;
-    this.loaderQueue.forEach(item => {
+    for (const item of this.loaderQueue) {
       if (loaders[item.name]) {
         const loader = new loaders[item.name]({
           dirs: this.dirs,
@@ -271,11 +271,11 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
         if (!(loader instanceof Loader)) {
           throw new Error(`Loader ${item.name} must extend Loader.`);
         }
-        loader.load();
+        await loader.load();
       } else {
         throw new Error(`Loader ${item.name} is not found.`);
       }
-    });
+    }
   }
 
   /**

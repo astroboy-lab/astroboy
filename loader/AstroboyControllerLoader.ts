@@ -4,10 +4,10 @@ import { IInnerApplication, PureObject } from '../definitions/core';
 import { IOptions } from '../definitions/config';
 
 class AstroboyControllerLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
-  load() {
+  async load() {
     const app = this.app;
     let controllers: PureObject = {};
-    const entries = glob.sync([`${app.ROOT_PATH}${this.config.pattern}`], {
+    const entries = await glob([`${app.ROOT_PATH}${this.config.pattern}`], {
       dot: true,
     });
     (<string[]>entries)
