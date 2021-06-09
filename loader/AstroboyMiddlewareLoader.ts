@@ -15,7 +15,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
     });
     this.app.middlewareConfig = middlewareConfig;
 
-    // 加载中间件
+    // 加载中间件文件
     let middlewares: PureObject<MiddlewareFactory> = {};
     const entries = await this.globDirs(this.config.pattern || []);
     entries.forEach(entry => {

@@ -18,7 +18,7 @@ class CsrfError extends Error {
   }
 }
 
-const factory: MiddlewareFactory<Partial<ICsrfOptions>, any> = function(options = {}, app) {
+const astroboySecurityCSRFFactory: MiddlewareFactory<Partial<ICsrfOptions>, any> = function(options = {}, app) {
   let token = new Token({
     saltLength: options.saltLength,
     secretLength: options.secretLength,
@@ -60,4 +60,4 @@ const factory: MiddlewareFactory<Partial<ICsrfOptions>, any> = function(options 
   };
 };
 
-export = factory;
+export = astroboySecurityCSRFFactory;

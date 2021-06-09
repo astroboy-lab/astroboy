@@ -8,10 +8,10 @@ import * as bodyParser from 'koa-bodyparser';
 import { MiddlewareFactory } from '../../../../definitions';
 import { IOptions } from '../../contract';
 
-const factory: MiddlewareFactory<Partial<IOptions>, any> = (options, app) => {
+const astroboyBodyFactory: MiddlewareFactory<Partial<IOptions>, any> = (options, app) => {
   const fn = options.parser === 'koa-bodyparser' ? bodyParser(options) : koaBody(options);
   fn._name = 'body';
   return fn;
 };
 
-export = factory;
+export = astroboyBodyFactory;
