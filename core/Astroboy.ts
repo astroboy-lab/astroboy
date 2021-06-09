@@ -55,7 +55,7 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
     this.start();
   }
 
-  initAe() {
+  async initAe() {
     this.app = <any>new Koa();
     this.app.env = this.options.NODE_ENV;
     this.app.proxy = this.options.PROXY;
@@ -67,6 +67,8 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
       astroboy: this,
       app: this.app,
     });
+    await this.loader.load();
+
     completeAssign(mockApplication, this.app);
   }
 
