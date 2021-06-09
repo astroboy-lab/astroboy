@@ -35,7 +35,10 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
 
   public async run() {
     await this.init();
-    this.start();
+    return new Promise<Astroboy>((resolve) => {
+      this.on('start', () => resolve(this));
+      this.start();
+    });
   }
 
   protected async init() {
