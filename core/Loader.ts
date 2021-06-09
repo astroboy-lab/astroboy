@@ -1,8 +1,8 @@
 import * as glob from 'fast-glob';
 import * as path from 'path';
+import * as lodash from 'lodash'
 import { EntryItem } from 'fast-glob/out/types/entries';
 import { PureObject, IDir, ILoaderOptions, IPluginEntry, IBaseApplication } from '../definitions/core';
-import { isAsyncFunction } from './lib/util';
 
 const TYPING_FILE_EXTS = '.d.ts';
 const APP_EXTENSIONS = ['js', 'ts'];
@@ -66,10 +66,14 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
    * @param {(files: EntryItem[]) => void} callback
    * @memberof Loader
    */
-  protected async globDirs(patterns: string | string[], callback: (files: EntryItem[]) => Promise<void> | void) {
-    for (const item of this.dirs) {
-      await this.globDir(item.baseDir, patterns, callback);
-    }
+  protected async globDirs(patterns: string | string[]): Promise<EntryItem[]> {
+    const entries = await Promise.all(
+      this.dirs.map((item) => {
+        return this.globDir(item.baseDir, patterns);
+      }),
+    );
+
+    return lodash.flatten(entries);
   }
 
   /**
@@ -82,7 +86,7 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
    * @param {(files: EntryItem[]) => void} callback
    * @memberof Loader
    */
-  protected async globDir(baseDir: string, patterns: string | string[], callback: (files: EntryItem[]) => Promise<void> | void) {
+  protected async globDir(baseDir: string, patterns: string | string[]): Promise<EntryItem[]> {
     let newPatterns: string[] = [];
     if (typeof patterns === 'string') {
       newPatterns = [`${baseDir}${patterns}`];
@@ -92,11 +96,7 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
       });
     }
     const entries = await glob(newPatterns, { dot: true });
-    if (isAsyncFunction(callback)) {
-      await callback(entries.filter(fileIsNotTypingFile));
-    } else {
-      callback(entries.filter(fileIsNotTypingFile))
-    }
+    return entries.filter(fileIsNotTypingFile);
   }
 
   /**
