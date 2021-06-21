@@ -55,6 +55,7 @@ module.exports = {
           // ['/进阶/框架继承', '框架继承'],
         ],
       },
+      ['/Changelog', 'Changelog'],
     ],
   },
 };
