@@ -18,7 +18,6 @@ build:
 	rm -rf dist
 	yarn tsc -p ./tsconfig.json
 	cp README.md dist/
-	cp CHANGELOG dist/
 	cp package.json dist/
 
 publish:
