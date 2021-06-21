@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>TypeScript 版本框架设计 | Astroboy</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="icon" href="https://img.yzcdn.cn/v2/image/yz_fc.ico">
+    <meta name="description" content="Astroboy（阿童木）is a Nodejs SFB(Separation of Front and Back ends) framework, built on koa2.">
+    
+    <link rel="preload" href="/astroboy/assets/css/0.styles.56bd8bfd.css" as="style"><link rel="preload" href="/astroboy/assets/js/app.6c195955.js" as="script"><link rel="preload" href="/astroboy/assets/js/2.48791499.js" as="script"><link rel="preload" href="/astroboy/assets/js/27.e2c865be.js" as="script"><link rel="prefetch" href="/astroboy/assets/js/10.471e5c1a.js"><link rel="prefetch" href="/astroboy/assets/js/11.0474066e.js"><link rel="prefetch" href="/astroboy/assets/js/12.391b8361.js"><link rel="prefetch" href="/astroboy/assets/js/13.ea7eca72.js"><link rel="prefetch" href="/astroboy/assets/js/14.791886e0.js"><link rel="prefetch" href="/astroboy/assets/js/15.bb462ee6.js"><link rel="prefetch" href="/astroboy/assets/js/16.3082c1f5.js"><link rel="prefetch" href="/astroboy/assets/js/17.dd40f560.js"><link rel="prefetch" href="/astroboy/assets/js/18.edc26a90.js"><link rel="prefetch" href="/astroboy/assets/js/19.6b633dee.js"><link rel="prefetch" href="/astroboy/assets/js/20.e6606e54.js"><link rel="prefetch" href="/astroboy/assets/js/21.c6b447fb.js"><link rel="prefetch" href="/astroboy/assets/js/22.ccd4ed0b.js"><link rel="prefetch" href="/astroboy/assets/js/23.4757bf92.js"><link rel="prefetch" href="/astroboy/assets/js/24.b8156037.js"><link rel="prefetch" href="/astroboy/assets/js/25.7fbf1566.js"><link rel="prefetch" href="/astroboy/assets/js/26.36600269.js"><link rel="prefetch" href="/astroboy/assets/js/28.06eef02d.js"><link rel="prefetch" href="/astroboy/assets/js/29.3c4c5ef7.js"><link rel="prefetch" href="/astroboy/assets/js/3.18f43790.js"><link rel="prefetch" href="/astroboy/assets/js/30.d685212e.js"><link rel="prefetch" href="/astroboy/assets/js/4.113bc4c8.js"><link rel="prefetch" href="/astroboy/assets/js/5.d584334f.js"><link rel="prefetch" href="/astroboy/assets/js/6.457b2da1.js"><link rel="prefetch" href="/astroboy/assets/js/7.1221b8aa.js"><link rel="prefetch" href="/astroboy/assets/js/8.8a3f469f.js"><link rel="prefetch" href="/astroboy/assets/js/9.3f6087fa.js">
+    <link rel="stylesheet" href="/astroboy/assets/css/0.styles.56bd8bfd.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/astroboy/" class="home-link router-link-active"><!----> <span class="site-name">Astroboy</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="https://github.com/astroboy-lab/astroboy" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="https://github.com/astroboy-lab/astroboy" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>新手指南</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/astroboy/新手指南/astroboy-cli.html" class="sidebar-link">astroboy-cli</a></li><li><a href="/astroboy/新手指南/Astroboy 和 Koa.html" class="sidebar-link">Astroboy 和 Koa</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>框架设计</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/astroboy/框架设计/框架分层.html" class="sidebar-link">框架分层</a></li><li><a href="/astroboy/框架设计/插件化.html" class="sidebar-link">插件化</a></li><li><a href="/astroboy/框架设计/约定优于配置.html" class="sidebar-link">约定优于配置</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>基础功能</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/astroboy/基础功能/目录结构.html" class="sidebar-link">目录结构</a></li><li><a href="/astroboy/基础功能/配置.html" class="sidebar-link">配置</a></li><li><a href="/astroboy/基础功能/Router.html" class="sidebar-link">路由（旧版）</a></li><li><a href="/astroboy/基础功能/声明式路由.html" class="sidebar-link">声明式路由（新版）</a></li><li><a href="/astroboy/基础功能/Controller.html" class="sidebar-link">控制器</a></li><li><a href="/astroboy/基础功能/Service.html" class="sidebar-link">服务</a></li><li><a href="/astroboy/基础功能/中间件.html" class="sidebar-link">中间件</a></li><li><a href="/astroboy/基础功能/插件.html" class="sidebar-link">插件</a></li><li><a href="/astroboy/基础功能/内置对象.html" class="sidebar-link">内置对象</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>进阶</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/astroboy/进阶/运行时配置输出.html" class="sidebar-link">运行时配置输出</a></li><li><a href="/astroboy/进阶/TypeScript体系设计.html" class="active sidebar-link">TypeScript体系设计</a></li></ul></section></li><li><a href="/astroboy/Changelog.html" class="sidebar-link">Changelog</a></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h3 id="typescript-版本框架设计"><a href="#typescript-版本框架设计" class="header-anchor">#</a> TypeScript 版本框架设计</h3> <p>Astroboy 的 1.1.0+ 版本针对 TypeScript 进行了一次重新设计，优化了框架定义体系，全面支持 TypeScript 语言开发环境。</p> <h4 id="重新设计框架定义"><a href="#重新设计框架定义" class="header-anchor">#</a> 重新设计框架定义</h4> <p>为了支持无限定义扩展，Astroboy 新版重新设计了针对 TS 的框架申明，使用可配置升级的接口来自定义 Astroboy 各个部分的静态语义。</p> <blockquote><p>框架定义体系部分源代码</p></blockquote> <div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IBaseContextDefine</span> <span class="token punctuation">{</span>
+  ctx<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">;</span>
+  app<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">;</span>
+  config<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">;</span>
+  services<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">;</span>
+  controllers<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">;</span>
+  libs<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>IBaseContextDefine</code> 定义了整个 Astroboy 框架各个部分的基础类型 any，使用 <code>any</code> 的好处是作为底层接口可以更好的适配上层扩展，实现接口收拢的需求。</p> <p>比如：</p> <div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IBaseApplication<span class="token operator">&lt;</span><span class="token constant">F</span> <span class="token keyword">extends</span> <span class="token builtin">any</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token operator">&gt;</span></span> <span class="token keyword">extends</span> <span class="token class-name">Koa</span> <span class="token punctuation">{</span>
+  config<span class="token operator">:</span> <span class="token constant">F</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IBaseContext<span class="token operator">&lt;</span><span class="token constant">F</span> <span class="token keyword">extends</span> <span class="token builtin">any</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token constant">A</span> <span class="token keyword">extends</span> IBaseApplication <span class="token operator">=</span> IBaseApplication<span class="token operator">&lt;</span><span class="token constant">F</span><span class="token operator">&gt;&gt;</span></span>
+  <span class="token keyword">extends</span> <span class="token class-name">Koa</span><span class="token punctuation">.</span>Context <span class="token punctuation">{</span>
+  app<span class="token operator">:</span> <span class="token constant">A</span><span class="token punctuation">;</span>
+  config<span class="token operator">:</span> <span class="token constant">F</span><span class="token punctuation">;</span>
+  request<span class="token operator">:</span> Koa<span class="token punctuation">.</span>Request <span class="token operator">&amp;</span> <span class="token punctuation">{</span>
+    body<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * ## astroboy 基础上下文扩展结构
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyContextDefine
+ * @extends {IBaseContextDefine}
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IAstroboyContextDefine</span> <span class="token keyword">extends</span> <span class="token class-name">IBaseContextDefine</span> <span class="token punctuation">{</span>
+  ctx<span class="token operator">:</span> IBaseContext<span class="token operator">&lt;</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+  app<span class="token operator">:</span> IBaseApplication<span class="token operator">&lt;</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+  config<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  services<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  controllers<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  libs<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>通过继承基础接口，使得部分定义范围得以收窄，更好的描述应用程序而又不破坏底层框架扩展性。</p> <p>框架定义在 Astroboy 中的存在感非常强烈，几乎所有的地方（诸如 service、controller、ctx 等等地方）都会被用到来约定成员的类型。</p> <p>参考一下 BaseClass 的源代码：</p> <div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">class</span> <span class="token class-name">BaseClass<span class="token operator">&lt;</span><span class="token constant">DEFINE</span> <span class="token keyword">extends</span> Partial<span class="token operator">&lt;</span>IBaseContextDefine<span class="token operator">&gt;</span> <span class="token operator">=</span> IAstroboyContextDefine<span class="token operator">&gt;</span></span>
+  <span class="token keyword">implements</span> <span class="token class-name">IAstroboyCtxExtends<span class="token operator">&lt;</span><span class="token constant">DEFINE</span><span class="token operator">&gt;</span></span> <span class="token punctuation">{</span>
+  <span class="token keyword">protected</span> app<span class="token operator">:</span> <span class="token constant">DEFINE</span><span class="token punctuation">[</span><span class="token string">'app'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">protected</span> config<span class="token operator">:</span> <span class="token constant">DEFINE</span><span class="token punctuation">[</span><span class="token string">'config'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">protected</span> ctx<span class="token operator">:</span> <span class="token constant">DEFINE</span><span class="token punctuation">[</span><span class="token string">'ctx'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">constructor</span><span class="token punctuation">(</span>ctx<span class="token operator">:</span> <span class="token constant">DEFINE</span><span class="token punctuation">[</span><span class="token string">'ctx'</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>ctx <span class="token operator">=</span> <span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span>ctx<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>app <span class="token operator">=</span> <span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>ctx <span class="token operator">&amp;&amp;</span> ctx<span class="token punctuation">.</span>app<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>config <span class="token operator">=</span> <span class="token operator">&lt;</span><span class="token builtin">any</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>ctx <span class="token operator">&amp;&amp;</span> ctx<span class="token punctuation">.</span>app <span class="token operator">&amp;&amp;</span> ctx<span class="token punctuation">.</span>app<span class="token punctuation">.</span>config<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// ...</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在框架定义中定一个各个部件的定义会被标注到 <code>BaseClass</code> 的各个部分，所有基予 <code>BaseClass</code> 的 service 或者 controller 都可以完整地访问到 <code>ctx</code>、<code>app</code> 和 <code>config</code> 的类型声明。</p> <h4 id="从-astroboy-引入接口"><a href="#从-astroboy-引入接口" class="header-anchor">#</a> 从 Astroboy 引入接口</h4> <p>Astroboy 的框架定义都被维护在&quot;astroboy/definitions&quot;目录下：</p> <div class="language-text extra-class"><pre class="language-text"><code>.
+├── extends                   # 框架扩展部分（对koa原生对象做的字段扩展）
+├   ├── app.ts                # 对koa/app部分做的扩展
+├   └── context.ts            # 对koa/ctx部分做的扩展
+├── plugins                   # Astroboy插件的定义导出
+├   └── index.ts              # Astroboy插件的合并定义导出（单个插件定义在app/plugins文件夹内）
+├── base.ts                   # 基础框架契约
+├── config.ts                 # 配置相关的约定
+├── core.ts                   # 框架核心接口定义
+└── index.ts                  # 导出模块出口
+</code></pre></div><p>框架主要部件的定义速览：</p> <blockquote><p>import { ... } from &quot;astroboy/definitions&quot;;</p></blockquote> <div class="language-typescript extra-class"><pre class="language-typescript"><code><span class="token comment">/**
+ * astroboy 框架的配置参数
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyBootstrapOptions
+ * @extends {BootstrapOptions}
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IAstroboyBootstrapOptions</span> <span class="token keyword">extends</span> <span class="token class-name">BootstrapOptions</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * ## astroboy 基础上下文扩展结构
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyContextDefine
+ * @extends {IBaseContextDefine}
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IAstroboyContextDefine</span> <span class="token keyword">extends</span> <span class="token class-name">IBaseContextDefine</span> <span class="token punctuation">{</span>
+  ctx<span class="token operator">:</span> IBaseContext<span class="token punctuation">;</span>
+  app<span class="token operator">:</span> IAstroboyApplication<span class="token punctuation">;</span>
+  config<span class="token operator">:</span> PureObject<span class="token punctuation">;</span>
+  services<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  controllers<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  libs<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * ## astroboy 基础app结构
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyApplication
+ * @extends {IAstroboyPluginAppMixins}
+ * @extends {IAstroboyAppExtends&lt;CONFIG&gt;}
+ * @template CONFIG
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IAstroboyApplication<span class="token operator">&lt;</span><span class="token constant">CONFIG</span> <span class="token keyword">extends</span> PureObject <span class="token operator">=</span> PureObject<span class="token operator">&gt;</span></span>
+  <span class="token keyword">extends</span> <span class="token class-name">IAstroboyPluginAppMixins</span><span class="token punctuation">,</span>
+    IPureAstroboyApplication<span class="token operator">&lt;</span><span class="token constant">CONFIG</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * astroboy 基础Ctx结构
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyContext
+ * @extends {IAstroboyPluginCtxMixins}
+ * @extends {IAstroboyCtxExtends&lt;CONFIG, A&gt;}
+ * @template CONFIG
+ * @template APP
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IAstroboyContext<span class="token operator">&lt;</span><span class="token constant">DEFINE</span> <span class="token keyword">extends</span> Partial<span class="token operator">&lt;</span>IBaseContextDefine<span class="token operator">&gt;</span> <span class="token operator">=</span> IAstroboyContextDefine<span class="token operator">&gt;</span></span>
+  <span class="token keyword">extends</span> <span class="token class-name">IAstroboyPluginCtxMixins</span><span class="token punctuation">,</span>
+    IPureAstroboyContext<span class="token operator">&lt;</span><span class="token constant">DEFINE</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * astroboy 基础configs结构
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyConfigs
+ * @extends {IAstroboyPluginConfigMixins}
+ * @extends {IBaseProjectConfig}
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IAstroboyConfigs</span> <span class="token keyword">extends</span> <span class="token class-name">IAstroboyPluginConfigMixins</span><span class="token punctuation">,</span> IBaseProjectConfig <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * astroboy 基础plugins结构
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyPlugins
+ * @extends {IAstroboyPluginRegisterMixins}
+ * @extends {IBasePluginConfig}
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IAstroboyPlugins</span> <span class="token keyword">extends</span> <span class="token class-name">IAstroboyPluginRegisterMixins</span><span class="token punctuation">,</span> IBasePluginConfig <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * astroboy 基础middlewares结构
+ *
+ * @author Big Mogician
+ * @export
+ * @interface IAstroboyMiddlewares
+ * @extends {IAstroboyPluginMiddlewareMixins}
+ * @extends {IBaseMiddlewareConfig}
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">IAstroboyMiddlewares</span> <span class="token keyword">extends</span> <span class="token class-name">IAstroboyPluginMiddlewareMixins</span><span class="token punctuation">,</span> IBaseMiddlewareConfig <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div><p>按图索骥吧 😄！</p></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/astroboy/进阶/运行时配置输出.html" class="prev">
+        运行时配置输出
+      </a></span> <span class="next"><a href="/astroboy/Changelog.html">
+        Changelog
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/astroboy/assets/js/app.6c195955.js" defer></script><script src="/astroboy/assets/js/2.48791499.js" defer></script><script src="/astroboy/assets/js/27.e2c865be.js" defer></script>
+  </body>
+</html>
