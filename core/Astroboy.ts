@@ -31,12 +31,17 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
     options.NODE_PORT = process.env.NODE_PORT || options.NODE_PORT || '8201';
     options.ROOT_PATH = options.ROOT_PATH || process.cwd();
     this.options = <IAstroboyOptions>options;
-
-    this.init();
-    this.start();
   }
 
-  protected init() {
+  public async run() {
+    await this.init();
+    return new Promise<Astroboy>((resolve) => {
+      this.on('start', () => resolve(this));
+      this.start();
+    });
+  }
+
+  protected async init() {
     this.app = <any>new Koa();
     this.app.env = this.options.NODE_ENV;
     this.app.proxy = this.options.PROXY;
@@ -48,6 +53,8 @@ class Astroboy<DEFINE extends Partial<IBaseFrameworkDefine> = IAstroboyFramework
       astroboy: this,
       app: this.app,
     });
+
+    await this.loader.load()
   }
 
   private start() {

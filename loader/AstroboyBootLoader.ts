@@ -5,14 +5,13 @@ import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
 
 class AstroboyBootLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
-  load() {
-    this.globDirs(this.config.pattern || [], entries => {
-      entries.forEach(entry => {
-        const boot = require(entry as string);
-        assert(lodash.isFunction(boot), `${entry} must return a function.`);
-        boot(this.app);
-      });
-    });
+  async load() {
+    const entries = await this.globDirs(this.config.pattern || []);
+    for (const entry of entries) {
+      const boot = require(entry as string);
+      assert(lodash.isFunction(boot), `${entry} must return a function.`);
+      await boot(this.app);
+    }
   }
 }
 

@@ -6,7 +6,7 @@
 import * as assert from 'assert';
 import { MiddlewareFactory } from '../../../../definitions';
 
-const factory: MiddlewareFactory<{ value?: string } | string, any> = function(options, app) {
+const astroboySecurityP3PFactory: MiddlewareFactory<{ value?: string } | string, any> = function(options, app) {
   if (typeof options === 'string') {
     options = {
       value: options,
@@ -22,4 +22,4 @@ const factory: MiddlewareFactory<{ value?: string } | string, any> = function(op
   };
 };
 
-export = factory;
+export = astroboySecurityP3PFactory;

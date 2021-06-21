@@ -1,68 +1,89 @@
 /**
  * 框架路由中间件
  */
-import * as lodash from 'lodash';
-// @ts-ignore typings missed
+// @ts-ignore
 import * as KoaRouter from 'koa-router';
 import * as compose from 'koa-compose';
 
 import { MiddlewareFactory, IConstructor } from '../../../../definitions';
 import { IInnerApplication } from '../../../../definitions/core';
 
-const factory: MiddlewareFactory<any, IInnerApplication> = function(options = {}, app) {
+const astroboyRouterFactory: MiddlewareFactory<any, IInnerApplication> = function(options = {}, app) {
   const koaRouter = new KoaRouter();
 
+  console.log('开始注册路由 ===>');
+  let counter = 0;
   app.routers.forEach((router: any) => {
-    const ControllerClass: IConstructor<any> = router.controller;
-    if (ControllerClass) {
-      if (lodash.isFunction(ControllerClass)) {
-        for (let i = 0; i < router.methods.length; i++) {
-          if (!ControllerClass.prototype[router.methods[i]]) {
-            throw new Error(
-              `注册路由失败，verb:${router.verb} path:${router.path}, method:${router.methods[i]} is not found.`
-            );
-          }
+    router.middleware.push(async function callback(ctx: any, next: () => Promise<any>) {
+      if (router.compiledSchema.header) {
+        const valid = router.compiledSchema.header(ctx.headers);
+        if (!valid) {
+          ctx.body = {
+            code: 'ERR_HTTP_REQUEST_HEADER_VALID_FAILED',
+            msg: 'Header 请求头参数校验失败',
+            data: router.compiledSchema.header.errors,
+          };
+          return;
         }
-        router.path.forEach((item: any) => {
-          koaRouter[router.verb](router.name, item, async function(ctx: any, next: () => Promise<any>) {
-            const controller = new (<any>ControllerClass)(ctx);
-            // init 是 Controller 类初始化后调用的一个方法
-            if (ControllerClass.prototype.init) {
-              await controller['init']();
-            }
-            if (ctx.status !== 301 && ctx.status !== 302) {
-              for (let i = 0; i < router.methods.length; i++) {
-                let method = router.methods[i];
-                const beforeMethod = 'before' + method.slice(0, 1).toUpperCase() + method.slice(1);
-                if (ControllerClass.prototype[beforeMethod]) {
-                  await controller[beforeMethod]();
-                }
-                if (ctx.status !== 301 && ctx.status !== 302 && !ctx.body) {
-                  await controller[method](ctx, next);
-                } else {
-                  break;
-                }
-              }
-            }
-          });
-        });
-      } else {
-        throw new Error(
-          `注册路由失败，verb:${router.verb} path:${router.path}, controllerName:${
-            router.controllerName
-          } is not a function.`
-        );
       }
-    } else {
-      throw new Error(
-        `注册路由失败，verb:${router.verb} path:${router.path}, controllerName:${router.controllerName} is undefined.`
-      );
+
+      if (router.compiledSchema.query) {
+        const valid = router.compiledSchema.query(ctx.query);
+        if (!valid) {
+          ctx.body = {
+            code: 'ERR_HTTP_REQUEST_QUERY_VALID_FAILED',
+            msg: 'Query 查询参数校验失败',
+            data: router.compiledSchema.query.errors,
+          };
+          return;
+        }
+      }
+
+      if (router.compiledSchema.body) {
+        const valid = router.compiledSchema.body(ctx.request.body);
+        if (!valid) {
+          ctx.body = {
+            code: 'ERR_HTTP_REQUEST_BODY_VALID_FAILED',
+            msg: 'Body 请求参数校验失败',
+            data: router.compiledSchema.body.errors,
+          };
+          return;
+        }
+      }
+
+      const ControllerClass: IConstructor<any> = router.controller;
+      const controller = new (<any>ControllerClass)(ctx);
+      const controllerMethods = router.controllerMethods;
+
+      for (let k = 0; k < controllerMethods.length; k++) {
+        const action = controllerMethods[k];
+        if (ctx.status !== 301 && ctx.status !== 302 && !ctx.body) {
+          await controller[action](ctx, next);
+        } else {
+          break;
+        }
+      }
+    });
+
+    for (let i = 0; i < router.method.length; i++) {
+      const method = router.method[i].toLowerCase();
+      for (let j = 0; j < router.path.length; j++) {
+        const path = router.path[j];
+        const name = router.name || '';
+        const controllerName = router.controllerName;
+        const controllerMethods = router.controllerMethods || [];
+
+        counter++;
+        console.log(`${name}：${method} ${path} ==> ${controllerName}:${controllerMethods.join(' > ')}`);
+        koaRouter[method](router.name, path, ...router.middleware);
+      }
     }
   });
+  console.log(`所有路由注册成功，共注册 ${counter} 个路由\n`);
 
   let fn = compose([koaRouter.routes(), koaRouter.allowedMethods()]);
   (<any>fn)._name = 'astroboy-router';
   return fn;
 };
 
-export = factory;
+export = astroboyRouterFactory;

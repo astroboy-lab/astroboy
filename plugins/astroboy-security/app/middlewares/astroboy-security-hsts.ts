@@ -6,7 +6,7 @@ import * as assert from 'assert';
 import { MiddlewareFactory } from '../../../../definitions';
 import { IHstsOptions } from '../../contract';
 
-const factory: MiddlewareFactory<Partial<IHstsOptions> | number, any> = function(options, app) {
+const astroboySecurityHSTSFactory: MiddlewareFactory<Partial<IHstsOptions> | number, any> = function(options, app) {
   if (typeof options === 'number') {
     options = {
       maxAge: options,
@@ -29,4 +29,4 @@ const factory: MiddlewareFactory<Partial<IHstsOptions> | number, any> = function
   };
 };
 
-export = factory;
+export = astroboySecurityHSTSFactory;
