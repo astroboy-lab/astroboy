@@ -19,56 +19,48 @@ import {
 } from '../core/lib/mockKoa';
 
 class AstroboyExtendLoader extends Loader<Partial<IOptions>, IInnerApplication<Partial<IOptions>>> {
-  load() {
+  async load() {
     // application extend
-    this.globDirs(this.config.applicationPattern || [], entries => {
-      entries.forEach(entry => {
-        if (this.app.MODE_AE) {
-          completeAssign(this.app, require(entry as string));
-        } else {
-          completeAssign(applicationProto, require(entry as string));
-        }
-      });
+    const applicationEntries = await this.globDirs(this.config.applicationPattern || []);
+    applicationEntries.forEach(entry => {
+      if (this.app.MODE_AE) {
+        completeAssign(this.app, require(entry as string));
+      } else {
+        completeAssign(applicationProto, require(entry as string));
+      }
     });
-
     // context extend
-    this.globDirs(this.config.contextPattern || [], entries => {
-      entries.forEach(entry => {
-        if (this.app.MODE_AE) {
-          completeAssign(mockContext, require(entry as string));
-        } else {
-          completeAssign(contextProto, require(entry as string));
-        }
-      });
+    const contextEntries = await this.globDirs(this.config.contextPattern || []);
+    contextEntries.forEach(entry => {
+      if (this.app.MODE_AE) {
+        completeAssign(mockContext, require(entry as string));
+      } else {
+        completeAssign(contextProto, require(entry as string));
+      }
     });
-
     // request extend
-    this.globDirs(this.config.requestPattern || [], entries => {
-      entries.forEach(entry => {
-        if (this.app.MODE_AE) {
-          completeAssign(mockRequest, require(entry as string));
-        } else {
-          completeAssign(requestProto, require(entry as string));
-        }
-      });
+    const requestEntries = await this.globDirs(this.config.requestPattern || []);
+    requestEntries.forEach(entry => {
+      if (this.app.MODE_AE) {
+        completeAssign(mockRequest, require(entry as string));
+      } else {
+        completeAssign(requestProto, require(entry as string));
+      }
     });
 
     // response extend
-    this.globDirs(this.config.responsePattern || [], entries => {
-      entries.forEach(entry => {
-        if (this.app.MODE_AE) {
-          completeAssign(mockResponse, require(entry as string));
-        } else {
-          completeAssign(responseProto, require(entry as string));
-        }
-      });
+    const responseEntries = await this.globDirs(this.config.responsePattern || []);
+    responseEntries.forEach(entry => {
+      if (this.app.MODE_AE) {
+        completeAssign(mockResponse, require(entry as string));
+      } else {
+        completeAssign(responseProto, require(entry as string));
+      }
     });
-
     // controller extend
-    this.globDirs(this.config.controllerPattern || [], entries => {
-      entries.forEach(entry => {
-        completeAssign(BaseClass.prototype, require(entry as string));
-      });
+    const controllerEntries = await this.globDirs(this.config.controllerPattern || []);
+    controllerEntries.forEach(entry => {
+      completeAssign(BaseClass.prototype, require(entry as string));
     });
   }
 }
