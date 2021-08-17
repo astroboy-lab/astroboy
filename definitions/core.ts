@@ -46,6 +46,7 @@ export interface IInnerApplication<F extends PureObject = PureObject> extends IB
   ROOT_PATH: string;
   ROOT_NAME: string;
   NODE_ENV: string;
+  MODE_AE: boolean;
   libs: PureObject<any>;
   controllers: PureObject<PureObject<IConstructor<any>>>;
   services: PureObject<PureObject<IConstructor<any>>>;
@@ -80,6 +81,7 @@ export interface IAstroboyOptions {
   NODE_PORT: string;
   ROOT_PATH: string;
   PROXY: boolean;
+  MODE_AE?: boolean;
 }
 
 export interface ILoaderOptions<F extends PureObject, A extends IBaseApplication> {
