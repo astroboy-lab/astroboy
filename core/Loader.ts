@@ -1,6 +1,6 @@
 import * as glob from 'fast-glob';
 import * as path from 'path';
-import * as lodash from 'lodash'
+import flatten from 'lodash.flatten'
 import { EntryItem } from 'fast-glob/out/types/entries';
 import { PureObject, IDir, ILoaderOptions, IPluginEntry, IBaseApplication } from '../definitions/core';
 
@@ -73,7 +73,7 @@ export abstract class Loader<F extends PureObject, A extends IBaseApplication<F>
       }),
     );
 
-    return lodash.flatten(entries);
+    return flatten(entries);
   }
 
   /**

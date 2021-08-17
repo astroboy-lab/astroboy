@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as glob from 'fast-glob';
 import { METHODS } from 'http';
-import * as lodash from 'lodash';
+import isFunction from 'lodash.isfunction';
 import { Loader } from '../core/Loader';
 import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
@@ -118,7 +118,7 @@ class AstroboyRouterLoader extends Loader<Partial<IOptions>, IInnerApplication<P
       if (!router.controller) {
         throw new Error(`注册路由失败，控制器 ${router.controllerName} 未找到！`);
       }
-      if (!lodash.isFunction(router.controller)) {
+      if (!isFunction(router.controller)) {
         throw new Error(`注册路由失败，${router.controllerName} 必须是一个类`);
       }
       const newControllerMethods = [];

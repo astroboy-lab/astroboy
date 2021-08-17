@@ -1,7 +1,8 @@
 // @ts-ignore no types matched
 import * as pathMatching from 'path-matching';
 import * as path from 'path';
-import * as lodash from 'lodash';
+import merge from 'lodash.merge';
+import isPlainObject from 'lodash.isplainobject';
 import { outputJsonAsync } from './lib/util';
 import {
   IInnerApplication,
@@ -131,7 +132,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
       const entries = await this.globDir(item.baseDir, this.patterns.pluginPattern);
       pluginConfig = entries.reduce((a, b) => {
         const content = require(b as string);
-        return lodash.merge(a, content);
+        return merge(a, content);
       }, pluginConfig);
     }
 
@@ -170,7 +171,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
   protected async getPluginDirs(baseDir: string) {
     const config = await this.getPluginConfig(baseDir);
     const ret: IDir[] = [];
-    if (lodash.isPlainObject(config)) {
+    if (isPlainObject(config)) {
       for (let name in config) {
         if (this.pluginConfig[name].enable) {
           const baseDir = this.getPluginPath(config[name]);
@@ -198,7 +199,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     let config: PureObject = {};
     const entries = await this.globDir(baseDir, this.patterns.pluginPattern);
     config = entries.reduce((a, b) => {
-      return lodash.merge(a, require(b as string));
+      return merge(a, require(b as string));
     }, {});
     return config;
   }
@@ -214,7 +215,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
     let loaderConfig: PureObject = {};
     const entries = await this.globDirs(this.patterns.loaderConfigPattern);
     loaderConfig = entries.reduce((previousValue, currentValue) => {
-      return lodash.merge(previousValue, require(currentValue as string));
+      return merge(previousValue, require(currentValue as string));
     }, loaderConfig);
     let queue: IPriority[] = [];
     Object.keys(loaderConfig).forEach(item => {

@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as lodash from 'lodash';
+import isFunction from 'lodash.isfunction';
 import { Loader } from '../core/Loader';
 import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
@@ -9,7 +9,7 @@ class AstroboyBootLoader extends Loader<Partial<IOptions>, IInnerApplication<Par
     const entries = await this.globDirs(this.config.pattern || []);
     for (const entry of entries) {
       const boot = require(entry as string);
-      assert(lodash.isFunction(boot), `${entry} must return a function.`);
+      assert(isFunction(boot), `${entry} must return a function.`);
       await boot(this.app);
     }
   }

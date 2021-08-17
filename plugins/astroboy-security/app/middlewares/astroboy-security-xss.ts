@@ -1,4 +1,5 @@
-import * as lodash from 'lodash';
+import isPlainObject from 'lodash.isplainobject';
+import reduce from 'lodash.reduce';
 import * as xss from 'xss';
 import { MiddlewareFactory } from '../../../../definitions';
 
@@ -9,7 +10,7 @@ const astroboySecurityXSSFactory: MiddlewareFactory<any, any> = (options, app) =
 
     if (Array.isArray(value) && value.length > 0) {
       res = [];
-    } else if (lodash.isPlainObject(value) && Object.keys(value).length > 0) {
+    } else if (isPlainObject(value) && Object.keys(value).length > 0) {
       res = {};
     } else {
       if (typeof value === 'string') {
@@ -18,7 +19,7 @@ const astroboySecurityXSSFactory: MiddlewareFactory<any, any> = (options, app) =
       return value;
     }
 
-    return lodash.reduce(
+    return reduce(
       value,
       (result, val, key) => {
         if (deep) {

@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as lodash from 'lodash';
+import merge from 'lodash.merge';
 import { Loader } from '../core/Loader';
 import { IInnerApplication, PureObject, MiddlewareFactory, PriorityDefine } from '../definitions/core';
 import { IOptions } from '../definitions/config';
@@ -11,7 +11,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
     let middlewareConfig: PureObject = {};
     const configEntries = await this.globDirs(this.config.configPattern || []);
     configEntries.forEach(entry => {
-      middlewareConfig = lodash.merge(middlewareConfig, require(entry as string));
+      middlewareConfig = merge(middlewareConfig, require(entry as string));
     });
     this.app.middlewareConfig = middlewareConfig;
 

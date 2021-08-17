@@ -1,4 +1,6 @@
-import * as lodash from 'lodash';
+import isFunction from 'lodash.isfunction';
+import merge from 'lodash.merge';
+import isPlainObject from 'lodash.isplainobject';
 import { Loader } from '../core/Loader';
 import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
@@ -13,10 +15,10 @@ class AstroboyConfigLoader extends Loader<Partial<IOptions>, IInnerApplication<P
       // 配置文件支持两种写法：
       // 1、返回一个 function，执行改方法返回一个对象
       // 2、普通 JS 对象
-      if (lodash.isFunction(content)) {
-        return lodash.merge(a, content(this.app));
-      } else if (lodash.isPlainObject(content)) {
-        return lodash.merge(a, content);
+      if (isFunction(content)) {
+        return merge(a, content(this.app));
+      } else if (isPlainObject(content)) {
+        return merge(a, content);
       }
     }, config);
 

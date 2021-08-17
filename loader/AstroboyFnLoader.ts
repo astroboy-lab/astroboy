@@ -1,4 +1,4 @@
-import * as lodash from 'lodash';
+import merge from 'lodash.merge';
 import { Loader } from '../core/Loader';
 import { IInnerApplication, PureObject } from '../definitions/core';
 import { IOptions } from '../definitions/config';
@@ -9,7 +9,7 @@ class AstroboyFnLoader extends Loader<Partial<IOptions>, IInnerApplication<Parti
     let fnConfig: PureObject = {};
     const entries = await this.globDirs(this.config.configPattern || []);
     entries.forEach(entry => {
-      fnConfig = lodash.merge(fnConfig, require(entry as string));
+      fnConfig = merge(fnConfig, require(entry as string));
     });
     this.app.fnConfig = fnConfig;
 
