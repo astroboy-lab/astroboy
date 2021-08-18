@@ -17,6 +17,14 @@
   "author": "KK",
   "license": "MIT",
   "dependencies": {
+    "@types/fs-extra": "^9.0.1",
+    "@types/koa": "^2.0.46",
+    "@types/koa-compose": "^3.2.5",
+    "@types/lodash.flatten": "^4.4.6",
+    "@types/lodash.isfunction": "^3.0.6",
+    "@types/lodash.isplainobject": "^4.0.6",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/lodash.reduce": "^4.6.6",
     "ajv": "^6.12.6",
     "complete-assign": "0.0.2",
     "fast-glob": "2.2.6",
@@ -37,14 +45,6 @@
     "xss": "0.3.7"
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.1",
-    "@types/koa": "^2.0.46",
-    "@types/koa-compose": "^3.2.5",
-    "@types/lodash.flatten": "^4.4.6",
-    "@types/lodash.isfunction": "^3.0.6",
-    "@types/lodash.isplainobject": "^4.0.6",
-    "@types/lodash.merge": "^4.6.6",
-    "@types/lodash.reduce": "^4.6.6",
     "ts-node": "^7.0.1",
     "typescript": "3.8.3",
     "vuepress": "^1.8.2"
