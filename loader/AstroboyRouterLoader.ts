@@ -5,6 +5,7 @@ import * as lodash from 'lodash';
 import { Loader } from '../core/Loader';
 import { IInnerApplication } from '../definitions/core';
 import { IOptions } from '../definitions/config';
+import { fileIsNotTypingFile } from '../core/lib/util';
 
 const Ajv = require('ajv');
 const ajv = new Ajv({
@@ -27,9 +28,10 @@ async function loadRouters(rootPath: string, pattern: any): Promise<any[]> {
       routerArr = content;
     }
   } else {
-    const entries = await glob([`${rootPath}${pattern}`], {
+    const entries = (await glob([`${rootPath}${pattern}`], {
       dot: true,
-    });
+    })).filter(fileIsNotTypingFile);
+
     entries.forEach(entry => {
       routerArr = routerArr.concat(require(entry as string));
     });

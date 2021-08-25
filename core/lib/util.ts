@@ -1,4 +1,18 @@
+import { EntryItem } from 'fast-glob/out/types/entries';
 import * as fse from 'fs-extra';
+
+const TYPING_FILE_EXTS = '.d.ts';
+
+/**
+ * ### Check the file is typing file or not.
+ *
+ * @author Big Mogician
+ * @param {EntryItem} entry
+ * @returns
+ */
+export function fileIsNotTypingFile(entry: EntryItem): Boolean {
+  return typeof entry === 'string' ? !entry.endsWith(TYPING_FILE_EXTS) : !entry.path.endsWith(TYPING_FILE_EXTS);
+}
 
 /**
  * ### 输出内容到文件
