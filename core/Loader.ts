@@ -3,20 +3,10 @@ import * as path from 'path';
 import * as lodash from 'lodash'
 import { EntryItem } from 'fast-glob/out/types/entries';
 import { PureObject, IDir, ILoaderOptions, IPluginEntry, IBaseApplication } from '../definitions/core';
+import { fileIsNotTypingFile } from './lib/util'
 
-const TYPING_FILE_EXTS = '.d.ts';
 const APP_EXTENSIONS = ['js', 'ts'];
 
-/**
- * ### Check the file is typing file or not.
- *
- * @author Big Mogician
- * @param {EntryItem} entry
- * @returns
- */
-function fileIsNotTypingFile(entry: EntryItem) {
-  return typeof entry === 'string' ? !entry.endsWith(TYPING_FILE_EXTS) : !entry.path.endsWith(TYPING_FILE_EXTS);
-}
 
 /**
  * ### Base Loader
