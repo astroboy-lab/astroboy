@@ -2,7 +2,7 @@
 import * as pathMatching from 'path-matching';
 import * as path from 'path';
 import * as lodash from 'lodash';
-import { outputJsonAsync } from './lib/util';
+import { isLoader, outputJsonAsync } from './lib/util';
 import {
   IInnerApplication,
   PureObject,
@@ -268,7 +268,7 @@ export class CoreLoader<F extends PureObject, A extends IInnerApplication<F>> ex
           config: item.options,
           app,
         });
-        if (!(loader instanceof Loader)) {
+        if (!(isLoader(loader))) {
           throw new Error(`Loader ${item.name} must extend Loader.`);
         }
         await loader.load();
