@@ -8,10 +8,10 @@ class AstroboyLibLoader extends Loader<Partial<IOptions>, IInnerApplication<Part
     let libs: PureObject = {};
 
     for (const item of this.dirs) {
-      const indexFile = `${item.baseDir}/app/lib/index.js`;
-      if (fs.existsSync(indexFile)) {
+      try {
+        const indexFile = require.resolve(`${item.baseDir}/app/lib/index`);
         libs[item.name] = require(indexFile);
-      } else {
+      } catch (_err) {
         const entries = await this.globDir(item.baseDir, this.config.pattern || []);
         if (entries.length > 0) {
           libs[item.name] = {};
