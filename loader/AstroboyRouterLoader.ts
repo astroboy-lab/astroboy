@@ -20,13 +20,14 @@ function check(data: any) {
  */
 async function loadRouters(rootPath: string, pattern: any): Promise<any[]> {
   let routerArr: any[] = [];
-  const indexFile = `${rootPath}/app/routers/index.js`;
-  if (fs.existsSync(indexFile)) {
+  try {
+    // 如果通过 ts-node 启动会 resolve index.ts
+    const indexFile = require.resolve(`${rootPath}/app/routers/index`)
     const content = require(indexFile);
     if (Array.isArray(content)) {
       routerArr = content;
     }
-  } else {
+  } catch (_err) {
     const entries = await glob([`${rootPath}${pattern}`], {
       dot: true,
     });

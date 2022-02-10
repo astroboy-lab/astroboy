@@ -11,8 +11,6 @@ import { IInnerApplication } from '../../../../definitions/core';
 const astroboyRouterFactory: MiddlewareFactory<any, IInnerApplication> = function(options = {}, app) {
   const koaRouter = new KoaRouter();
 
-  console.log('开始注册路由 ===>');
-  let counter = 0;
   app.routers.forEach((router: any) => {
     router.middleware.push(async function callback(ctx: any, next: () => Promise<any>) {
       if (router.compiledSchema.header) {
@@ -69,17 +67,11 @@ const astroboyRouterFactory: MiddlewareFactory<any, IInnerApplication> = functio
       const method = router.method[i].toLowerCase();
       for (let j = 0; j < router.path.length; j++) {
         const path = router.path[j];
-        const name = router.name || '';
-        const controllerName = router.controllerName;
-        const controllerMethods = router.controllerMethods || [];
 
-        counter++;
-        console.log(`${name}：${method} ${path} ==> ${controllerName}:${controllerMethods.join(' > ')}`);
         koaRouter[method](router.name, path, ...router.middleware);
       }
     }
   });
-  console.log(`所有路由注册成功，共注册 ${counter} 个路由\n`);
 
   let fn = compose([koaRouter.routes(), koaRouter.allowedMethods()]);
   (<any>fn)._name = 'astroboy-router';
