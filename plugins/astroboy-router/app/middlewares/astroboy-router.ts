@@ -55,7 +55,9 @@ const astroboyRouterFactory: MiddlewareFactory<any, IInnerApplication> = functio
 
       for (let k = 0; k < controllerMethods.length; k++) {
         const action = controllerMethods[k];
-        if (ctx.status !== 301 && ctx.status !== 302 && !ctx.body) {
+        if (action === 'init') {
+          await controller[action]();
+        } else if (ctx.status !== 301 && ctx.status !== 302 && !ctx.body) {
           await controller[action](ctx, next);
         } else {
           break;

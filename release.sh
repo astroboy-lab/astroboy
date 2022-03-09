@@ -24,5 +24,5 @@ then
   yarn tsc -p ./tsconfig.json
   cp README.md dist/
   cp package.json dist/
-  cd dist && npm publish
+  cd dist && npm publish --registry=https://registry.npmjs.org/
 fi
