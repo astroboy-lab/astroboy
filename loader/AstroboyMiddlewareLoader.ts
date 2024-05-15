@@ -11,13 +11,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
     let middlewareConfig: PureObject = {};
     const configEntries = await this.globDirs(this.config.configPattern || []);
     configEntries.forEach((entry) => {
-      const config = require(entry);
-      Object.values(config).forEach((item) => {
-        // for debug，方便查看这个中间件是哪个 plugin 引入的
-        item['__debug_path'] = entry;
-      });
-
-      middlewareConfig = lodash.merge(middlewareConfig, config);
+      middlewareConfig = lodash.merge(middlewareConfig, require(entry));
     });
     this.app.middlewareConfig = middlewareConfig;
 
@@ -26,7 +20,16 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
     const entries = await this.globDirs(this.config.pattern || []);
     entries.forEach((entry) => {
       const key = this.resolveExtensions(path.basename(entry as string));
+
       middlewares[key] = require(entry as string);
+
+      if (middlewareConfig[key]) {
+        try {
+          middlewareConfig[key]['__debug_path'] = entry;
+        } catch {
+          /* noop */
+        }
+      }
     });
     this.app.middlewares = middlewares;
 
