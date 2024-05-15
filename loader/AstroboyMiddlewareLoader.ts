@@ -11,10 +11,13 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
     let middlewareConfig: PureObject = {};
     const configEntries = await this.globDirs(this.config.configPattern || []);
     configEntries.forEach((entry) => {
-      middlewareConfig = lodash.merge(middlewareConfig, {
-        ...require(entry as string),
-        __debug_path__: entry, // for debug，方便查看这个中间件是哪个 plugin 引入的
+      const config = require(entry);
+      Object.values(config).forEach((item) => {
+        // for debug，方便查看这个中间件是哪个 plugin 引入的
+        item['__debug_path'] = entry;
       });
+
+      middlewareConfig = lodash.merge(middlewareConfig, config);
     });
     this.app.middlewareConfig = middlewareConfig;
 
