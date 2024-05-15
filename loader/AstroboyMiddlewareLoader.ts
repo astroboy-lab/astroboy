@@ -10,15 +10,18 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
     // 加载中间件配置
     let middlewareConfig: PureObject = {};
     const configEntries = await this.globDirs(this.config.configPattern || []);
-    configEntries.forEach(entry => {
-      middlewareConfig = lodash.merge(middlewareConfig, require(entry as string));
+    configEntries.forEach((entry) => {
+      middlewareConfig = lodash.merge(middlewareConfig, {
+        ...require(entry as string),
+        __debug_path__: entry, // for debug，方便查看这个中间件是哪个 plugin 引入的
+      });
     });
     this.app.middlewareConfig = middlewareConfig;
 
     // 加载中间件文件
     let middlewares: PureObject<MiddlewareFactory> = {};
     const entries = await this.globDirs(this.config.pattern || []);
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       const key = this.resolveExtensions(path.basename(entry as string));
       middlewares[key] = require(entry as string);
     });
@@ -26,7 +29,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
 
     // 生成中间件加载顺序
     let middlewareQueue: PriorityDefine[] = [];
-    Object.keys(middlewareConfig).forEach(item => {
+    Object.keys(middlewareConfig).forEach((item) => {
       middlewareQueue.push(
         Object.assign(
           {
@@ -38,7 +41,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
       );
     });
     middlewareQueue = middlewareQueue
-      .filter(item => {
+      .filter((item) => {
         return item.enable === true;
       })
       .sort((a, b) => {
