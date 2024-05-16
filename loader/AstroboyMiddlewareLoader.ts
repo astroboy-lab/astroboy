@@ -11,7 +11,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
     let middlewareConfig: PureObject = {};
     const configEntries = await this.globDirs(this.config.configPattern || []);
     configEntries.forEach((entry) => {
-      middlewareConfig = lodash.merge(middlewareConfig, require(entry));
+      middlewareConfig = lodash.merge(middlewareConfig, require(entry as string));
     });
     this.app.middlewareConfig = middlewareConfig;
 
