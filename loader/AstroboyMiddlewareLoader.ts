@@ -25,7 +25,7 @@ class AstroboyMiddlewareLoader extends Loader<Partial<IOptions>, IInnerApplicati
 
       if (middlewareConfig[key]) {
         try {
-          middlewareConfig[key]['__debug_path__'] = entry;
+          middlewareConfig[key]['path'] = entry;
         } catch {
           /* noop */
         }
