@@ -23,7 +23,7 @@
     "@types/lodash": "^4.14.123",
     "ajv": "^6.12.6",
     "complete-assign": "0.0.2",
-    "fast-glob": "2.2.6",
+    "fast-glob": "^3.0.3",
     "fs-extra": "9.0.1",
     "koa": "2.5.0",
     "koa-body": "2.5.0",
