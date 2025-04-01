@@ -1,7 +1,7 @@
 import * as glob from 'fast-glob';
 import * as path from 'path';
 import * as lodash from 'lodash'
-import { EntryItem } from 'fast-glob/out/types/entries';
+import { EntryItem } from 'fast-glob/out/types';
 import { PureObject, IDir, ILoaderOptions, IPluginEntry, IBaseApplication } from '../definitions/core';
 
 const TYPING_FILE_EXTS = '.d.ts';
